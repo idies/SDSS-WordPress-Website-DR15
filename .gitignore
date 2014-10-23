@@ -1,5 +1,6 @@
 .htaccess
 wp-config.php
+init_from_www.php
 
 # Compiled source #
 ###################
