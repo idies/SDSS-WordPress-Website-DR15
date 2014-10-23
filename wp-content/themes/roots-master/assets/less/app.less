@@ -1,0 +1,245 @@
+/*!
+ * Roots 6.5.2
+ */
+
+@import "bootstrap/bootstrap.less";
+
+
+
+
+
+/* ==========================================================================
+   Base
+   ========================================================================== */
+
+body { font-family: 'Gentium Book Basic', serif; }
+html, body {
+  width: auto !important;
+  overflow-x: hidden !important;
+}
+
+.wrap.container {padding-top:100px; }
+.content.row {margin-bottom: 200px;}
+
+/* ==========================================================================
+   Navigation
+   ========================================================================== */
+.navbar-inverse { border-radius: 0; background:rgba(0, 0, 0, .8); border-bottom:1px solid rgba(255, 255, 255, 0.15); min-height:100px; padding-top:25px; margin-bottom:0;}
+.navbar-inverse *:focus { outline: 0; }
+@media (max-width: 767px) {
+  .navbar-inverse {  background:rgba(0,0,0,.9); }
+}
+
+.navbar-inverse .navbar-nav > li > a,
+.navbar-inverse .navbar-nav > .open ul > a { color:rgba(255, 255, 255, .4); transition: color 0.5s ease; }
+
+.navbar-inverse .navbar-nav > .active > a,
+.navbar-inverse .navbar-nav > .active > a:hover, 
+.navbar-inverse .navbar-nav > .active > a:focus { color: #fff; background:none ; }
+.navbar-inverse .navbar-nav > .open > a{ background:none; color:white; }
+
+.navbar-inverse .navbar-nav>li>a:hover, 
+.navbar-inverse .navbar-nav>li>a:focus,
+.navbar-inverse .navbar-nav>.open>a:hover, 
+.navbar-inverse .navbar-nav>.open>a:focus { background:none; color:white; }
+
+.navbar-inverse .navbar-nav > .active > a { background:none; color:white; }
+
+.navbar-inverse .navbar-brand {font-size: 24px; color:white; padding:0 0 0 15px; margin:12px 0 0 0; }
+  .navbar-inverse .navbar-brand img { margin-top:-8px;}
+
+.navbar-nav .dropdown-menu {
+  left:-5px;
+  font-size: 13px;
+  background-color: rgba(0, 0, 0, .7);
+  border: 0px none;
+  -webkit-border-radius: 0px; -moz-border-radius: 0px; border-radius: 0px;
+  -webkit-box-shadow: 0 6px 12px rgba(0, 0, 0, 0.175); box-shadow: 0 6px 12px rgba(0, 0, 0, 0.175);
+}
+.navbar-nav .dropdown-menu > li > a { color:rgba(255, 255, 255, .7); padding:7px 20px; }
+  .navbar-nav .dropdown-menu > li > a:hover,
+  .navbar-nav .dropdown-menu > li > a:focus,
+  .navbar-nav .dropdown-menu > .active > a:hover{ background: rgba(255, 255, 255, .1); color:white; }
+
+.navbar-nav .dropdown-menu > .active > a,
+.navbar-nav .dropdown-menu > .active > a:focus { background: none; color:#fff; }
+
+.navbar-nav .btn { border:1px solid rgba(255, 255, 255, .2); margin-left:5px; margin-top:5px; padding-top:10px; padding-bottom:10px; }
+
+.navbar-nav a.btn:focus, 
+.navbar-nav a.btn:hover  { border:1px solid rgba(255,255,255,.6); }
+
+.navbar-collapse { border:0 none;  border-top:0 none; box-shadow: none; }
+@media (max-width: 767px) {
+  .navbar-collapse ul { text-align: center;  width:100%; padding-bottom:10px; }
+  .navbar-collapse ul .btn{ max-width:50%; margin:0 auto; }
+}
+.navbar-static-top,
+.navbar-fixed-top,
+.navbar-fixed-bottom { border-radius: 0; }
+
+.nav-pills>li>a {color: #777777;}
+.nav-pills>li>a:hover {color: #ffffff; background: rgba(0,0,0,.9); transition: background 0.5s ease;border-left: 5px solid #6600ff;}
+.nav-pills>li.active>a,  .nav-pills>li.active>a:focus{color: inherit; background: inherit; border-left: 5px solid #6600ff;}
+.nav-pills>li.active>a:hover {background: rgba(0,0,0,.9);}
+
+.btn-sdss:hover{color: #ffffff; background: rgba(0,0,0,.9); transition: background 0.5s ease;border-left: 5px solid #6600ff;}
+
+.btn-sdss:hover, .btn-sdss:focus, .btn-sdss:active, .btn-sdss.active, .open .dropdown-toggle.btn-sdss {color: #ffffff; background: rgba(0,0,0,.9); transition: background 0.5s ease;border-left: 5px solid #6600ff;}
+
+/* ==========================================================================
+   Header
+   ========================================================================== */
+
+.banner {}
+
+.navbar-default {background-color: @brand-sdss-clouds; border: 3px solid darken(@brand-sdss-clouds, 20%); border-width: 0 1px 4px 1px;}
+
+/* Autohide navbar */
+.slideUp { top:-100px; }
+.headroom { -webkit-transition: all 0.4s ease-out; -moz-transition: all 0.4s ease-out; -o-transition: all 0.4s ease-out; transition: all 0.4s ease-out; }
+
+.progress-bar-theme {
+  background-color: #1abc9c;
+}
+
+.headroom { position: fixed;top: 0;left: 0;right: 0;transition: all .4s ease-in-out;}
+.headroom--unpinned {top: -100px;}
+.headroom--pinned {top: 0;}
+
+
+/* ==========================================================================
+   Content
+   ========================================================================== */
+.content {}
+.hero {position: relative; overflow: hidden; margin-bottom: 0; padding: 0; } 
+.hero-unit {position: relative; overflow: hidden; margin-bottom: 6%;}
+.panner { overflow: hidden; line-height: 0;}
+.panner img { max-width: 4909px;}
+.panner img { width: 500%; max-width: 2500px;}
+.branding {background: rgba(0,0,0,0.7); color: #fff; display: block; padding: 0 1%; width: 100%; text-decoration: none; font-size: 1.2em; transition: background-color 0.3s ease; } 
+.branding>p {font-size: 18px; } .surveys {margin-bottom: 2em; } 
+.ball {background: #f0f0f0; border-radius: 50%; padding: 5em; display: inline-block; line-height: 1em; width: 250px; height: 250px; color: #000; } 
+.ball>h3{color: #000; }
+#surveys { width: 100%; padding: 50px 0; color: #fff; text-shadow: 2px 2px 3px rgba(0,0,0,.9); background:url('/wp-content/uploads/2014/04/sdss-telescope.png')no-repeat bottom center fixed; background-color: #000; -webkit-background-size: cover; -moz-background-size: cover; background-size: cover; -o-background-size: cover;}
+.flex-caption {color: @body-bg; width: 40%; padding: 10px; margin: 0 0 60px 60px; background-color: #222; background: rgba(0,0,0,.8); position: absolute; display: block; left: 0; bottom: 0; border-left: 4px solid @brand-sdss; } 
+#myCarousel .nav a small {display:block;}
+#myCarousel .nav {background:#eee;}
+#myCarousel .nav a {border-radius:0px;}
+.survey-item {position:relative; padding:0; -webkit-box-shadow: 0 0 10px rgba(204,204,204,.8);-moz-box-shadow: 0 0 10px rgba(204,204,204,.8);box-shadow: 0 0 10px rgba(204,204,204,.8);}
+
+/* ==========================================================================
+   Primary Content
+   ========================================================================== */
+
+.main { }
+
+/* Gallery Shortcode */
+.gallery-row { padding: 15px 0; }
+
+.ch-grid {margin: 20px 0 0 0; padding: 0; list-style: none; display: block; text-align: center; width: 100%; } 
+.ch-grid:after, .ch-item:before {content: ''; display: table; } 
+.ch-grid:after {clear: both; } 
+.ch-grid li {width: 220px; height: 220px; display: inline-block; margin: 20px; } 
+.ch-item {width: 100%; height: 100%; border-radius: 50%; position: relative; cursor: default; -webkit-perspective: 900px; -moz-perspective: 900px; -o-perspective: 900px; -ms-perspective: 900px; perspective: 900px; } 
+.ch-info{position: absolute; width: 100%; height: 100%; -webkit-transform-style: preserve-3d; -moz-transform-style: preserve-3d; -o-transform-style: preserve-3d; -ms-transform-style: preserve-3d; transform-style: preserve-3d; }
+.ch-info > div {display: block; position: absolute; width: 100%; height: 100%; border-radius: 50%; background-position: center center; -webkit-transition: all 0.4s linear; -moz-transition: all 0.4s linear; -o-transition: all 0.4s linear; -ms-transition: all 0.4s linear; transition: all 0.4s linear; -webkit-transform-origin: 50% 0%; -moz-transform-origin: 50% 0%; -o-transform-origin: 50% 0%; -ms-transform-origin: 50% 0%; transform-origin: 50% 0%; }
+.ch-info .ch-info-front {box-shadow: inset 0 0 0 16px rgba(0,0,0,0.3); }
+
+.ch-info .ch-info-back {-webkit-transform: translate3d(0,0,-220px) rotate3d(1,0,0,90deg); -moz-transform: translate3d(0,0,-220px) rotate3d(1,0,0,90deg); -o-transform: translate3d(0,0,-220px) rotate3d(1,0,0,90deg); -ms-transform: translate3d(0,0,-220px) rotate3d(1,0,0,90deg); transform: translate3d(0,0,-220px) rotate3d(1,0,0,90deg); background: #000; opacity: 0; }
+
+.ch-img-1 {background-image: url(http://sdss3.org/images/home/top_photo1.jpg); }
+.ch-img-2 {background-image: url(http://sdss3.org/images/home/top_photo2.jpg); background-position: 20% 65% !important; }
+
+.ch-img-3 { background-image: url(http://sdss3.org/images/home/top_photo4.jpg);}
+
+.ch-img-4 {background-image: url(http://sdss3.org/images/home/top_photo3.jpg); background-position: left center!important; }
+
+
+.ch-info h3 {color: #fff; text-transform: uppercase; letter-spacing: 2px; font-size: 24px; margin: 0 15px; padding: 60px 0 0 0; height: 110px; text-shadow: 0 0 1px #fff, 0 1px 2px rgba(0,0,0,0.3); }
+
+.ch-info p {color: #fff; padding: 10px 5px; font-style: italic; margin: 0 30px; font-size: 12px; }
+
+.ch-info p a {display: block; color: #fff; color: rgba(255,255,255,0.7); font-style: normal; font-weight: 700; text-transform: uppercase; font-size: 9px; letter-spacing: 1px; padding-top: 4px; }
+
+.ch-info p a:hover {color: #6600FF; color: rgba(102, 0, 255, .8); }
+
+.ch-info-back hr {width: 65%; margin-top: -5px; margin-bottom: -5px; }
+
+.ch-item:hover .ch-info-front {-webkit-transform: translate3d(0,280px,0) rotate3d(1,0,0,-90deg); -moz-transform: translate3d(0,280px,0) rotate3d(1,0,0,-90deg); -o-transform: translate3d(0,280px,0) rotate3d(1,0,0,-90deg); -ms-transform: translate3d(0,280px,0) rotate3d(1,0,0,-90deg); transform: translate3d(0,280px,0) rotate3d(1,0,0,-90deg); opacity: 0; }
+
+.ch-item:hover .ch-info-back {-webkit-transform: rotate3d(1,0,0,0deg); -moz-transform: rotate3d(1,0,0,0deg); -o-transform: rotate3d(1,0,0,0deg); -ms-transform: rotate3d(1,0,0,0deg); transform: rotate3d(1,0,0,0deg); opacity: 1; }
+
+/* ==========================================================================
+   Sidebar
+   ========================================================================== */
+
+.sidebar { }
+
+/* ==========================================================================
+   Posts
+   ========================================================================== */
+
+.hentry header { }
+.hentry time { }
+.hentry .byline { }
+.hentry .entry-content { }
+.hentry footer { }
+.display-posts-title {font-size: 15px;font-weight: bold;}
+.listing-item {margin-bottom: 10px;}
+
+
+/* ==========================================================================
+   Footer
+   ========================================================================== */
+
+.content-info { }
+/*.footer1 {background-color: mix(@branding, @branding2, 25%);position: absolute; width: 100%; min-height: 60px;}
+.footer2 {background-color: mix(@branding, @branding2, 50%); margin-top:10px; padding-top:10px;}*/
+
+.sitemap { background: #232323; padding: 30px 0 0 0; font-size: 12px; color: #999;}
+.sitemap a { color: #ccc; }
+.sitemap a:hover {color: #fff; }
+.sitemap .widget { margin-bottom:30px; }    
+.sitemap .widget-title { font-size: 17px; font-weight: bold; color: #ccc; margin: 0 0 20px; }
+.sitemap .entry-meta { border-top: 1px solid #ccc; border-bottom: 1px solid #ccc; margin: 0 0 35px 0; padding: 2px 0; color: #888888; font-size: 12px; font-size: 0.75rem; }
+.sitemap .entry-meta a { color: #333333; }
+.sitemap .entry-meta .meta-in { border-top: 1px solid #ccc; border-bottom: 1px solid #ccc; padding: 10px 0; }
+.follow-me-icons { font-size:30px; }    
+.follow-me-icons i { float:left; margin:0 10px 0 0; }   
+#footer {background: #191919; padding-top: 15px; color: #777; font-size: 12px; min-height: 35px;}
+.social a { color: #aaa; }
+.social a:hover { color: #fff; }
+.social p { margin: 0; }
+
+
+/* ==========================================================================
+   WordPress Generated Classes
+   See: http://codex.wordpress.org/CSS#WordPress_Generated_Classes
+   ========================================================================== */
+
+.aligncenter { display: block; margin: 0 auto; }
+.alignleft { float: left; }
+.alignright { float: right; }
+figure.alignnone { margin-left: 0; margin-right: 0; }
+
+
+
+/* ==========================================================================
+   Media Queries
+   ========================================================================== */
+
+@media (min-width: @screen-sm-min) {
+.branding {position: absolute; text-align: left; right: 0; left: 0; bottom: 2em; padding: 1em 5% 1em 1em; max-width: 40em; width: auto; transition: padding-right 0.3s ease, background-color 0.3s ease;}
+}
+
+@media (max-width: @screen-sm-max) { }
+
+@media (min-width: @screen-xs-min) and (max-width: @screen-sm-min) { }
+
+@media (min-width: @screen-md-min) and (max-width: @screen-lg-min) {.nav {
+  font-size: (@font-size-base * 1.02); }}
+
+@media (min-width: @screen-md-min) { }
+
+@media (min-width: @screen-lg-min) { }
