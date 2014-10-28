@@ -4,3 +4,6 @@
 [submodule "/data1/dswww-ln01/sdss.org/prod/html/wp-content/themes/dr12-post-types"]
 	path = /data1/dswww-ln01/sdss.org/prod/html/wp-content/themes/dr12-post-types
 	url = https://bsouter@bitbucket.org/idies/dr12-post-types.git
+[submodule "wp-content/plugins/dr12-post-types"]
+	path = wp-content/plugins/dr12-post-types
+	url = https://bsouter@bitbucket.org/idies/dr12-post-types.git
