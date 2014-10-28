@@ -1,0 +1,6 @@
+[submodule "/data1/dswww-ln01/sdss.org/prod/html/wp-content/themes/sdss"]
+	path = /data1/dswww-ln01/sdss.org/prod/html/wp-content/themes/sdss
+	url = https://bsouter@bitbucket.org/idies/sdss_wptheme.git
+[submodule "/data1/dswww-ln01/sdss.org/prod/html/wp-content/themes/dr12-post-types"]
+	path = /data1/dswww-ln01/sdss.org/prod/html/wp-content/themes/dr12-post-types
+	url = https://bsouter@bitbucket.org/idies/dr12-post-types.git
