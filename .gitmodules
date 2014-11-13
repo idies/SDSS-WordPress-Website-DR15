@@ -1,6 +1,6 @@
 [submodule "wp-content/plugins/dr12-post-types"]
 	path = wp-content/plugins/dr12-post-types
-	url = https://bsouter@bitbucket.org/idies/dr12-post-types.git
+	url = git@bitbucket.org:idies/dr12-post-types.git
 [submodule "wp-content/themes/sdss"]
 	path = wp-content/themes/sdss
-	url = https://bsouter@bitbucket.org/idies/sdss_wptheme.git
+	url = git@bitbucket.org:idies/sdss_wptheme.git
