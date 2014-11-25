@@ -131,6 +131,18 @@ class DWPlugin{
             $show = isset($instance['page-search']) ? $instance['page-search'] : false;
         } else if ( $post_id ) {
             $show = isset($instance['page-'. $post_id]) ? $instance['page-'. $post_id] : false;
+            if ( !$show ) {
+                $cats = get_the_category();
+                foreach ( $cats as $cat ) { 
+                    if ($show) break;
+                    $c_id = self::get_lang_id($cat->cat_ID, 'category');
+                    if ( isset($instance['cat-'. $c_id]) ) {
+                        $show = $instance['cat-'. $c_id];
+                    }
+                    unset($c_id);
+                    unset($cat);
+                } 
+            }
         } else {
             $show = false;
         }
