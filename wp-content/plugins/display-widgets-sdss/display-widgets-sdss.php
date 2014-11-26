@@ -1,11 +1,16 @@
 <?php
 /*
-Plugin Name: Display Widgets
-Plugin URI: http://strategy11.com/display-widgets/
+Plugin Name: Display Widgets SDSS 
+Plugin URI: http://www.sdss.org
+Original Plugin URI: http://strategy11.com/display-widgets/
 Description: Adds checkboxes to each widget to show or hide on site pages.
-Author: Strategy11
-Author URI: http://strategy11.com
-Version: 2.03
+
+Updated to show widgets on pages with categories as well as posts in categories
+
+Author: Strategy11, modified by Bonnie Souter
+Author URI: http://sdss.org
+Original Author URI: http://strategy11.com
+Version: 2.03.1
 */
 
 /*
@@ -75,6 +80,7 @@ class DWPlugin{
     function show_widget($instance) {
         $post_id = get_queried_object_id();
         $post_id = self::get_lang_id($post_id, 'page');
+		
 
         if ( is_home() ) {
             $show = isset($instance['page-home']) ? $instance['page-home'] : false;
