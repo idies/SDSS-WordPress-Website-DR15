@@ -4,3 +4,6 @@
 [submodule "wp-content/themes/sdss"]
 	path = wp-content/themes/sdss
 	url = git@bitbucket.org:idies/sdss_wptheme.git
+[submodule "wp-content/plugins/display-widgets-sdss"]
+	path = wp-content/plugins/display-widgets-sdss
+	url = git@bitbucket.org:idies/display-widgets-sdss.git
