@@ -2,7 +2,7 @@
 /**
  * @package WP-RSSImport
  * @author Frank B&uuml;ltge &amp; Novaclic
- * @version 4.4.12
+ * @version 4.4.14
  */
  
 /**
@@ -11,10 +11,10 @@
  * Text Domain: rssimport
  * Domain Path: /languages
  * Description: Import and display Feeds in your blog, use the function RSSImport(), a Widget or Shortcode [RSSImport]. Please see the new <a href="http://wordpress.org/extend/plugins/rss-import/">possibilities</a>.
- * Author:      Frank B&uuml;ltge, novaclic
- * Version:     4.4.13
+ * Author:      Frank B&uuml;ltge, novaclic, took77
+ * Version:     4.4.15
  * License:     GPLv3
- * Last change: 04/04/2012
+ * Last change: 08/22/2014
  */ 
 
 /*
@@ -89,29 +89,43 @@ if ( ! defined('MAGPIE_CACHE_AGE') )
 //error_reporting(E_ALL);
 
 function RSSImport(
-		$display = 5, $feedurl = 'http://bueltge.de/feed/',
+		$display = 5,
+		$feedurl = 'http://bueltge.de/feed/',
 		$before_desc = '',
 		$displaydescriptions = 0,
 		$after_desc = '',
 		$html = 0,
 		$truncatedescchar = 200,
 		$truncatedescstring = ' ... ',
-		$truncatetitlechar = '', $truncatetitlestring = ' ... ',
-		$before_date = ' <small>', $date = 0, $after_date = '</small>', $date_format = '',
-		$before_creator = ' <small>', $creator = 0, $after_creator = '</small>',
-		$start_items = '<ul>', $end_items = '</ul>',
-		$start_item = '<li>', $end_item = '</li>',
+		$truncatetitlechar = '',
+		$truncatetitlestring = ' ... ',
+		$before_date = ' <small>',
+		$date = 0,
+		$after_date = '</small>',
+		$date_format = '',
+		$before_creator = ' <small>',
+		$creator = 0,
+		$after_creator = '</small>',
+		$start_items = '<ul>',
+		$end_items = '</ul>',
+		$start_item = '<li>',
+		$end_item = '</li>',
 		$target = '',
 		$rel = '',
 		$desc4title = 0,
-		$charsetscan = 0, $debug = 0,
-		$before_noitems = '<p>', $noitems = 'No items, feed is empty.', $after_noitems = '</p>',
+		$charsetscan = 0,
+		$debug = 0,
+		$before_noitems = '<p>',
+		$noitems = 'No items, feed is empty.',
+		$after_noitems = '</p>',
 		$before_error = '<p>',
-		$error = 'Error: Feed has a error or is not valid',
+		$error = 'Error: Feed has an error or is not valid',
 		$after_error = '</p>',
 		$paging = 0,
-		$prev_paging_link = '&laquo; Previous', $next_paging_link = 'Next &raquo;',
-		$prev_paging_title = 'more items', $next_paging_title = 'more items',
+		$prev_paging_link = '&laquo; Previous',
+		$next_paging_link = 'Next &raquo;',
+		$prev_paging_title = 'more items',
+		$next_paging_title = 'more items',
 		$use_simplepie = 1,
 		$view = 1
 	) {
@@ -220,7 +234,6 @@ function RSSImport(
 					$item = $rss->get_item($display);
 				else
 					$item = $rss->items[$display];
-				$echo .= $start_item;
 				// import title
 				if ($use_simplepie)
 					$title = esc_attr( strip_tags( $item->get_title() ) );
@@ -231,6 +244,19 @@ function RSSImport(
 					$href  = wp_filter_kses( $item->get_link() );
 				elseif ( isset($item['link']) )
 					$href  = wp_filter_kses( $item['link'] );
+				// import picture_url
+				$picture_url  = '';
+				if ($use_simplepie) {
+					if ( $enclosure = $item->get_enclosure() ) {
+						$picture_url  = wp_filter_kses( $enclosure->get_thumbnail() );
+					}
+				}
+				
+				$start_item_temp = str_replace('%title%', $title, $start_item);
+				$start_item_temp = str_replace('%href%', $href, $start_item_temp);
+				$start_item_temp = str_replace('%picture_url%', $picture_url, $start_item_temp);
+				$echo .= $start_item_temp;
+				
 				// import date
 				if ($use_simplepie && $date)
 					$pubDate = date_i18n( $date_format, strtotime( $item->get_date() ) );
@@ -317,12 +343,19 @@ function RSSImport(
 				if ( isset($creator) && $creator && $creator != '' )
 					$echo .= $before_creator . $creator . $after_creator;
 				if ( isset($desc) && $displaydescriptions && $desc != '' ) {
-					$after_desc = stripslashes_deep( $after_desc );
-					$after_desc = str_replace('%title%', $title, $after_desc);
-					$after_desc = str_replace('%href%', $href, $after_desc);
-					$echo .= $before_desc . $desc . $after_desc;
+					$after_desc_temp = stripslashes_deep( $after_desc );
+					$after_desc_temp = str_replace('%title%', $title, $after_desc_temp);
+					$after_desc_temp = str_replace('%href%', $href, $after_desc_temp);
+					$after_desc_temp = str_replace('%picture_url%', $picture_url, $after_desc_temp);
+					$before_desc_temp = str_replace('%title%', $title, $before_desc);
+					$before_desc_temp = str_replace('%href%', $href, $before_desc_temp);
+					$before_desc_temp = str_replace('%picture_url%', $picture_url, $before_desc_temp);
+					$echo .= $before_desc_temp . $desc . $after_desc_temp;
 				}
-				$echo .= $end_item;
+				$end_item_temp = str_replace('%title%', $title, $end_item);
+				$end_item_temp = str_replace('%href%', $href, $end_item_temp);
+				$end_item_temp = str_replace('%picture_url%', $picture_url, $end_item_temp);
+				$echo .= $end_item_temp;
 			} else {
 				$nextitems = FALSE;
 			}
@@ -376,8 +409,65 @@ function isodec($s_String) {
 function all_convert($s_String) {
 
 	// Array for entities
-	$umlaute  = array('„','“','–',' \&#34;','&#8211;','&#8212;','&#8216;','&#8217;','&#8220;','&#8221;','&#8222;','&#8226;','&#8230;' ,'�'     ,'�'      ,'�'     ,'�'      ,'�'       ,'�'       ,'�'       ,'�'     ,'�'       ,'�'       ,'�'       ,'�'      ,'�'       ,'�'      ,'�'      ,'�'      ,'�'      ,'�'     ,'�'      ,'�'      ,'�'      ,'�'      ,'�'       ,'�','�','�','�','�','�','�','�','�','�','�','�','�','�','�','�','�','�','�','�','�','�','�','�','�','�','�','�','�','�','�','�','�','�','�','�','�','�','�','�','�','�','�','�','�','�','�','�','�','�','�','�','�','�','�','�','�','�','�','�','�','�','�','�','�','�','�','�','�','�','�','�','�','�','�','�','�','�','�','�','�','�','�','�','�','�','�','�','�','�','�','�','�','�','�','�','�','�',utf8_encode('�'),utf8_encode('�'),utf8_encode('�'),utf8_encode('�'),utf8_encode('�'),utf8_encode('�'),utf8_encode('�'),utf8_encode('�'),utf8_encode('�'),utf8_encode('�'),utf8_encode('�'),utf8_encode('�'),utf8_encode('�'),utf8_encode('�'),utf8_encode('�'),utf8_encode('�'),utf8_encode('�'),utf8_encode('�'),utf8_encode('�'),utf8_encode('�'),utf8_encode('�'),utf8_encode('�'),utf8_encode('�'),utf8_encode('�'),utf8_encode('�'),utf8_encode('�'),utf8_encode('�'),utf8_encode('�'),utf8_encode('�'),utf8_encode('�'),utf8_encode('�'),utf8_encode('�'),utf8_encode('�'),utf8_encode('�'),utf8_encode('�'),utf8_encode('�'),utf8_encode('�'),utf8_encode('�'),utf8_encode('�'),utf8_encode('�'),utf8_encode('�'),utf8_encode('�'),utf8_encode('�'),utf8_encode('�'),utf8_encode('�'),utf8_encode('�'),utf8_encode('�'),utf8_encode('�'),utf8_encode('�'),utf8_encode('�'),utf8_encode('�'),utf8_encode('�'),utf8_encode('�'),utf8_encode('�'),utf8_encode('�'),utf8_encode('�'),utf8_encode('�'),utf8_encode('�'),utf8_encode('�'),utf8_encode('�'),utf8_encode('�'),utf8_encode('�'),utf8_encode('�'),utf8_encode('�'),utf8_encode('�'),utf8_encode('�'),utf8_encode('�'),utf8_encode('�'),utf8_encode('�'),utf8_encode('�'),utf8_encode('�'),utf8_encode('�'),utf8_encode('�'),utf8_encode('�'),utf8_encode('�'),utf8_encode('�'),utf8_encode('�'),utf8_encode('�'),utf8_encode('�'),utf8_encode('�'),utf8_encode('�'),utf8_encode('�'),utf8_encode('�'),utf8_encode('�'),utf8_encode('�'),utf8_encode('�'),utf8_encode('�'),utf8_encode('�'),utf8_encode('�'),utf8_encode('�'),utf8_encode('�'),utf8_encode('�'),utf8_encode('�'),utf8_encode('�'),utf8_encode('�'),utf8_encode('�'),utf8_encode('�'),utf8_encode('�'),utf8_encode('�'),utf8_encode('�'),utf8_encode('�'),utf8_encode('�'),utf8_encode('�'),utf8_encode('�'),utf8_encode('�'),utf8_encode('�'),utf8_encode('�'),utf8_encode('�'),utf8_encode('�'),utf8_encode('�'),utf8_encode('�'),utf8_encode('�'),utf8_encode('�'),utf8_encode('�'),utf8_encode('�'),utf8_encode('�'),utf8_encode('�'),utf8_encode('�'),utf8_encode('�'),utf8_encode('�'),utf8_encode('�'),chr(128),chr(129),chr(130),chr(131),chr(132),chr(133),chr(134),chr(135),chr(136),chr(137),chr(138),chr(139),chr(140),chr(141),chr(142),chr(143),chr(144),chr(145),chr(146),chr(147),chr(148),chr(149),chr(150),chr(151),chr(152),chr(153),chr(154),chr(155),chr(156),chr(157),chr(158),chr(159),chr(160),chr(161),chr(162),chr(163),chr(164),chr(165),chr(166),chr(167),chr(168),chr(169),chr(170),chr(171),chr(172),chr(173),chr(174),chr(175),chr(176),chr(177),chr(178),chr(179),chr(180),chr(181),chr(182),chr(183),chr(184),chr(185),chr(186),chr(187),chr(188),chr(189),chr(190),chr(191),chr(192),chr(193),chr(194),chr(195),chr(196),chr(197),chr(198),chr(199),chr(200),chr(201),chr(202),chr(203),chr(204),chr(205),chr(206),chr(207),chr(208),chr(209),chr(210),chr(211),chr(212),chr(213),chr(214),chr(215),chr(216),chr(217),chr(218),chr(219),chr(220),chr(221),chr(222),chr(223),chr(224),chr(225),chr(226),chr(227),chr(228),chr(229),chr(230),chr(231),chr(232),chr(233),chr(234),chr(235),chr(236),chr(237),chr(238),chr(239),chr(240),chr(241),chr(242),chr(243),chr(244),chr(245),chr(246),chr(247),chr(248),chr(249),chr(250),chr(251),chr(252),chr(253),chr(254),chr(255),chr(256));
-	$htmlcode = array('&bdquo;','&ldquo;','&ndash;',' &#34;','&ndash;','&mdash;','&lsquo;','&rsquo;','&ldquo;','&rdquo;','&bdquo;','&bull;' ,'&hellip;','&euro;','&sbquo;','&fnof;','&bdquo;','&hellip;','&dagger;','&Dagger;','&circ;','&permil;','&Scaron;','&lsaquo;','&OElig;','&#x017D;','&lsquo;','&rsquo;','&ldquo;','&rdquo;','&bull;','&ndash;','&mdash;','&tilde;','&trade;','&scaron;','&rsaquo;','&oelig;','&#x017E;','&Yuml;','&iexcl;','&cent;','&pound;','&curren;','&yen;','&brvbar;','&sect;','&uml;','&copy;','&ordf;','&laquo;','&not;','&reg;','&macr;','&deg;','&plusmn;','&sup2;','&sup3;','&acute;','&micro;','&para;','&middot;','&cedil;','&supl;','&ordm;','&raquo;','&frac14;','&frac12;','&frac34;','&iquest;','&Agrave;','&Aacute;','&Acirc;','&Atilde;','&Auml;','&Aring;','&AElig;','&Ccedil;','&Egrave;','&Eacute;','&Ecirc;','&Euml;','&Igrave;','&Iacute;','&Icirc;','&Iuml;','&ETH;','&Ntilde;','&Ograve;','&Oacute;','&Ocirc;','&Otilde;','&Ouml;','&times;','&Oslash;','&Ugrave;','&Uacute;','&Ucirc;','&Uuml;','&Yacute;','&THORN;','&szlig;','&agrave;','&aacute;','&acirc;','&atilde;','&auml;','&aring;','&aelig;','&ccedil;','&egrave;','&eacute;','&ecirc;','&euml;','&igrave;','&iacute;','&icirc;','&iuml;','&eth;','&ntilde;','&ograve;','&oacute;','&ocirc;','&otilde;','&ouml;','&divide;','&oslash;','&ugrave;','&uacute;','&ucirc;','&uuml;','&yacute;','&thorn;','&yuml;','&euro;','&sbquo;','&fnof;','&bdquo;','&hellip;','&dagger;','&Dagger;','&circ;','&permil;','&Scaron;','&lsaquo;','&OElig;','&#x017D;','&lsquo;','&rsquo;','&ldquo;','&rdquo;','&bull;','&ndash;','&mdash;','&tilde;','&trade;','&scaron;','&rsaquo;','&oelig;','&#x017E;','&Yuml;','&iexcl;','&cent;','&pound;','&curren;','&yen;','&brvbar;','&sect;','&uml;','&copy;','&ordf;','&laquo;','&not;','&reg;','&macr;','&deg;','&plusmn;','&sup2;','&sup3;','&acute;','&micro;','&para;','&middot;','&cedil;','&supl;','&ordm;','&raquo;','&frac14;','&frac12;','&frac34;','&iquest;','&Agrave;','&Aacute;','&Acirc;','&Atilde;','&Auml;','&Aring;','&AElig;','&Ccedil;','&Egrave;','&Eacute;','&Ecirc;','&Euml;','&Igrave;','&Iacute;','&Icirc;','&Iuml;','&ETH;','&Ntilde;','&Ograve;','&Oacute;','&Ocirc;','&Otilde;','&Ouml;','&times;','&Oslash;','&Ugrave;','&Uacute;','&Ucirc;','&Uuml;','&Yacute;','&THORN;','&szlig;','&agrave;','&aacute;','&acirc;','&atilde;','&auml;','&aring;','&aelig;','&ccedil;','&egrave;','&eacute;','&ecirc;','&euml;','&igrave;','&iacute;','&icirc;','&iuml;','&eth;','&ntilde;','&ograve;','&oacute;','&ocirc;','&otilde;','&ouml;','&divide;','&oslash;','&ugrave;','&uacute;','&ucirc;','&uuml;','&yacute;','&thorn;','&yuml;','&euro;','','&sbquo;','&fnof;','&bdquo;','&hellip;','&dagger;','&Dagger;','&circ;','&permil;','&Scaron;','&lsaquo;','&OElig;','','&#x017D;','','','&lsquo;','&rsquo;','&ldquo;','&rdquo;','&bull;','&ndash;','&mdash;','&tilde;','&trade;','&scaron;','&rsaquo;','&oelig;','','&#x017E;','&Yuml;','&nbsp;','&iexcl;','&iexcl;','&iexcl;','&iexcl;','&yen;','&brvbar;','&sect;','&uml;','&copy;','&ordf;','&laquo;','&not;','�&shy;','&reg;','&macr;','&deg;','&plusmn;','&sup2;','&sup3;','&acute;','&micro;','&para;','&middot;','&cedil;','&supl;','&ordm;','&raquo;','&frac14;','&frac12;','&frac34;','&iquest;','&Agrave;','&Aacute;','&Acirc;','&Atilde;','&Auml;','&Aring;','&AElig;','&Ccedil;','&Egrave;','&Eacute;','&Ecirc;','&Euml;','&Igrave;','&Iacute;','&Icirc;','&Iuml;','&ETH;','&Ntilde;','&Ograve;','&Oacute;','&Ocirc;','&Otilde;','&Ouml;','&times;','&Oslash;','&Ugrave;','&Uacute;','&Ucirc;','&Uuml;','&Yacute;','&THORN;','&szlig;','&agrave;','&aacute;','&acirc;','&atilde;','&auml;','&aring;','&aelig;','&ccedil;','&egrave;','&eacute;','&ecirc;','&euml;','&igrave;','&iacute;','&icirc;','&iuml;','&eth;','&ntilde;','&ograve;','&oacute;','&ocirc;','&otilde;','&ouml;','&divide;','&oslash;','&ugrave;','&uacute;','&ucirc;','&uuml;','&yacute;','&thorn;','&yuml;');
+	$umlaute  = array('„','“','–',' \&#34;','&#8211;','&#8212;','&#8216;','&#8217;','&#8220;','&#8221;','&#8222;','&#8226;','&#8230;' ,
+	'�'     ,'�'      ,'�'     ,'�'      ,'�'       ,'�'       ,'�'       ,'�'     ,'�'       ,'�'       ,'�'       ,'�'      ,'�'       ,
+	'�'      ,'�'      ,'�'      ,'�'      ,'�'     ,'�'      ,'�'      ,'�'      ,'�'      ,'�'       ,'�','�','�','�','�','�','�','�','�',
+	'�','�','�','�','�','�','�','�','�','�','�','�','�','�','�','�','�','�','�','�','�','�','�','�','�','�','�','�','�','�','�','�','�','�',
+	'�','�','�','�','�','�','�','�','�','�','�','�','�','�','�','�','�','�','�','�','�','�','�','�','�','�','�','�','�','�','�','�','�','�',
+	'�','�','�','�','�','�','�','�','�','�','�','�','�','�','�','�','�','�','�','�','�',utf8_encode('�'),utf8_encode('�'),utf8_encode('�'),
+	utf8_encode('�'),utf8_encode('�'),utf8_encode('�'),utf8_encode('�'),utf8_encode('�'),utf8_encode('�'),utf8_encode('�'),utf8_encode('�'),
+	utf8_encode('�'),utf8_encode('�'),utf8_encode('�'),utf8_encode('�'),utf8_encode('�'),utf8_encode('�'),utf8_encode('�'),utf8_encode('�'),
+	utf8_encode('�'),utf8_encode('�'),utf8_encode('�'),utf8_encode('�'),utf8_encode('�'),utf8_encode('�'),utf8_encode('�'),utf8_encode('�'),
+	utf8_encode('�'),utf8_encode('�'),utf8_encode('�'),utf8_encode('�'),utf8_encode('�'),utf8_encode('�'),utf8_encode('�'),utf8_encode('�'),
+	utf8_encode('�'),utf8_encode('�'),utf8_encode('�'),utf8_encode('�'),utf8_encode('�'),utf8_encode('�'),utf8_encode('�'),utf8_encode('�'),
+	utf8_encode('�'),utf8_encode('�'),utf8_encode('�'),utf8_encode('�'),utf8_encode('�'),utf8_encode('�'),utf8_encode('�'),utf8_encode('�'),
+	utf8_encode('�'),utf8_encode('�'),utf8_encode('�'),utf8_encode('�'),utf8_encode('�'),utf8_encode('�'),utf8_encode('�'),utf8_encode('�'),
+	utf8_encode('�'),utf8_encode('�'),utf8_encode('�'),utf8_encode('�'),utf8_encode('�'),utf8_encode('�'),utf8_encode('�'),utf8_encode('�'),
+	utf8_encode('�'),utf8_encode('�'),utf8_encode('�'),utf8_encode('�'),utf8_encode('�'),utf8_encode('�'),utf8_encode('�'),utf8_encode('�'),
+	utf8_encode('�'),utf8_encode('�'),utf8_encode('�'),utf8_encode('�'),utf8_encode('�'),utf8_encode('�'),utf8_encode('�'),utf8_encode('�'),
+	utf8_encode('�'),utf8_encode('�'),utf8_encode('�'),utf8_encode('�'),utf8_encode('�'),utf8_encode('�'),utf8_encode('�'),utf8_encode('�'),
+	utf8_encode('�'),utf8_encode('�'),utf8_encode('�'),utf8_encode('�'),utf8_encode('�'),utf8_encode('�'),utf8_encode('�'),utf8_encode('�'),
+	utf8_encode('�'),utf8_encode('�'),utf8_encode('�'),utf8_encode('�'),utf8_encode('�'),utf8_encode('�'),utf8_encode('�'),utf8_encode('�'),
+	utf8_encode('�'),utf8_encode('�'),utf8_encode('�'),utf8_encode('�'),utf8_encode('�'),utf8_encode('�'),utf8_encode('�'),utf8_encode('�'),
+	utf8_encode('�'),utf8_encode('�'),utf8_encode('�'),utf8_encode('�'),utf8_encode('�'),utf8_encode('�'),chr(128),chr(129),chr(130),
+	chr(131),chr(132),chr(133),chr(134),chr(135),chr(136),chr(137),chr(138),chr(139),chr(140),chr(141),chr(142),chr(143),chr(144),chr(145),
+	chr(146),chr(147),chr(148),chr(149),chr(150),chr(151),chr(152),chr(153),chr(154),chr(155),chr(156),chr(157),chr(158),chr(159),chr(160),
+	chr(161),chr(162),chr(163),chr(164),chr(165),chr(166),chr(167),chr(168),chr(169),chr(170),chr(171),chr(172),chr(173),chr(174),chr(175),
+	chr(176),chr(177),chr(178),chr(179),chr(180),chr(181),chr(182),chr(183),chr(184),chr(185),chr(186),chr(187),chr(188),chr(189),chr(190),
+	chr(191),chr(192),chr(193),chr(194),chr(195),chr(196),chr(197),chr(198),chr(199),chr(200),chr(201),chr(202),chr(203),chr(204),chr(205),
+	chr(206),chr(207),chr(208),chr(209),chr(210),chr(211),chr(212),chr(213),chr(214),chr(215),chr(216),chr(217),chr(218),chr(219),chr(220),
+	chr(221),chr(222),chr(223),chr(224),chr(225),chr(226),chr(227),chr(228),chr(229),chr(230),chr(231),chr(232),chr(233),chr(234),chr(235),
+	chr(236),chr(237),chr(238),chr(239),chr(240),chr(241),chr(242),chr(243),chr(244),chr(245),chr(246),chr(247),chr(248),chr(249),chr(250),
+	chr(251),chr(252),chr(253),chr(254),chr(255),chr(256));
+	$htmlcode = array('&bdquo;','&ldquo;','&ndash;',' &#34;','&ndash;','&mdash;','&lsquo;','&rsquo;','&ldquo;','&rdquo;','&bdquo;','&bull;' ,
+	'&hellip;','&euro;','&sbquo;','&fnof;','&bdquo;','&hellip;','&dagger;','&Dagger;','&circ;','&permil;','&Scaron;','&lsaquo;','&OElig;',
+	'&#x017D;','&lsquo;','&rsquo;','&ldquo;','&rdquo;','&bull;','&ndash;','&mdash;','&tilde;','&trade;','&scaron;','&rsaquo;','&oelig;',
+	'&#x017E;','&Yuml;','&iexcl;','&cent;','&pound;','&curren;','&yen;','&brvbar;','&sect;','&uml;','&copy;','&ordf;','&laquo;','&not;',
+	'&reg;','&macr;','&deg;','&plusmn;','&sup2;','&sup3;','&acute;','&micro;','&para;','&middot;','&cedil;','&supl;','&ordm;','&raquo;',
+	'&frac14;','&frac12;','&frac34;','&iquest;','&Agrave;','&Aacute;','&Acirc;','&Atilde;','&Auml;','&Aring;','&AElig;','&Ccedil;','&Egrave;',
+	'&Eacute;','&Ecirc;','&Euml;','&Igrave;','&Iacute;','&Icirc;','&Iuml;','&ETH;','&Ntilde;','&Ograve;','&Oacute;','&Ocirc;','&Otilde;',
+	'&Ouml;','&times;','&Oslash;','&Ugrave;','&Uacute;','&Ucirc;','&Uuml;','&Yacute;','&THORN;','&szlig;','&agrave;','&aacute;','&acirc;',
+	'&atilde;','&auml;','&aring;','&aelig;','&ccedil;','&egrave;','&eacute;','&ecirc;','&euml;','&igrave;','&iacute;','&icirc;','&iuml;',
+	'&eth;','&ntilde;','&ograve;','&oacute;','&ocirc;','&otilde;','&ouml;','&divide;','&oslash;','&ugrave;','&uacute;','&ucirc;','&uuml;',
+	'&yacute;','&thorn;','&yuml;','&euro;','&sbquo;','&fnof;','&bdquo;','&hellip;','&dagger;','&Dagger;','&circ;','&permil;','&Scaron;',
+	'&lsaquo;','&OElig;','&#x017D;','&lsquo;','&rsquo;','&ldquo;','&rdquo;','&bull;','&ndash;','&mdash;','&tilde;','&trade;','&scaron;',
+	'&rsaquo;','&oelig;','&#x017E;','&Yuml;','&iexcl;','&cent;','&pound;','&curren;','&yen;','&brvbar;','&sect;','&uml;','&copy;','&ordf;',
+	'&laquo;','&not;','&reg;','&macr;','&deg;','&plusmn;','&sup2;','&sup3;','&acute;','&micro;','&para;','&middot;','&cedil;','&supl;',
+	'&ordm;','&raquo;','&frac14;','&frac12;','&frac34;','&iquest;','&Agrave;','&Aacute;','&Acirc;','&Atilde;','&Auml;','&Aring;','&AElig;',
+	'&Ccedil;','&Egrave;','&Eacute;','&Ecirc;','&Euml;','&Igrave;','&Iacute;','&Icirc;','&Iuml;','&ETH;','&Ntilde;','&Ograve;','&Oacute;',
+	'&Ocirc;','&Otilde;','&Ouml;','&times;','&Oslash;','&Ugrave;','&Uacute;','&Ucirc;','&Uuml;','&Yacute;','&THORN;','&szlig;','&agrave;',
+	'&aacute;','&acirc;','&atilde;','&auml;','&aring;','&aelig;','&ccedil;','&egrave;','&eacute;','&ecirc;','&euml;','&igrave;','&iacute;',
+	'&icirc;','&iuml;','&eth;','&ntilde;','&ograve;','&oacute;','&ocirc;','&otilde;','&ouml;','&divide;','&oslash;','&ugrave;','&uacute;',
+	'&ucirc;','&uuml;','&yacute;','&thorn;','&yuml;','&euro;','','&sbquo;','&fnof;','&bdquo;','&hellip;','&dagger;','&Dagger;','&circ;',
+	'&permil;','&Scaron;','&lsaquo;','&OElig;','','&#x017D;','','','&lsquo;','&rsquo;','&ldquo;','&rdquo;','&bull;','&ndash;','&mdash;',
+	'&tilde;','&trade;','&scaron;','&rsaquo;','&oelig;','','&#x017E;','&Yuml;','&nbsp;','&iexcl;','&iexcl;','&iexcl;','&iexcl;','&yen;',
+	'&brvbar;','&sect;','&uml;','&copy;','&ordf;','&laquo;','&not;','�&shy;','&reg;','&macr;','&deg;','&plusmn;','&sup2;','&sup3;',
+	'&acute;','&micro;','&para;','&middot;','&cedil;','&supl;','&ordm;','&raquo;','&frac14;','&frac12;','&frac34;','&iquest;','&Agrave;',
+	'&Aacute;','&Acirc;','&Atilde;','&Auml;','&Aring;','&AElig;','&Ccedil;','&Egrave;','&Eacute;','&Ecirc;','&Euml;','&Igrave;','&Iacute;',
+	'&Icirc;','&Iuml;','&ETH;','&Ntilde;','&Ograve;','&Oacute;','&Ocirc;','&Otilde;','&Ouml;','&times;','&Oslash;','&Ugrave;','&Uacute;',
+	'&Ucirc;','&Uuml;','&Yacute;','&THORN;','&szlig;','&agrave;','&aacute;','&acirc;','&atilde;','&auml;','&aring;','&aelig;','&ccedil;',
+	'&egrave;','&eacute;','&ecirc;','&euml;','&igrave;','&iacute;','&icirc;','&iuml;','&eth;','&ntilde;','&ograve;','&oacute;','&ocirc;',
+	'&otilde;','&ouml;','&divide;','&oslash;','&ugrave;','&uacute;','&ucirc;','&uuml;','&yacute;','&thorn;','&yuml;');
 	//$s_String = str_replace($umlaute, $htmlcode, $s_String);
 	if ( version_compare(phpversion(), '5.0.0', '>=') )
 		$s_String = utf8_encode( html_entity_decode( str_replace($umlaute, $htmlcode, $s_String) ) );
@@ -483,7 +573,7 @@ function RSSImport_Shortcode($atts) {
 			'noitems' => __('No items, feed is empty.', FB_RSSI_TEXTDOMAIN ),
 			'after_noitems' => '</p>',
 			'before_error' => '<p>',
-			'error' => __('Error: Feed has a error or is not valid', FB_RSSI_TEXTDOMAIN ),
+			'error' => __('Error: Feed has an error or is not valid', FB_RSSI_TEXTDOMAIN ),
 			'after_error' => '</p>',
 			'paging' => 0,
 			'prev_paging_link' => __( '&laquo; Previous', FB_RSSI_TEXTDOMAIN ),
@@ -589,7 +679,14 @@ function RSSImport_insert_button() {
 	*/
 	var id = 'rssimport',
 	    text = '<?php _e( 'RSSImport', FB_RSSI_TEXTDOMAIN ); ?>',
-	    start = '[RSSImport display="5" feedurl="http://feedurl.com/" before_desc="<br />" displaydescriptions="TRUE" after_desc=" " html="FALSE" truncatedescchar="200" truncatedescstring=" ... " truncatetitlechar=" " truncatetitlestring=" ... " before_date=" <small>" date="FALSE" after_date="</small>" date_format="" before_creator=" <small>" creator="FALSE" after_creator="</small>" start_items="<ul>" end_items="</ul>" start_item="<li>" end_item="</li>" target="" rel="" desc4title="" charsetscan="FALSE" debug="FALSE" before_noitems="<p>" noitems="No items, feed is empty." after_noitems="</p>" before_error="<p>" error="Error: Feed has a error or is not valid" after_error="</p>" paging="FALSE" prev_paging_link="&laquo; Previous" next_paging_link="Next &raquo;" prev_paging_title="more items" next_paging_title="more items" use_simplepie="FALSE"]',
+	    start = '[RSSImport display="5" feedurl="http://feedurl.com/" before_desc="<br />" displaydescriptions="TRUE" after_desc=" " ' +
+	    		'html="FALSE" truncatedescchar="200" truncatedescstring=" ... " truncatetitlechar="" truncatetitlestring=" ... " ' +
+	    		'before_date=" <small>" date="FALSE" after_date="</small>" date_format="" before_creator=" <small>" creator="FALSE" ' +
+	    		'after_creator="</small>" start_items="<ul>" end_items="</ul>" start_item="<li>" end_item="</li>" target="" rel="" ' +
+	    		'desc4title="" charsetscan="FALSE" debug="FALSE" before_noitems="<p>" noitems="No items, feed is empty." ' +
+	    		'after_noitems="</p>" before_error="<p>" error="Error: Feed has an error or is not valid" after_error="</p>" ' +
+	    		'paging="FALSE" prev_paging_link="&laquo; Previous" next_paging_link="Next &raquo;" prev_paging_title="more items" ' +
+	    		'next_paging_title="more items" use_simplepie="FALSE"]',
 	    end = '',
 	    access = 'r',
 	    title = '<?php _e( 'Import a feed with RSSImport', FB_RSSI_TEXTDOMAIN ); ?>';
@@ -611,13 +708,21 @@ function RSSImport_insert_button_old() {
 		//<![CDATA[
 		if ( typeof edButtons != \'undefined\' ) {
 			var length = edButtons.length;
-			edButtons[length] = new edButton(\'RSSImport\', \'$context\', \'[RSSImport display="5" feedurl="http://feedurl.com/" before_desc="<br />" displaydescriptions="TRUE" after_desc=" " html="FALSE" truncatedescchar="200" truncatedescstring=" ... " truncatetitlechar=" " truncatetitlestring=" ... " before_date=" <small>" date="FALSE" after_date="</small>" date_format="" before_creator=" <small>" creator="FALSE" after_creator="</small>" start_items="<ul>" end_items="</ul>" start_item="<li>" end_item="</li>" target="" rel="" desc4title="" charsetscan="FALSE" debug="FALSE" before_noitems="<p>" noitems="No items, feed is empty." after_noitems="</p>" before_error="<p>" error="Error: Feed has a error or is not valid" after_error="</p>" paging="FALSE" prev_paging_link="&laquo; Previous" next_paging_link="Next &raquo;" prev_paging_title="more items" next_paging_title="more items" use_simplepie="FALSE"]\', \'\', \'\');
+			edButtons[length] = new edButton(\'RSSImport\', \'$context\', \'[RSSImport display="5" feedurl="http://feedurl.com/"'.
+	    		' before_desc="<br />" displaydescriptions="TRUE" after_desc=" " html="FALSE" truncatedescchar="200" truncatedescstring=" ... "'.
+	    		' truncatetitlechar=" " truncatetitlestring=" ... " before_date=" <small>" date="FALSE" after_date="</small>"'.
+	    		' date_format="" before_creator=" <small>" creator="FALSE" after_creator="</small>" start_items="<ul>" end_items="</ul>"'.
+	    		' start_item="<li>" end_item="</li>" target="" rel="" desc4title="" charsetscan="FALSE" debug="FALSE" before_noitems="<p>"'.
+	    		' noitems="No items, feed is empty." after_noitems="</p>" before_error="<p>" error="Error: Feed has an error or is not valid"'.
+	    		' after_error="</p>" paging="FALSE" prev_paging_link="&laquo; Previous" next_paging_link="Next &raquo;"'.
+	    		' prev_paging_title="more items" next_paging_title="more items" use_simplepie="FALSE"]\', \'\', \'\');
 			function RSSImport_tag(id) {
 				id = id.replace(/RSSImport_/, \'\');
 				edInsertTag(edCanvas, id);
 			}
 			jQuery(document).ready(function() {
-				content = \'<input id="RSSImport_\'+length+\'" class="ed_button" type="button" value="' . __( 'RSSImport', FB_RSSI_TEXTDOMAIN ) . '" title="' . __( 'Import a feed with RSSImport', FB_RSSI_TEXTDOMAIN ) . '" onclick="RSSImport_tag(this.id);" />\';
+				content = \'<input id="RSSImport_\'+length+\'" class="ed_button" type="button" value="' . __( 'RSSImport', FB_RSSI_TEXTDOMAIN ) .
+	    		'" title="' . __( 'Import a feed with RSSImport', FB_RSSI_TEXTDOMAIN ) . '" onclick="RSSImport_tag(this.id);" />\';
 				jQuery("#ed_toolbar").append(content);
 			});
 		}
@@ -951,7 +1056,7 @@ if ( class_exists('WP_Widget') ) {
 			$html                = empty($instance['html']) ? '0' : $instance['html'];
 			$truncatedescchar    = empty($instance['truncatedescchar']) ? '200' : $instance['truncatedescchar'];
 			$truncatedescstring  = empty($instance['truncatedescstring']) ? '' : $instance['truncatedescstring'];
-			$truncatetitlechar   = empty($instance['truncatetitlechar']) ? ' ... ' : $instance['truncatetitlechar'];
+			$truncatetitlechar   = empty($instance['truncatetitlechar']) ? '' : $instance['truncatetitlechar'];
 			$truncatetitlestring = empty($instance['truncatetitlestring']) ? ' ... ' : $instance['truncatetitlestring'];
 			$before_date         = empty($instance['before_date']) ? ' <small>' : $instance['before_date'];
 			$date                = empty($instance['date']) ? '0' : $instance['date'];
@@ -973,7 +1078,7 @@ if ( class_exists('WP_Widget') ) {
 			$noitems             = empty($instance['noitems']) ? __('No items, feed is empty.', FB_RSSI_TEXTDOMAIN) : $instance['noitems'];
 			$after_noitems       = empty($instance['after_noitems']) ? '</p>' : $instance['after_noitems'];
 			$before_error        = empty($instance['before_error']) ? '<p>' : $instance['before_error'];
-			$error               = empty($instance['error']) ? __('Error: Feed has a error or is not valid', FB_RSSI_TEXTDOMAIN) : $instance['error'];
+			$error               = empty($instance['error']) ? __('Error: Feed has an error or is not valid', FB_RSSI_TEXTDOMAIN) : $instance['error'];
 			$after_error         = empty($instance['after_error']) ? '</p>' : $instance['after_error'];
 			$paging              = empty($instance['paging']) ? '0' : $instance['paging'];
 			$prev_paging_link    = empty($instance['prev_paging_link']) ? __('&laquo; Previous', FB_RSSI_TEXTDOMAIN) : $instance['prev_paging_link'];
@@ -1094,7 +1199,7 @@ if ( class_exists('WP_Widget') ) {
 													 'noitems' => __('No items, feed is empty.', FB_RSSI_TEXTDOMAIN),
 													 'after_noitems' => '</p>',
 													 'before_error' => '<p>',
-													 'error' => __('Error: Feed has a error or is not valid', FB_RSSI_TEXTDOMAIN),
+													 'error' => __('Error: Feed has an error or is not valid', FB_RSSI_TEXTDOMAIN),
 													 'after_error' => '</p>',
 													 'paging' => 0,
 													 'prev_paging_link' => __('&laquo; Previous', FB_RSSI_TEXTDOMAIN),
@@ -1172,7 +1277,7 @@ if ( class_exists('WP_Widget') ) {
 				</p>
 				<p>
 					<label for="<?php echo $this->get_field_id('after_desc'); ?>"><?php _e( 'After Description:', FB_RSSI_TEXTDOMAIN ) ?> <input class="widefat code" id="<?php echo $this->get_field_id('after_desc'); ?>" name="<?php echo $this->get_field_name('after_desc'); ?>" type="text" value="<?php echo $after_desc; ?>" /></label>
-					<br /><small><?php _e( 'You can use the follow strings for create custom links:', FB_RSSI_TEXTDOMAIN ); ?> <code>%title%</code>, <code>%href%</code>
+					<br /><small><?php _e( 'You can use the following strings to create custom links:', FB_RSSI_TEXTDOMAIN ); ?> <code>%title%</code>, <code>%href%</code>
 					<br /><?php _e( 'Example:', FB_RSSI_TEXTDOMAIN ); ?> <code>&lt;a href="%href%" target="self" rel="follow"&gt;%title%&lt;/a&gt;</code></small>
 				</p>
 				<p>

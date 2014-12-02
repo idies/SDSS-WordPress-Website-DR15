@@ -5,14 +5,14 @@ msgstr ""
 "POT-Creation-Date: 2014-08-02 23:07+0100\n"
 "PO-Revision-Date: 2014-08-02 23:07+0100\n"
 "Last-Translator: \n"
-"Language-Team: \n"
+"Language-Team: Web Geeks\n"
 "Language: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
+"X-Poedit-Language: Romanian\n"
+"X-Poedit-Country: Romania\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Poedit-Language: German\n"
-"X-Poedit-Country: GERMANY\n"
 "X-Poedit-SourceCharset: utf-8\n"
 "X-Poedit-KeywordsList: __;_e;__ngettext:1,2;_n:1,2;__ngettext_noop:1,2;_n_noop:1,2;_c,_nc:4c,1,2;_x:1,2c;_ex:1,2c;_nx:4c,1,2;_nx_noop:4c,1,2\n"
 "X-Poedit-Basepath: ../\n"
@@ -29,28 +29,28 @@ msgstr ""
 #: rssimport.php:1059
 #: rssimport.php:1180
 msgid "No items, feed is empty."
-msgstr "Elementų nerasta, padavimas tuščias."
+msgstr "Articole, alimentare este gol."
 
 # @ rssimport
 #: rssimport.php:557
 #: rssimport.php:1062
 #: rssimport.php:1183
 msgid "Error: Feed has an error or is not valid"
-msgstr "Klaida: Padavime yra klaidų arba jis nėra teisingas"
+msgstr "Eroare: Are o eroare sau nu este valid"
 
 # @ rssimport
 #: rssimport.php:560
 #: rssimport.php:1065
 #: rssimport.php:1186
+#, fuzzy
 msgid "&laquo; Previous"
-msgstr "&laquo; Ankstesnis"
+msgstr "«Anterioare"
 
-# @ rssimport
 #: rssimport.php:561
 #: rssimport.php:1066
 #: rssimport.php:1187
 msgid "Next &raquo;"
-msgstr "Kitas &raquo;"
+msgstr ""
 
 # @ rssimport
 #: rssimport.php:562
@@ -60,7 +60,7 @@ msgstr "Kitas &raquo;"
 #: rssimport.php:1188
 #: rssimport.php:1189
 msgid "more items"
-msgstr "daugiau elementų"
+msgstr "mai multe elemente"
 
 # @ rssimport
 # @ default
@@ -74,42 +74,42 @@ msgstr "RSSImport"
 #: rssimport.php:673
 #: rssimport.php:706
 msgid "Import a feed with RSSImport"
-msgstr "Importuoti padavimą su RSSImport"
+msgstr "Import un flux cu RSSImport"
 
 # @ rssimport
 #: rssimport.php:1023
 msgid "Entries from any RSS or Atom feed"
-msgstr "Įrašai iš bet kurio RSS arba Atom padavimo"
+msgstr "Intrările din orice RSS sau Atom feed"
 
 # @ rssimport
 #: rssimport.php:1237
 msgid "Title:"
-msgstr "Antraštė:"
+msgstr "Titlu:"
 
 # @ rssimport
 #: rssimport.php:1240
 msgid "URL for Title (incl. http://):"
-msgstr "Universalioji nuoroda Antraštei (įtraukti http://):"
+msgstr "URL-ul pentru titlu (incl. http://):"
 
 # @ rssimport
 #: rssimport.php:1243
 msgid "Display:"
-msgstr "Vaizduoti:"
+msgstr "Afişare:"
 
 # @ rssimport
 #: rssimport.php:1246
 msgid "FeedURL:"
-msgstr "Padavimo universalioji nuoroda:"
+msgstr "FeedURL:"
 
 # @ rssimport
 #: rssimport.php:1249
 msgid "Before Description:"
-msgstr "Prieš Aprašą:"
+msgstr "Înainte de Descriere:"
 
 # @ rssimport
 #: rssimport.php:1252
 msgid "Display Description:"
-msgstr "Vaizduoti Aprašą:"
+msgstr "Afişare Descriere:"
 
 # @ rssimport
 #: rssimport.php:1254
@@ -123,7 +123,7 @@ msgstr "Vaizduoti Aprašą:"
 #: rssimport.php:1401
 #: rssimport.php:1409
 msgid "False"
-msgstr "Netiesa"
+msgstr "False"
 
 # @ rssimport
 #: rssimport.php:1255
@@ -137,22 +137,22 @@ msgstr "Netiesa"
 #: rssimport.php:1402
 #: rssimport.php:1410
 msgid "True"
-msgstr "Tiesa"
+msgstr "Adevărat"
 
 # @ rssimport
 #: rssimport.php:1260
 msgid "After Description:"
-msgstr "Po Aprašymo:"
+msgstr "După descrierea:"
 
 # @ rssimport
 #: rssimport.php:1261
 msgid "You can use the following strings to create custom links:"
-msgstr "Jūs galite naudoti šiuos saitus, individualių nuorodų kūrimui:"
+msgstr "Aveţi posibilitatea să utilizaţi urmaţi siruri de caractere pentru a crea linkuri particularizate:"
 
 # @ rssimport
 #: rssimport.php:1262
 msgid "Example:"
-msgstr "Pavyzdys:"
+msgstr "Exemplu:"
 
 # @ rssimport
 #: rssimport.php:1265
@@ -162,27 +162,27 @@ msgstr "HTML:"
 # @ rssimport
 #: rssimport.php:1273
 msgid "Truncate Description Char:"
-msgstr "Trumpinti Aprašymo Ženklus:"
+msgstr "Trunchiaţi Char Descriere:"
 
 # @ rssimport
 #: rssimport.php:1276
 msgid "Truncate Description String (HTML):"
-msgstr "Trumpinti Aprašymo Eilutę (HTML):"
+msgstr "Trunchiaţi Descriere String (HTML):"
 
 # @ rssimport
 #: rssimport.php:1279
 msgid "Truncate Title Char:"
-msgstr "Trumpinti Antraštės Ženklus:"
+msgstr "Trunchiaţi Char titlu:"
 
 # @ rssimport
 #: rssimport.php:1282
 msgid "Truncate Title String (HTML):"
-msgstr "Trumpinti Antraštės Eilutę (HTML):"
+msgstr "Trunchiaţi titlul şir (HTML):"
 
 # @ rssimport
 #: rssimport.php:1285
 msgid "Before Date (HTML):"
-msgstr "Prieš Datą (HTML):"
+msgstr "Înainte de data (HTML):"
 
 # @ rssimport
 #: rssimport.php:1288
@@ -192,150 +192,150 @@ msgstr "Data:"
 # @ rssimport
 #: rssimport.php:1296
 msgid "After Date (HTML):"
-msgstr "Po Datos(HTML):"
+msgstr "Data (HTML):"
 
 # @ rssimport
 #: rssimport.php:1299
 msgid "Date Formatting:"
-msgstr "Datos Ženklinimas:"
+msgstr "Data de formatare:"
 
 # @ rssimport
 #: rssimport.php:1300
 msgid "Leave empty for use the date format of your WordPress settings."
-msgstr "Palikite šį laukelį tuščią ir naudokite datos ženklinimą, kaip nustatyta Jūsų WordPress nuostatose."
+msgstr "Lăsaţi necompletat pentru utilizarea formatul de dată setările de WordPress."
 
 # @ rssimport
 #: rssimport.php:1300
 msgid "Documentation on date formatting"
-msgstr "Datos ženklinimo dokumentacija"
+msgstr "Documentația privind data de formatare"
 
 # @ rssimport
 #: rssimport.php:1303
 msgid "Before Creator (HTML):"
-msgstr "Prieš Autorių (HTML):"
+msgstr "Înainte de Creator (HTML):"
 
 # @ rssimport
 #: rssimport.php:1306
 msgid "Creator:"
-msgstr "Autorius:"
+msgstr "Creator:"
 
 # @ rssimport
 #: rssimport.php:1314
 msgid "After Creator (HTML):"
-msgstr "Po Autoriaus (HTML):"
+msgstr "După Creator (HTML):"
 
 # @ rssimport
 #: rssimport.php:1317
 msgid "Before Items (HTML):"
-msgstr "Prieš Elementus (HTML):"
+msgstr "Înainte de elemente (HTML):"
 
 # @ rssimport
 #: rssimport.php:1320
 msgid "After Items (HTML):"
-msgstr "Po Elementų (HTML):"
+msgstr "După elemente (HTML):"
 
 # @ rssimport
 #: rssimport.php:1323
 msgid "Before Item (HTML):"
-msgstr "Prieš Elementą (HTML):"
+msgstr "Element (HTML):"
 
 # @ rssimport
 #: rssimport.php:1326
 msgid "After Item (HTML):"
-msgstr "Po Elemento (HTML):"
+msgstr "După punctul (HTML):"
 
 # @ rssimport
 #: rssimport.php:1329
 msgid "Target Attribut:"
-msgstr "Paskirtasis Požymis:"
+msgstr "Ţintă Attribut:"
 
 # @ rssimport
 #: rssimport.php:1332
 msgid "Rel Attribut:"
-msgstr "Ryšio Požymis:"
+msgstr "Rel Attribut:"
 
 # @ rssimport
 #: rssimport.php:1335
 msgid "Desc4Title:"
-msgstr "Aprašymas Antraštei:"
+msgstr "Desc4Title:"
 
 # @ rssimport
 #: rssimport.php:1342
 msgid "Description for title-Attribut on Title-Link"
-msgstr "Antraštės gairės aprašymas Antraštės Nuorodoje"
+msgstr "Descriere pentru titlul-Attribut pe titlul-Link"
 
 # @ rssimport
 #: rssimport.php:1345
 msgid "Charsetscan:"
-msgstr "Ženklų bloko tinkrinimas:"
+msgstr "Charsetscan:"
 
 # @ rssimport
 #: rssimport.php:1353
 msgid "Debug mode:"
-msgstr "Derinimo būsena:"
+msgstr "Debug mode:"
 
 # @ rssimport
 #: rssimport.php:1361
 msgid "Before <em>No</em> Items Message (HTML):"
-msgstr "Prieš <em>Ne</em> Elementų Pranešimą (HTML):"
+msgstr "Înainte de a <em>nu</em> elemente mesajului (HTML):"
 
 # @ rssimport
 #: rssimport.php:1364
 msgid "<em>No</em> Items Message:"
-msgstr "<em>Ne</em> Elementų Pranešimą:"
+msgstr "<em>Nu</em> Elemente mesaj:"
 
 # @ rssimport
 #: rssimport.php:1367
 msgid "After <em>No</em> Items Message (HTML):"
-msgstr "Po <em>Keine</em> Elementų Pranešimą (HTML):"
+msgstr "După <em>nu</em> elemente mesajului (HTML):"
 
 # @ rssimport
 #: rssimport.php:1370
 msgid "Before Error Message (HTML):"
-msgstr "Prieš Klaidos Pranešimo (HTML):"
+msgstr "Înainte de mesaj de eroare (HTML):"
 
 # @ rssimport
 #: rssimport.php:1373
 msgid "Error Message:"
-msgstr "Klaidos Pranešimas:"
+msgstr "Mesaj de eroare:"
 
 # @ rssimport
 #: rssimport.php:1376
 msgid "After Error Message (HTML):"
-msgstr "Po Klidos Pranešimo (HTML):"
+msgstr "După mesajul de eroare (HTML):"
 
 # @ rssimport
 #: rssimport.php:1379
 msgid "Pagination:"
-msgstr "Puslapių numeravimas:"
+msgstr "Pagination:"
 
 # @ rssimport
 #: rssimport.php:1387
 msgid "Previous Pagination Link String:"
-msgstr "Buvęs Puslapių numeravimo nuorodos Saitas:"
+msgstr "Anterioare Pagination Link String:"
 
 # @ rssimport
 #: rssimport.php:1390
 msgid "Next Pagination Link String:"
-msgstr "Sekantis Puslapių numeravimo nuorodos Saitas:"
+msgstr "Următoarea Pagination Link String:"
 
 # @ rssimport
 #: rssimport.php:1393
 msgid "Previous Pagination Title String:"
-msgstr "Buvęsi Puslapių numeravimo Antraštės Saitas:"
+msgstr "Anterioare Pagination titlul String:"
 
 # @ rssimport
 #: rssimport.php:1396
 msgid "Next Pagination Title String:"
-msgstr "Sekantis Puslapių numeravimo Antraštės Saitas:"
+msgstr "Următoarea Pagination titlul String:"
 
 # @ rssimport
 #: rssimport.php:1399
 msgid "Use SimplePie class:"
-msgstr "Naudoti SimplePie klasę:"
+msgstr "Utilizarea SimplePie clasa:"
 
 # @ rssimport
 #: rssimport.php:1407
 msgid "Echo/Return:"
-msgstr "Aidas/Grįžtis:"
+msgstr "Echo/întoarcere:"
 
