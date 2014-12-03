@@ -2,9 +2,9 @@
 /*
 Plugin Name: WCK - Custom Fields and Custom Post Types Creator
 Description: WordPress Creation Kit consists of three tools that can help you create and maintain custom post types, custom taxonomies and most importantly, custom fields and metaboxes for your posts, pages or CPT's.
-Author: Reflection Media, Madalin Ungureanu, sareiodata
-Version: 1.1.1
-Author URI: http://www.reflectionmedia.ro
+Author: Cozmoslabs, Madalin Ungureanu, Cristian Antohe
+Version: 1.1.3
+Author URI: http://www.cozmoslabs.com
 
 License: GPL2
 
@@ -32,6 +32,10 @@ load_plugin_textdomain( 'wck', false, basename( dirname( __FILE__ ) ) . '/langua
 
 /* include Custom Fields Creator API */
 require_once('wordpress-creation-kit-api/wordpress-creation-kit.php');
+
+/* include Notices Class */
+if( file_exists( dirname(__FILE__).'/inc/class_notices.php' ) )
+    require_once('inc/class_notices.php');
 
 /* Create the WCK Page only for admins ( 'capability' => 'edit_theme_options' ) */
 $args = array(							
@@ -113,12 +117,13 @@ if( !file_exists( dirname(__FILE__).'/wck-fep.php' ) && !file_exists( dirname(__
 	
 /* deactivation hook */
 register_deactivation_hook( __FILE__, 'wck_deactivate_function' );
-function wck_deactivate_function() {	
-	
+function wck_deactivate_function() {
 	/* remove capabilities from subscriber that were added by FEP */
-	$role = get_role( 'subscriber' ); 	
-	$role->remove_cap( 'upload_files' );	
-	$role->remove_cap( 'edit_posts' );
+	$role = get_role( 'subscriber' );
+    if( !empty( $role ) ){
+        $role->remove_cap('upload_files');
+        $role->remove_cap('edit_posts');
+    }
 }
 
 /* check for updates */

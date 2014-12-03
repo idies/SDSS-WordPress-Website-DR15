@@ -4,3 +4,6 @@
 [submodule "wp-content/themes/sdss"]
 	path = wp-content/themes/sdss
 	url = git@bitbucket.org:idies/sdss_wptheme.git
+[submodule "voyages"]
+	path = voyages
+	url = git@bitbucket.org:idies/voyages.git
