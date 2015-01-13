@@ -7,3 +7,6 @@
 [submodule "wp-content/plugins/display-widgets-sdss"]
 	path = wp-content/plugins/display-widgets-sdss
 	url = git@bitbucket.org:idies/display-widgets-sdss.git
+[submodule "voyages"]
+	path = voyages
+	url = git@bitbucket.org:idies/voyages_videos.git
