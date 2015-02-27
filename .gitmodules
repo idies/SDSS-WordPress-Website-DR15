@@ -10,3 +10,6 @@
 [submodule "voyages"]
 	path = voyages
 	url = git@bitbucket.org:idies/voyages_videos.git
+[submodule "wp-content/plugins/idies-update-tracker"]
+	path = wp-content/plugins/idies-update-tracker
+	url = git@bitbucket.org:idies/idies-update-tracker.git
