@@ -1,12 +1,6 @@
-[submodule "wp-content/plugins/dr12-post-types"]
-	path = wp-content/plugins/dr12-post-types
-	url = git@bitbucket.org:idies/dr12-post-types.git
 [submodule "wp-content/themes/sdss"]
 	path = wp-content/themes/sdss
 	url = git@bitbucket.org:idies/sdss_wptheme.git
-[submodule "wp-content/plugins/display-widgets-sdss"]
-	path = wp-content/plugins/display-widgets-sdss
-	url = git@bitbucket.org:idies/display-widgets-sdss.git
 [submodule "voyages"]
 	path = voyages
 	url = git@bitbucket.org:idies/voyages_videos.git
