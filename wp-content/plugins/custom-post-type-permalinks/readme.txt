@@ -1,9 +1,11 @@
-﻿=== Custom Post Type Permalinks ===
-Contributors: Toro_Unit
-Tags: permalink,permalinks,custom post type,custom taxonomy,cms
-Requires at least: 3.7
-Tested up to: 4.0
-Stable tag: 0.9.6
+=== Custom Post Type Permalinks ===
+Contributors:      Toro_Unit
+Donate link:       http://www.amazon.co.jp/registry/wishlist/COKSXS25MVQV
+Tags:              permalink,permalinks,custom post type,custom taxonomy,cms
+Requires at least: 4.1
+Tested up to:      4.2
+Stable tag:        1.0.3
+License: GPLv2 or Later
 
 Lets you edit the permalink of custom post type.
 
@@ -24,6 +26,23 @@ Donation: Please send amazon.co.jp Gift to donate[at]torounit.com.
 * Japanese(ja) - [Toro_Unit](http://www.torounit.com/)
 * Russian(ru_RU) - [Olart](http://olart.ru)
 
+== Setting on Code ==
+
+Example:
+
+`
+register_post_type( 'foo',
+	array(
+		"public" => true,
+		'has_archive' => true,
+		"rewrite" => [
+			"with_front" => true
+		],
+		"cptp_permalink_structure" => "%post_id%"
+	)
+);
+`
+
 
 == Installation ==
 
@@ -41,6 +60,29 @@ That's it. You can access the permalinks setting by going to *Settings -> Permal
 
 
 == Changelog ==
+
+= 1.0.3 =
+* add category rule, if only attached category to post type.
+
+= 1.0.2 =
+* category slug bug fix.
+
+= 1.0.0 =
+* Set Permalink enable register_post_type.
+* Enable add post type query to taxonomy archives.
+* Use Class Autoloader.
+* Create Rewrite Rule on `wp_loaded` action.
+* WordPress Code Format Fix.
+* CPTP_Module_Permalink Bug Fix.
+* Bug Fix.
+* Use Semantic Versioning.
+* Date Structure Fix.
+* Use Category Base.
+
+= 0.9.7 =
+* Adding date slug only conflicting %post_id%.
+* Change taxonomy link rewrite rule. Use post_type.
+* Can change template include custom taxonomy.
 
 = 0.9.6 =
 * Category and author.
