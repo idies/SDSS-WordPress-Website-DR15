@@ -1,17 +1,17 @@
 === Custom Post Type Permalinks ===
-Contributors:      Toro_Unit
+Contributors:      Toro_Unit,inc2734,ixkaito,keita_kobayashi
 Donate link:       http://www.amazon.co.jp/registry/wishlist/COKSXS25MVQV
 Tags:              permalink,permalinks,custom post type,custom taxonomy,cms
 Requires at least: 4.1
-Tested up to:      4.2
-Stable tag:        1.0.4
+Tested up to:      4.3
+Stable tag:        1.2.0
 License: GPLv2 or Later
 
-Lets you edit the permalink of custom post type.
+Edit the permalink of custom post type.
 
 == Description ==
 
-Custom Post Type Permalinks lets you edit the permalink structure of custom post type.
+Custom Post Type Permalinks allow you edit the permalink structure of custom post type.
 
 Change custom taxonomy archive's permalink to "example.org/post_type/taxonomy_name/term_slug". Can disable this fix.
 
@@ -24,7 +24,7 @@ Donation: Please send amazon.co.jp Gift to donate[at]torounit.com.
 = Translators =
 * French(fr_FR) - [Geoffrey Crofte](http://geoffrey.crofte.fr/)
 * Japanese(ja) - [Toro_Unit](http://www.torounit.com/)
-* Russian(ru_RU) - [Olart](http://olart.ru)
+* Russian(ru_RU) - [Olart](http://olart.ru), [Natali_Z](https://profiles.wordpress.org/natali_z)
 
 == Setting on Code ==
 
@@ -60,6 +60,17 @@ That's it. You can access the permalinks setting by going to *Settings -> Permal
 
 
 == Changelog ==
+
+= 1.2.0 =
+* Add filter `cptp_post_type_link_priority`, `cptp_term_link_priority`, `cptp_attachment_link_priority`.
+* Add action `CPTP_registered_modules`.
+
+= 1.1.0 =
+* WPML Test. thanks [keita_kobayashi](https://profiles.wordpress.org/keita_kobayashi) !
+
+= 1.0.5 =
+* admin bug fix. thanks [ixkaito](https://profiles.wordpress.org/ixkaito) !
+* Translation Update Thanks [Natali_Z](https://profiles.wordpress.org/natali_z) !
 
 = 1.0.4 =
 * option bug fix.
