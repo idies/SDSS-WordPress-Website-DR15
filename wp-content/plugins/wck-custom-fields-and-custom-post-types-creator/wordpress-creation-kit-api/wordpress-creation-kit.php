@@ -306,9 +306,10 @@ class Wordpress_Creation_Kit{
 		}
 		
 		$element .= '</div><!-- .mb-right-column -->';
-		
+
+		$element = apply_filters( "wck_output_form_field", $element, $meta, $details);
 		$element = apply_filters( "wck_output_form_field_{$meta}_" . Wordpress_Creation_Kit::wck_generate_slug( $details['title'], $details ), $element );
-		
+
 		return $element;
 				
 	}
@@ -532,7 +533,9 @@ class Wordpress_Creation_Kit{
 					$display_value = self::wck_get_entry_field_cpt_select( $value ) . '</pre>';
 				} elseif ( $details['type'] == 'checkbox' && is_array( $value ) ){
                     $display_value = implode( ', ', $value );
-                } else {
+                } elseif ( $details['type'] == 'select' ){
+                    $display_value = '<pre>' . __(self::wck_get_entry_field_select( $value, $details ), 'profilebuilder') . '</pre>';
+                }else {
 					$display_value = '<pre>'.htmlspecialchars( $value ) . '</pre>';
 				}
 				
@@ -575,6 +578,29 @@ class Wordpress_Creation_Kit{
 		$list .= '</tr>';		
 	
 		return $list;
+	}
+
+    /* function to generate the output for the select field */
+	function wck_get_entry_field_select( $value, $field_details ){
+    	if ( (!is_array( $field_details ) && !isset( $field_details['options']) ) || empty( $value )){
+            return $value;
+		}
+
+		foreach( $field_details['options'] as $option ){
+            if ( strpos( $option, $value ) !== false ){
+                if( strpos( $option, '%' ) === false ){
+                    return $value;
+				} else {
+                    $option_parts = explode( '%', $option );
+                	if( !empty( $option_parts ) ){
+                        if( empty( $option_parts[0] ) && count( $option_parts ) == 3 ){
+                            $label = $option_parts[1];
+                        	return $label;
+						}
+					}
+				}
+			}
+		}
 	}
 
 	/* function to generate output for upload field */
@@ -1071,7 +1097,7 @@ class Wordpress_Creation_Kit{
                             foreach ($this->args['meta_array'] as $meta_field){
                                 /* in the $_POST the names for the fields are prefixed with the meta_name for the single metaboxes in case there are multiple metaboxes that contain fields wit hthe same name */
                                 $single_field_name = $this->args['meta_name'] .'_'. Wordpress_Creation_Kit::wck_generate_slug( $meta_field['title'], $meta_field );
-                                if (!empty($_POST[$single_field_name])) {
+                                if (isset($_POST[$single_field_name])) {
                                     /* checkbox needs to be stored as string not array */
                                     if( $meta_field['type'] == 'checkbox' )
                                         $_POST[$single_field_name] = implode( ', ', $_POST[$single_field_name] );
@@ -1132,7 +1158,7 @@ class Wordpress_Creation_Kit{
                 $error_messages .= $wck_single_forms_error['error'];
                 $error_fields .= implode( ',', $wck_single_forms_error['errorfields'] ).',';
             }
-            wp_redirect( add_query_arg( array( 'wckerrormessages' => base64_encode( urlencode( $error_messages ) ), 'wckerrorfields' => base64_encode( urlencode( $error_fields ) ) ), $_SERVER["HTTP_REFERER"] ) );
+            wp_safe_redirect( add_query_arg( array( 'wckerrormessages' => base64_encode( urlencode( $error_messages ) ), 'wckerrorfields' => base64_encode( urlencode( $error_fields ) ) ), $_SERVER["HTTP_REFERER"] ) );
             exit;
         }
     }
@@ -1156,7 +1182,7 @@ class Wordpress_Creation_Kit{
             echo '<script type="text/javascript">';
             $field_names = explode( ',', urldecode( base64_decode( $_GET['wckerrorfields'] ) ) );
             foreach( $field_names as $field_name ){
-                echo "jQuery( '.field-label[for=\"". $field_name ."\"]' ).addClass('error');";
+                echo "jQuery( '.field-label[for=\"". esc_js( $field_name ) ."\"]' ).addClass('error');";
 
             }
             echo '</script>';
@@ -1164,7 +1190,7 @@ class Wordpress_Creation_Kit{
 
         /* alert the error messages */
         if( isset( $_GET['wckerrormessages'] ) ){
-            echo '<script type="text/javascript">alert("'. urldecode( str_replace( '%0A', '\n', base64_decode( $_GET['wckerrormessages'] ) ) ) .'")</script>';
+            echo '<script type="text/javascript">alert("'. str_replace( '%0A', '\n', esc_js( urldecode( base64_decode( $_GET['wckerrormessages'] ) ) ) ) .'")</script>';
         }
     }
 	

@@ -714,7 +714,7 @@ class WCK_FEP_Dashboard{
 								'author' => $user_id,
 								'post_type' => $post_type->name
 							);
-					$posts = get_posts( $args );
+					$posts = get_posts( apply_filters( 'wck_fep_dashbord_get_posts_args', $args ) );
 					
 					if( !empty( $posts ) )				
 						$dashboard .= '<li><a href="#fep-'. $post_type->name .'">'. __( 'My ', 'wck' ) .$post_type->label.'</a></li>';
@@ -733,7 +733,7 @@ class WCK_FEP_Dashboard{
 								'author' => $user_id,
 								'post_type' => $post_type->name
 							);
-					$posts = get_posts( $args );
+					$posts = get_posts( apply_filters( 'wck_fep_dashbord_get_posts_args', $args ) );
 					if( !empty( $posts ) ){
 						$dashboard .= '<div id="fep-'. $post_type->name .'">';
 						$dashboard .= '<h3 class="fep-'. $post_type->name .'">'. __( 'My ', 'wck' ) . $post_type->label .'</h3>';

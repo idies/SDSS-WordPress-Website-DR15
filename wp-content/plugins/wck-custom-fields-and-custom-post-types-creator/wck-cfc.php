@@ -118,7 +118,7 @@ function wck_cfc_create_box(){
 
 	/* set up the fields array */
 	$cfc_box_args_fields = array(
-		array( 'type' => 'text', 'title' => __( 'Metaaaa name', 'wck' ), 'slug' => 'meta-name', 'description' => __( 'The name of the meta field. It is the name by which you will query the data in the frontend. Must be unique, only lowercase letters, no spaces and no special characters.', 'wck' ), 'required' => true ),
+		array( 'type' => 'text', 'title' => __( 'Meta name', 'wck' ), 'slug' => 'meta-name', 'description' => __( 'The name of the meta field. It is the name by which you will query the data in the frontend. Must be unique, only lowercase letters, no spaces and no special characters.', 'wck' ), 'required' => true ),
 		array( 'type' => 'select', 'title' => __( 'Post Type', 'wck' ), 'slug' => 'post-type', 'options' => $post_type_names, 'default-option' => true, 'description' => __( 'What post type the meta box should be attached to', 'wck' ), 'required' => true ),
 		array( 'type' => 'select', 'title' => __( 'Repeater', 'wck' ), 'slug' => 'repeater', 'options' => array( 'false', 'true' ), 'default' => 'false', 'description' => __( 'Whether the box supports just one entry or if it is a repeater field. By default it is a single field.', 'wck' ) ),
 		array( 'type' => 'select', 'title' => __( 'Sortable', 'wck' ), 'slug' => 'sortable', 'options' => array( 'true', 'false' ), 'default' => 'false', 'description' => __( 'Whether the entries are sortable or not. This is valid for repeater fields.', 'wck' ) ),

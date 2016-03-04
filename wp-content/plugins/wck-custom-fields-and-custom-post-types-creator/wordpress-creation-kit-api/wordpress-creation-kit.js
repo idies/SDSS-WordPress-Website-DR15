@@ -47,9 +47,12 @@ function addMeta(value, id, nonce){
 					values[key.toString()] += ', ' + jQuery(this).val().toString();
 			}			
 		}
-		
-		else		
-			values[key.toString()] = jQuery(this).val().toString();
+		else {
+            if( jQuery(this).val() != null )
+                values[key.toString()] = jQuery(this).val().toString();
+            else
+                values[key.toString()] = '';
+        }
 	});
 	
 	meta = value;
@@ -304,9 +307,12 @@ function updateMeta(value, id, element_id, nonce){
 					values[key.toString()] += ', ' + jQuery(this).val().toString();
 			}			
 		}
-		
-		else		
-			values[key.toString()] = jQuery(this).val().toString();
+		else {
+            if( jQuery(this).val() != null )
+                values[key.toString()] = jQuery(this).val().toString();
+            else
+                values[key.toString()] = '';
+        }
 		
 	});
 	

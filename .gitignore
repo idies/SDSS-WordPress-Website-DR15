@@ -1,7 +1,8 @@
 .htaccess
 wp-config.php
-init.php
 node_modules
+wp-content/uploads/ninja-forms/
+ninja-forms-submission.csv
 
 # Compiled source #
 ###################
