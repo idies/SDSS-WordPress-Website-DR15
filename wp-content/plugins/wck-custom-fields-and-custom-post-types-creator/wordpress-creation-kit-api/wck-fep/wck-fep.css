@@ -373,9 +373,17 @@
 }
 
 .fep-container .fep-element-wrap, .fep-container .fep-single-element-wrap{
-	overflow:hidden;
 	clear:both;
 	margin-bottom:13px;
+}
+
+.fep-container .fep-element-wrap:after,
+.fep-container .fep-single-element-wrap:after {
+    content: ".";
+    visibility: hidden;
+    display: block;
+    height: 0;
+    clear: both;
 }
 
 .fep-container .description{

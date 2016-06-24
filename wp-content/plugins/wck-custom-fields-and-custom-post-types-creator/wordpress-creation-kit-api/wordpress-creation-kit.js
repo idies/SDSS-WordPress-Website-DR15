@@ -18,7 +18,7 @@ jQuery(function(){
 });
 
 
-/* add reccord to the meta */
+/* add record to the meta */
 function addMeta(value, id, nonce){
 
 	/* if CKEDITOR then trigger save. save puts the content in the hidden textarea */
@@ -34,18 +34,18 @@ function addMeta(value, id, nonce){
 	jQuery('#'+value+' .mb-field').each(function(){
 	
 		var key = jQuery(this).attr('name');
-		
+
 		if(jQuery(this).attr('type') == 'checkbox' || jQuery(this).attr('type') == 'radio' ) {
-			
+
 			if( typeof values[key.toString()] === "undefined" )
 				values[key.toString()] = '';
-			
+
 			if(jQuery(this).is(':checked')){
 				if( values[key.toString()] == '' )
 					values[key.toString()] += jQuery(this).val().toString();
 				else
 					values[key.toString()] += ', ' + jQuery(this).val().toString();
-			}			
+			}
 		}
 		else {
             if( jQuery(this).val() != null )
@@ -56,7 +56,7 @@ function addMeta(value, id, nonce){
 	});
 	
 	meta = value;
-	
+
 	if( value.indexOf("-wcknested-") != -1 ){
 		metaDetails = value.split("-wcknested-");
 		meta = metaDetails[0];
@@ -120,7 +120,7 @@ function addMeta(value, id, nonce){
 	
 }
 
-/* remove reccord from the meta */
+/* remove record from the meta */
 function removeMeta(value, id, element_id, nonce){
 	
 	var response = confirm( "Delete this item ?" );
@@ -438,4 +438,29 @@ jQuery(function(){
             location.reload();
         });
     }
+});
+
+/* Timepicker on change populate hidden input */
+jQuery(function(){
+    jQuery(document).on( 'change', '.mb-timepicker-hours', function() {
+
+        var $this = jQuery(this);
+
+        var hours   = $this.val();
+        var minutes = $this.siblings('.mb-timepicker-minutes').val();
+
+        $this.siblings('input[type=hidden]').val( hours + ':' + minutes );
+
+    });
+
+    jQuery(document).on( 'change', '.mb-timepicker-minutes', function() {
+
+        var $this = jQuery(this);
+
+        var hours   = $this.siblings('.mb-timepicker-hours').val();
+        var minutes = $this.val();
+
+        $this.siblings('input[type=hidden]').val( hours + ':' + minutes );
+
+    });
 });

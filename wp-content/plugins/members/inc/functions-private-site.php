@@ -7,7 +7,7 @@
  * @package    Members
  * @subpackage Includes
  * @author     Justin Tadlock <justin@justintadlock.com>
- * @copyright  Copyright (c) 2009 - 2015, Justin Tadlock
+ * @copyright  Copyright (c) 2009 - 2016, Justin Tadlock
  * @link       http://themehybrid.com/plugins/members
  * @license    http://www.gnu.org/licenses/old-licenses/gpl-2.0.html
  */
@@ -64,8 +64,8 @@ function members_please_log_in() {
 	// Check if the private blog feature is active and if the user is not logged in.
 	if ( members_is_private_blog() && ! is_user_logged_in() ) {
 
-		// If using BuddyPress and on the register page, don't do anything.
-		if ( function_exists( 'bp_is_current_component' ) && bp_is_current_component( 'register' ) )
+		// If using BuddyPress and on the register/activate page, don't do anything.
+		if ( function_exists( 'bp_is_current_component' ) && ( bp_is_current_component( 'register' ) || bp_is_current_component( 'activate' ) ) )
 			return;
 
 		// Redirect to the login page.

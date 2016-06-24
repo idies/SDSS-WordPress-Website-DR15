@@ -1,17 +1,19 @@
-=== WCK - Custom Fields and Custom Post Types Creator === 
+=== WCK - Custom Post Types and Custom Fields Creator ===
 
-Contributors: reflectionmedia, madalin.ungureanu, sareiodata
+Contributors: cozmoslabs, reflectionmedia, madalin.ungureanu, sareiodata, adispiac
 Donate link: http://www.cozmoslabs.com/wordpress-creation-kit/
-Tags: custom fields, custom field, wordpress custom fields, advanced custom fields, custom post type, custom post types, post types, cpt, post type, repeater fields, repeater, repeatable fields, meta box, metabox, taxonomy, taxonomies, custom taxonomy, custom taxonomies, custom, custom fields creator, post meta, meta, get_post_meta, post creator, cck, content types, types
+Tags: custom fields, custom field, wordpress custom fields, custom post type, custom post types, repeater fields, meta box, metabox, custom taxonomy, custom fields creator, post meta
 
 Requires at least: 3.1
-Tested up to: 4.3.1
-Stable tag: 1.1.7
+Tested up to: 4.5.2
+Stable tag: 1.2.8
 
 A must have tool for creating custom fields, custom post types and taxonomies, fast and without any programming knowledge.
 
 
 == Description ==
+
+**Like this plugin?** Consider leaving a [5 star review](https://wordpress.org/support/view/plugin-reviews/wck-custom-fields-and-custom-post-types-creator?filter=5).
 
 **WordPress Creation Kit** consists of three tools that can help you create and maintain custom post types, custom taxonomies and most importantly, custom fields and metaboxes for your posts, pages or CPT's.
 
@@ -141,6 +143,58 @@ Creating a taxonomy generally automatically creates a special query variable usi
 10. Taxonomy listing
 
 == Changelog ==
+= 1.2.8 =
+* Added Phone field type
+* Added HTML field type
+* Added Time Picker field type
+* Added Default Text for textarea field instead of Default Value
+
+= 1.2.7 =
+* Added Heading field type
+* Added Colorpicker field type
+* Added Currency field type
+* Added number of rows and readonly options to the textarea field
+* Added error notice for users with a php version lower than 5.3.0 on the settings page
+
+= 1.2.6 =
+* Small change in saving single metaboxes
+* Fixed a possible conflict with ACF Pro
+
+= 1.2.5 =
+* Minor compatibility tweeks for WordPress 4.5
+* Added new filter for registration errors:'wck_registration_errors'
+
+= 1.2.4 =
+* We now load the translation files from the theme first if they exist in the folder:local_wck_lang
+* Now in Custom Fields Creator the Options field for selects,radios and checkboxes is required so you can't create those field without any options
+* Single forms now keep their values when form throws alert required message so you don't have to input the values again
+
+= 1.2.3 =
+* Minor security improvements
+* Added filter for the 'rewrite' argument in the Custom Taxonomy Creator: 'wck_ctc_register_taxonomy_rewrite_arg'
+* Added hooks in WCK_Page_Creator api to allow extra content before and after metaboxes: 'wck_page_creator_before_meta_boxes' and 'wck_page_creator_after_meta_boxes'
+
+= 1.2.2 =
+* Added additional labels to Post Type Creator and Taxonomy Creator
+* We now check the post type name to not have spaces, capital letters or hyphens
+* When changing a custom post type name the existing posts get ported as well
+
+= 1.2.1 =
+* When renaming a taxonomy we now make sure the terms get ported as well
+
+= 1.2.0 =
+* We now display error message when meta name contains uppercase letters
+* We now display error message when taxonomy name contains uppercase letters or spaces
+* Security improvements
+* Fixed issues with post thumbnail and themes that added thumbnail support for specific post types in Custom Post Types Creator
+* Removed notice when WPML was active in certain cases
+
+= 1.1.9 =
+* Fixed typo from 'Chose' to 'Choose'
+
+= 1.1.8 =
+* We now allow  Custom Post Types and Custom Taxonomies to be available via REST API by adding 'show_in_rest' attribute
+
 = 1.1.7 =
 * Select field can now display lables when outputting values
 * Minor security improvements

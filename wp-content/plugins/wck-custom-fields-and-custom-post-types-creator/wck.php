@@ -3,13 +3,13 @@
 Plugin Name: WCK - Custom Fields and Custom Post Types Creator
 Description: WordPress Creation Kit consists of three tools that can help you create and maintain custom post types, custom taxonomies and most importantly, custom fields and metaboxes for your posts, pages or CPT's.
 Author: Cozmoslabs, Madalin Ungureanu, Cristian Antohe
-Version: 1.1.7
+Version: 1.2.8
 Author URI: http://www.cozmoslabs.com
 
 License: GPL2
 
 == Copyright ==
-Copyright 2014 Cozmoslabs (wwww.cozmoslabs.com)
+Copyright 2016 Cozmoslabs (wwww.cozmoslabs.com)
 
 This program is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -27,7 +27,12 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 define( 'WCK_PLUGIN_DIR', WP_PLUGIN_DIR . '/' . dirname( plugin_basename( __FILE__ ) ) );
 
 /* ready for localization */
-load_plugin_textdomain( 'wck', false, basename( dirname( __FILE__ ) ) . '/languages' );
+$current_theme = wp_get_theme();
+if( !empty( $current_theme->stylesheet ) && file_exists( get_theme_root().'/'. $current_theme->stylesheet .'/local_wck_lang' ) )
+    load_plugin_textdomain( 'wck', false, basename( dirname( __FILE__ ) ).'/../../themes/'.$current_theme->stylesheet.'/local_wck_lang' );
+else
+    load_plugin_textdomain( 'wck', false, basename( dirname( __FILE__ ) ) . '/languages' );
+
 
 
 /* include Custom Fields Creator API */
