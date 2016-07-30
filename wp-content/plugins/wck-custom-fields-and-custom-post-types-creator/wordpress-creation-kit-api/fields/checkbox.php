@@ -4,7 +4,7 @@
  * @param string $value Contains input value;
  * @param string $context Context where the function is used. Depending on it some actions are preformed.;
  * @return string $element input element html string. */
- 
+
 if( !empty( $details['options'] ) ){	
 	$element .= '<div class="wck-checkboxes">';
 	foreach( $details['options'] as $option ){

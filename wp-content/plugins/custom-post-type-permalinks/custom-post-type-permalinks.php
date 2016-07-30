@@ -5,7 +5,7 @@ Plugin URI: https://github.com/torounit/custom-post-type-permalinks
 Description:  Add post archives of custom post type and customizable permalinks.
 Author: Toro_Unit
 Author URI: https://torounit.com/
-Version: 1.5.4
+Version: 2.0.1
 Text Domain: custom-post-type-permalinks
 License: GPL2 or later
 Domain Path: /language/
@@ -17,8 +17,7 @@ Domain Path: /language/
  * Custom Post Type Permalinks
  *
  * @package Custom_Post_Type_Permalinks
- * @version 1.5.4
- *
+ * @version 2.0.1
  */
 
 define( 'CPTP_PLUGIN_FILE', __FILE__ );
@@ -27,32 +26,31 @@ define( 'CPTP_VERSION', $data['ver'] );
 define( 'CPTP_DEFAULT_PERMALINK', '/%postname%/' );
 
 
-
 /**
  *
  * Autoloader for CPTP.
- * @since 1.0.0
  *
+ * @since 1.0.0
  */
 function cptp_class_loader( $class_name ) {
-	$dir = dirname( __FILE__ );
-	$file_name = $dir . '/'. str_replace( '_', '/', $class_name ).'.php';
+	$dir       = dirname( __FILE__ );
+	$file_name = $dir . '/' . str_replace( '_', '/', $class_name ) . '.php';
 	if ( is_readable( $file_name ) ) {
 		include $file_name;
 	}
 }
+
 spl_autoload_register( 'cptp_class_loader' );
 
 
 /**
- *
- * Entry Point
- * @since 0.9.4
- *
+ * initialize Plugin
  */
-add_action( 'plugins_loaded', 'cptp_init_instance' );
-function cptp_init_instance() {
-	CPTP::get_instance();
-}
+add_action( 'plugins_loaded', array( CPTP::get_instance(), 'init' ) );
 
+
+/**
+ * Activation hooks.
+ */
+register_activation_hook( CPTP_PLUGIN_FILE, array( CPTP::get_instance(), 'activate' ) );
 

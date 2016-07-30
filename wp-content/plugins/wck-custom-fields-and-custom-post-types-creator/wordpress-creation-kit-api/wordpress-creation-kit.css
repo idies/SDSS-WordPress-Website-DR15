@@ -247,3 +247,15 @@ td.wck-number{
 	line-height: 21px;
 	padding-left: 18px;
 }
+
+.wck-notification {
+    padding: 0.5em 1em;
+    border: 1px solid;
+    border-radius: 2px;
+}
+
+.wck-notification.friendly-warning {
+    background: rgba(230,126,34, 0.2);
+    color: #d35400;
+    border-color: #f39c12;
+}

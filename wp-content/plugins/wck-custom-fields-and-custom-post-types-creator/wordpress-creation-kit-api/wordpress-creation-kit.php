@@ -554,6 +554,8 @@ class Wordpress_Creation_Kit{
                     $display_value = implode( ', ', $value );
                 } elseif ( $details['type'] == 'select' ){
                     $display_value = '<pre>' . __(self::wck_get_entry_field_select( $value, $details ), 'profilebuilder') . '</pre>';
+                } elseif ( $details['type'] == 'map' ){
+                    $display_value = '<pre>' . ( !empty( $value ) ? count( $value ) : 0 ) . ' ' . __( 'Map Markers', 'wck' ) . '</pre>';
                 }else {
 					$display_value = '<pre>'.htmlspecialchars( $value ) . '</pre>';
 				}
@@ -740,6 +742,17 @@ class Wordpress_Creation_Kit{
 		if ( file_exists( WCK_PLUGIN_DIR. '/wordpress-creation-kit-api/fields/phone.php' ) ){
 			wp_enqueue_script( 'wck-jquery-inputmask', plugins_url( '/assets/phone/jquery.inputmask.bundle.min.js', __FILE__ ), array( 'jquery' ), false, 1 );
 		}
+
+        //map
+        if ( file_exists( WCK_PLUGIN_DIR. '/wordpress-creation-kit-api/fields/map.php' ) ){
+            $options = get_option( 'wck_extra_options' );
+
+            if( !empty( $options[0]['google-maps-api'] ) ) {
+                wp_enqueue_script('wck-google-maps-api-script', 'https://maps.googleapis.com/maps/api/js?key=' . $options[0]['google-maps-api'] . '&libraries=places', array('jquery'));
+                wp_enqueue_script('wck-google-maps-script', plugin_dir_url(__FILE__) . '/assets/map/map.js', array('jquery'), false, 1);
+                wp_enqueue_style('wck-google-maps-style', plugin_dir_url(__FILE__) . '/assets/map/map.css');
+            }
+        }
 		
 		/* media upload */
 		wp_enqueue_media();
@@ -765,10 +778,10 @@ class Wordpress_Creation_Kit{
 			}
 		}
 
-		if( !empty( $values ) ){
-			foreach( $values as $key => $value ){
-				if( array_key_exists( $key, $required_fields ) && apply_filters( "wck_required_test_{$meta}_{$key}", empty( $value ), $value, $id, $key, $meta, $fields ) ){
-					$required_message .= apply_filters( "wck_required_message_{$meta}_{$key}", __( "Please enter a value for the required field ", "wck" ) . "$required_fields[$key] \n", $value, $required_fields[$key] );
+        if( !empty( $values ) ){
+			foreach( $required_fields as $key => $title ){
+                if( !array_key_exists( $key, $values ) || ( array_key_exists( $key, $values ) && apply_filters( "wck_required_test_{$meta}_{$key}", empty( $values[$key] ), $values[$key], $id, $key, $meta, $fields ) ) ) {
+					$required_message .= apply_filters( "wck_required_message_{$meta}_{$key}", __( "Please enter a value for the required field ", "wck" ) . "$required_fields[$key] \n", ( isset($values[$key]) ? $values[$key] : '' ), $required_fields[$key] );
 					$required_fields_with_errors[] = $key;
 				}
 			}
@@ -785,7 +798,42 @@ class Wordpress_Creation_Kit{
 	}
 	
 
+	/* Checks to see wether the current user can modify data */
+	function wck_verify_user_capabilities( $context, $meta = '', $id = 0 ) {
 
+		$return = true;
+
+		// Meta is an option
+		if( $context == 'option' && !current_user_can( 'manage_options' ) )
+			$return = false;
+
+		// Meta is post related
+		if( $context == 'post_meta' && is_user_logged_in() ) {
+			
+			// Current user must be able to edit posts
+			if( !current_user_can( 'edit_posts' ) )
+				$return = false;
+
+			// If the user can't edit others posts the current post must be his/hers
+			elseif( !current_user_can( 'edit_others_posts' ) ) {
+
+				$current_post = get_post( $id );
+				$current_user = wp_get_current_user();
+
+				if( $current_user->ID != $current_post->post_author )
+					$return = false;
+
+			}
+
+		}
+
+		// Return
+		if( $return )
+			return $return;
+		else
+			return array( 'error' => __( 'You are not allowed to do this.', 'wck' ), 'errorfields' => '' );
+
+	}
 
 
 	/* ajax add a reccord to the meta */
@@ -803,6 +851,13 @@ class Wordpress_Creation_Kit{
 			$values = $_POST['values'];
 		else
 			$values = array();
+
+
+		// Security checks
+		if( true !== ( $error = self::wck_verify_user_capabilities( $this->args['context'], $meta, $id ) ) ) {
+			header( 'Content-type: application/json' );
+			die( json_encode( $error ) );
+		}
 		
 		$values = apply_filters( "wck_add_meta_filter_values_{$meta}", $values );
 
@@ -863,7 +918,14 @@ class Wordpress_Creation_Kit{
 			$element_id = 0;
 		if( !empty( $_POST['values'] ) )
 			$values = $_POST['values'];
-		
+
+
+		// Security checks
+		if( true !== ( $error = self::wck_verify_user_capabilities( $this->args['context'], $meta, $id ) ) ) {
+			header( 'Content-type: application/json' );
+			die( json_encode( $error ) );
+		}
+
 		
 		$values = apply_filters( "wck_update_meta_filter_values_{$meta}", $values, $element_id );
 		
@@ -994,6 +1056,14 @@ class Wordpress_Creation_Kit{
 			$element_id = absint( $_POST['element_id'] );
 		else 
 			$element_id = '';
+
+
+		// Security checks
+		if( true !== ( $error = self::wck_verify_user_capabilities( $this->args['context'], $meta, $id ) ) ) {
+			header( 'Content-type: application/json' );
+			die( json_encode( $error ) );
+		}
+
 		
 		if( $this->args['context'] == 'post_meta' )
 			$results = get_post_meta($id, $meta, true);
@@ -1060,6 +1130,12 @@ class Wordpress_Creation_Kit{
 			$elements_id = $_POST['values'];
 		else 
 			$elements_id = array();
+
+		// Security checks
+		if( true !== ( $error = self::wck_verify_user_capabilities( $this->args['context'], $meta, $id ) ) ) {
+			header( 'Content-type: application/json' );
+			die( json_encode( $error ) );
+		}
 		
 		do_action( 'wck_before_reorder_meta', $meta, $id, $elements_id );
 		

@@ -1,12 +1,14 @@
 jQuery(function(){
 	jQuery(document).on( 'change', '#wck_cfc_fields #field-type', function () {
 		value = jQuery(this).val();
-		
+
 		if( value == 'select' || value == 'checkbox' || value == 'radio' ){
 			jQuery( '#wck_cfc_fields .row-options' ).show();
+			jQuery( '#wck_cfc_fields .row-labels' ).show();
 		}
 		else{
 			jQuery( '#wck_cfc_fields .row-options' ).hide();
+			jQuery( '#wck_cfc_fields .row-labels' ).hide();
 		}
 		
 		if( value == 'upload' ){
@@ -60,15 +62,31 @@ jQuery(function(){
             jQuery( '#wck_cfc_fields .row-html-content' ).hide();
         }
 
+        if( value == 'map' ) {
+            jQuery( '#wck_cfc_fields .row-map-default-latitude' ).show();
+            jQuery( '#wck_cfc_fields .row-map-default-longitude' ).show();
+            jQuery( '#wck_cfc_fields .row-map-default-zoom' ).show();
+            jQuery( '#wck_cfc_fields .row-map-height' ).show();
+            jQuery( '#wck_cfc_fields .row-default-value' ).hide();
+        } else {
+            jQuery( '#wck_cfc_fields .row-map-default-latitude' ).hide();
+            jQuery( '#wck_cfc_fields .row-map-default-longitude' ).hide();
+            jQuery( '#wck_cfc_fields .row-map-default-zoom' ).hide();
+            jQuery( '#wck_cfc_fields .row-map-height' ).hide();
+            jQuery( '#wck_cfc_fields .row-default-value' ).show();
+        }
+
     });
 	
 	jQuery(document).on( 'change', '#container_wck_cfc_fields #field-type', function () {
 		value = jQuery(this).val();
 		if( value == 'select' || value == 'checkbox' || value == 'radio' ){
 			jQuery(this).parent().parent().parent().children(".row-options").show();
+			jQuery(this).parent().parent().parent().children(".row-labels").show();
 		}
 		else{
 			jQuery(this).parent().parent().parent().children(".row-options").hide();
+			jQuery(this).parent().parent().parent().children(".row-labels").hide();
 		}
 		
 		if( value == 'upload' ){
@@ -120,6 +138,20 @@ jQuery(function(){
             jQuery( this ).parent().parent().parent().children( ".row-required" ).hide();
         } else {
             jQuery( this ).parent().parent().parent().children( ".row-html-content" ).hide();
+        }
+
+        if( value == 'map' ) {
+            jQuery( this ).parent().parent().parent().children( '.row-map-default-latitude' ).show();
+            jQuery( this ).parent().parent().parent().children( '.row-map-default-longitude' ).show();
+            jQuery( this ).parent().parent().parent().children( '.row-map-default-zoom' ).show();
+            jQuery( this ).parent().parent().parent().children( '.row-map-height' ).show();
+            jQuery( this ).parent().parent().parent().children( '.row-default-value' ).hide();
+        } else {
+            jQuery( this ).parent().parent().parent().children( '.row-map-default-latitude' ).hide();
+            jQuery( this ).parent().parent().parent().children( '.row-map-default-longitude' ).hide();
+            jQuery( this ).parent().parent().parent().children( '.row-map-default-zoom' ).hide();
+            jQuery( this ).parent().parent().parent().children( '.row-map-height' ).hide();
+            jQuery( this ).parent().parent().parent().children( '.row-default-value' ).show();
         }
 
     });

@@ -46,8 +46,19 @@ function addMeta(value, id, nonce){
 				else
 					values[key.toString()] += ', ' + jQuery(this).val().toString();
 			}
-		}
-		else {
+
+        } else if( jQuery(this).hasClass('wck-map-marker') ) {
+
+            if( !Array.isArray( values[key.toString()] ) )
+                values[key.toString()] = [];
+
+            if( jQuery(this).val() != null )
+                values[key.toString()].push( jQuery(this).val().toString() );
+            else
+                values[key.toString()].push( '' );
+
+        } else {
+
             if( jQuery(this).val() != null )
                 values[key.toString()] = jQuery(this).val().toString();
             else
@@ -61,7 +72,7 @@ function addMeta(value, id, nonce){
 		metaDetails = value.split("-wcknested-");
 		meta = metaDetails[0];
 	}
-		
+
 	jQuery.post( wckAjaxurl ,  { action:"wck_add_meta"+meta, meta:value, id:id, values:values, _ajax_nonce:nonce}, function(response) {
 
 			jQuery( '#'+value+' .field-label').removeClass('error');
@@ -305,8 +316,19 @@ function updateMeta(value, id, element_id, nonce){
 					values[key.toString()] += jQuery(this).val().toString();
 				else
 					values[key.toString()] += ', ' + jQuery(this).val().toString();
-			}			
-		}
+			}
+
+        // The map markers need to be passed as array
+		} else if( jQuery(this).hasClass('wck-map-marker') ) {
+
+            if( !Array.isArray( values[key.toString()] ) )
+                values[key.toString()] = [];
+
+            if( jQuery(this).val() != null )
+                values[key.toString()].push( jQuery(this).val().toString() );
+            else
+                values[key.toString()].push( '' );
+        }
 		else {
             if( jQuery(this).val() != null )
                 values[key.toString()] = jQuery(this).val().toString();
@@ -315,8 +337,7 @@ function updateMeta(value, id, element_id, nonce){
         }
 		
 	});
-	
-	
+
 	meta = value;
 	
 	if( value.indexOf("-wcknested-") != -1 ){

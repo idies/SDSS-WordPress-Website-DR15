@@ -149,7 +149,9 @@ function wck_cfc_create_box(){
 	new Wordpress_Creation_Kit( $args );
 
 	/* set up field types */
-	$field_types = array( 'heading', 'text', 'textarea', 'select', 'checkbox', 'radio', 'phone', 'upload', 'wysiwyg editor', 'datepicker', 'timepicker', 'colorpicker', 'country select', 'user select', 'cpt select', 'currency select', 'html' );
+
+	$field_types = array( 'heading', 'text', 'textarea', 'select', 'checkbox', 'radio', 'phone', 'upload', 'wysiwyg editor', 'datepicker', 'timepicker', 'colorpicker', 'country select', 'user select', 'cpt select', 'currency select', 'html', 'map' );
+
 	$field_types = apply_filters( 'wck_field_types', $field_types );
 
 	/* setup post types */
@@ -165,12 +167,17 @@ function wck_cfc_create_box(){
 		array( 'type' => 'text', 'title' => __( 'Default Value', 'wck' ), 'slug' => 'default-value', 'description' => __( 'Default value of the field. For Checkboxes if there are multiple values separate them with a ",". For an Upload field input an attachment id.', 'wck' ) ),
 		array( 'type' => 'textarea', 'title' => __( 'Default Text', 'wck' ), 'slug' => 'default-text', 'description' => __( 'Default text of the textarea.', 'wck' ) ),
 		array( 'type' => 'textarea', 'title' => __( 'HTML Content', 'wck' ), 'slug' => 'html-content', 'description' => __( 'Add your HTML (or text) content.', 'wck' ) ),
-		array( 'type' => 'text', 'title' => __( 'Options', 'wck' ), 'slug' => 'options', 'description' => __( 'Options for field types "select", "checkbox" and "radio". For multiple options separate them with a ",". You can use the following structure if you want the label to be different from the value: %LabelOne%valueone,%LabelTwo%valuetwo,%LabelThree%valuethree', 'wck' ) ),
+		array( 'type' => 'text', 'title' => __( 'Options', 'wck' ), 'slug' => 'options', 'description' => __( 'Options for field types "select", "checkbox" and "radio". For multiple options separate them with a ",".', 'wck' ) ),
+		array( 'type' => 'text', 'title' => __( 'Labels', 'wck' ), 'slug' => 'labels', 'description' => __( 'Labels for field types "select", "checkbox" and "radio". For multiple options separate them with a ",".', 'wck' ) ),
 		array( 'type' => 'text', 'title' => __( 'Phone Format', 'wck' ), 'slug' => 'phone-format', 'default' => '(###) ###-####', 'description' => __( "You can use: # for numbers, parentheses ( ), - sign, + sign, dot . and spaces.", 'wck' ) .'<br>'.  __( "Eg. (###) ###-####", 'wck' ) .'<br>'. __( "Empty field won't check for correct phone number.", 'wck' ) ),
 		array( 'type' => 'checkbox', 'title' => __( 'Attach upload to post', 'wck' ), 'slug' => 'attach-upload-to-post', 'description' => __( 'Uploads will be attached to the post if this is checked', 'wck' ), 'options' => array( 'yes' ), 'default' => 'yes' ),
 		array( 'type' => 'text', 'title' => __( 'Number of rows', 'wck' ), 'slug' => 'number-of-rows', 'description' => __( 'Number of rows for the textarea', 'wck' ), 'default' => '5' ),
         array( 'type' => 'select', 'title' => __( 'Readonly', 'wck' ), 'slug' => 'readonly', 'options' => array( 'false', 'true' ), 'default' => 'false', 'description' => __( 'Whether the textarea is readonly or not', 'wck' ) ),
-	) );
+        array( 'type' => 'text', 'title' => __( 'Default Latitude', 'wck' ), 'slug' => 'map-default-latitude', 'description' => __( 'The latitude at which the map should be displayed when no pins are attached.', 'wck' ), 'default' => 0 ),
+        array( 'type' => 'text', 'title' => __( 'Default Longitude', 'wck' ), 'slug' => 'map-default-longitude', 'description' => __( 'The longitude at which the map should be displayed when no pins are attached.', 'wck' ), 'default' => 0 ),
+        array( 'type' => 'text', 'title' => __( 'Default Zoom', 'wck' ), 'slug' => 'map-default-zoom', 'description' => __( 'Add a number from 0 to 19. The higher the number the higher the zoom.', 'wck' ), 'default' => 15 ),
+        array( 'type' => 'text', 'title' => __( 'Map Height', 'wck' ), 'slug' => 'map-height', 'description' => __( 'The height of the map.', 'wck' ), 'default' => 350 )
+	));
 
 
 	/* set up the box arguments */
@@ -258,11 +265,17 @@ function wck_cfc_create_boxes_args(){
                     if( isset( $wck_cfc_field['default-text'] ) && !empty( $wck_cfc_field['default-text'] ) )
                         $fields_inner_array['default'] = $wck_cfc_field['default-text'];
 					if( !empty( $wck_cfc_field['options'] ) ){
-						$fields_inner_array['options'] = explode( ',', $wck_cfc_field['options'] );
+						$fields_inner_array['options'] = array_map( 'trim', explode( ',', $wck_cfc_field['options'] ) );
+
+                        if( !empty( $wck_cfc_field['labels'] ) ){
+                            $labels = array_map( 'trim', explode( ',', $wck_cfc_field['labels'] ) );
+                        }
 
 						if( !empty( $fields_inner_array['options'] ) ){
 							foreach( $fields_inner_array['options'] as  $key => $value ){
 								$fields_inner_array['options'][$key] = trim( $value );
+                                if( strpos( $value, '%' ) === false && !empty( $labels[$key] ) )
+                                    $fields_inner_array['options'][$key] = '%'.$labels[$key].'%'.$value;
 							}
 						}
 
@@ -289,9 +302,23 @@ function wck_cfc_create_boxes_args(){
 						}
 					}
 
-					if( $wck_cfc_field['field-type'] === 'html' && isset( $wck_cfc_field['html-content'] ) ) {
-						$fields_inner_array['html-content'] = $wck_cfc_field['html-content'];
-					}
+
+                    if( $wck_cfc_field['field-type'] === 'html' && isset( $wck_cfc_field['html-content'] ) ) {
+                        $fields_inner_array['html-content'] = $wck_cfc_field['html-content'];
+                    }
+
+
+                    if( isset( $wck_cfc_field['map-default-latitude'] ) )
+                        $fields_inner_array['map_default_latitude'] = trim( $wck_cfc_field['map-default-latitude'] );
+
+                    if( isset( $wck_cfc_field['map-default-longitude'] ) )
+                        $fields_inner_array['map_default_longitude'] = trim( $wck_cfc_field['map-default-longitude'] );
+
+                    if( !empty( $wck_cfc_field['map-default-zoom'] ) )
+                        $fields_inner_array['map_default_zoom'] = trim( $wck_cfc_field['map-default-zoom'] );
+
+                    if( !empty( $wck_cfc_field['map-height'] ) )
+                        $fields_inner_array['map_height'] = trim( $wck_cfc_field['map-height'] );
 
 					$fields_array[] = $fields_inner_array;
 				}
@@ -467,8 +494,10 @@ function wck_cfc_change_meta_key( $meta, $id, $values, $element_id ){
             }
 
             // Page Template
-            if ($wck_cfc_args[0]['page-template'] != $values['page-template']) {
-                update_post_meta($id, 'wck_cfc_page_template_arg', $values['page-template']);
+            if( isset( $wck_cfc_args[0]['page-template'] ) && $values['page-template'] ) {
+                if ($wck_cfc_args[0]['page-template'] != $values['page-template']) {
+                    update_post_meta($id, 'wck_cfc_page_template_arg', $values['page-template']);
+                }
             }
         }
 	}

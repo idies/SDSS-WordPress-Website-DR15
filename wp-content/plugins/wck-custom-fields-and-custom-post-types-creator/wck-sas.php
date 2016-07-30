@@ -79,6 +79,35 @@ function wck_sas_create_box(){
 
 		/* create the box */
 		new Wordpress_Creation_Kit( $args );
+
+
+        /* set up the extra settings array */
+        $sas_extra_options = array();
+
+        if( file_exists( dirname( __FILE__ ) . '/wordpress-creation-kit-api/fields/map.php' ) )
+            $sas_extra_options[] = array( 'type' => 'text', 'title' => __( 'Google Maps API', 'wck' ), 'description' => __( 'Enter your Google Maps API key ( <a href="https://console.developers.google.com/flows/enableapi?apiid=maps_backend" target="_blank">Get your API key</a> )', 'wck' ), 'required' => false );
+
+        /* if there are extra options add the box */
+        if( !empty( $sas_extra_options ) ) {
+
+            /* set up the box arguments */
+            $args = array(
+                'metabox_id' => 'wck_extra_options',
+                'metabox_title' => __( 'Extra Settings', 'wck' ),
+                'post_type' => 'sas-page',
+                'meta_name' => 'wck_extra_options',
+                'meta_array' => $sas_extra_options,
+                'context' 	=> 'option',
+                'single' => true,
+                'sortable' => false
+            );
+
+            /* create the box */
+            if (file_exists ($wck_premium_update . 'update-checker.php'))
+                new Wordpress_Creation_Kit( $args );
+
+        }
+
 	}
 }
 

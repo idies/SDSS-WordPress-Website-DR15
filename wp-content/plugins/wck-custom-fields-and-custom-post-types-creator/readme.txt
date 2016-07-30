@@ -5,8 +5,8 @@ Donate link: http://www.cozmoslabs.com/wordpress-creation-kit/
 Tags: custom fields, custom field, wordpress custom fields, custom post type, custom post types, repeater fields, meta box, metabox, custom taxonomy, custom fields creator, post meta
 
 Requires at least: 3.1
-Tested up to: 4.5.2
-Stable tag: 1.2.8
+Tested up to: 4.5.3
+Stable tag: 1.3.0
 
 A must have tool for creating custom fields, custom post types and taxonomies, fast and without any programming knowledge.
 
@@ -143,6 +143,9 @@ Creating a taxonomy generally automatically creates a special query variable usi
 10. Taxonomy listing
 
 == Changelog ==
+= 1.2.9 =
+* Added Lables field in Custom Fields Creator next to Options for checkboxes, selects and radios
+
 = 1.2.8 =
 * Added Phone field type
 * Added HTML field type

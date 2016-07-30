@@ -34,7 +34,8 @@
                 <tbody>
                 <tr>
                 	<td align="center">
-                    	<form action="https://www.paypal.com/cgi-bin/webscr" method="post" target="_top">
+                    	<p>Please don't kill open source developers. Please donate if it has helped you.</p>
+                        <form action="https://www.paypal.com/cgi-bin/webscr" method="post" target="_top">
                             <input type="hidden" name="cmd" value="_s-xclick">
                             <input type="hidden" name="hosted_button_id" value="NX89F5F93YTZJ">
                             <input type="image" src="https://www.paypalobjects.com/en_US/i/btn/btn_donateCC_LG.gif" border="0" name="submit" alt="PayPal - The safer, easier way to pay online!">
@@ -75,9 +76,11 @@
                 	<td>
                     	<ol class="uaf_list">
                         	<li><a href="http://wordpress.org/plugins/use-any-font/" target="_blank">Use Any Font</a></li>
+                            <li><a href="https://wordpress.org/plugins/wp-masonry-layout/" target="_blank">WP Masonry Layout (Pinterest Like Grid)</a></li>
+                            <li><a target="_blank" href="http://wordpress.org/plugins/email-checker/">Real Email Checker</a></li>                            
                             <li><a href="http://wordpress.org/extend/plugins/any-mobile-theme-switcher/" target="_blank">Any Mobile Theme Switcher</a></li>
                             <li><a href="http://wordpress.org/extend/plugins/jquery-validation-for-contact-form-7/" target="_blank">Jquery Validation For Contact Form 7</a></li>
-                            <li><a href="http://wordpress.org/extend/plugins/block-specific-plugin-updates/" target="_blank">Block Specific Plugin Updates</a></li>
+                            <li><a href="http://wordpress.org/plugins/add-tags-and-category-to-page/" target="_blank">Add Tags and Category To Pages/Post Types</a></li>
                             <li><a href="http://wordpress.org/extend/plugins/featured-image-in-rss-feed/" target="_blank">Featured Image In RSS Feed</a></li>
                             <li><a href="http://wordpress.org/extend/plugins/remove-admin-bar-for-client/" target="_blank">Remove Admin Bar</a></li>
                             <li><a href="http://wordpress.org/extend/plugins/html-in-category-and-pages/" target="_blank">.html in category and page url</a></li>

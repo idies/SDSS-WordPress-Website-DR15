@@ -4,7 +4,7 @@ Plugin Name: Add Tags And Category To Page And Post Types
 Plugin URI: http://dineshkarki.com.np/add-tags-and-category-to-page
 Description: This plugin adds tags and category to wordpress pages and post types.
 Author: Dinesh Karki
-Version: 1.1
+Version: 2.0
 Author URI: http://www.dineshkarki.com.np
 */
 
@@ -72,5 +72,9 @@ function tcp_add_post_types_in_category_and_tag_template($query) {
 }
 add_action('admin_init', 'add_tags_and_category_for_post_types');
 add_filter('pre_get_posts', 'tcp_add_post_types_in_category_and_tag_template');
+add_filter( 'plugin_action_links_' . plugin_basename(__FILE__), 'tcp_plugin_action_links' );
+function tcp_plugin_action_links( $links ) {
+   $links[] = '<a href="'. esc_url( get_admin_url(null, 'options-general.php?page=add-tags-and-category-to-page/plugin_interface.php') ) .'">Settings</a>';
+   return $links;
+}
 include('plugin_interface.php');
-?>
