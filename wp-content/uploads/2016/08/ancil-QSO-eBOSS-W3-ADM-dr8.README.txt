@@ -1,0 +1,161 @@
+The CFHT W3/D3 ancillary program was designed to target the CFHT W3/D3 region in order to construct various samples of quasars that
+are useful for testing quasar selection for SDSS-IV/eBOSS. The goals were to find as many quasars as possible to r~22 using a variety 
+of methods, while also testing typical quasar selection with force-photometered WISE, variability, CFHT-depth fluxes and SDSS_depth fluxes.
+
+We applied 5 main selection methods in the W3/D3 field. The resulting targets are stored in the file ancil-QSO-eBOSS-W3-ADM-dr8.fits,
+which also contains a bitmask (W3bitmask) that spcifies the selection method(s):
+
+2^0: W3 color box selection
+2^1: SDSS xdqsoz selection
+2^2: SDSS-WISE selection
+2^3: CFHT variability selection
+2^4: PTF variability selection
+
+The bitmask encodes the fact that many of the selection methods overlap. Over the entire file (which is larger than the eventual 
+footprint of targets that was tiled) there are 6743 total targets that split as follows:
+
+TOTAL TARGETS>        6743   (~4495 over 10 deg<sup>2</sup>)
+ 
+               ----TARGETS------
+PROGRAM        TOTAL      UNIQUE
+colorbox        3726        1556
+xdqsoz          2728         532
+wise            3975        1931
+CFHTvar          262         150
+PTFvar           341          54
+ 
+OVERLAPPING TARGETS BETWEEN PROGRAMS...
+ 
+            colorbox      xdqsoz        wise     CFHTvar      PTFvar  
+colorbox        3726        1866        1700          90         249
+xdqsoz          1866        2728        1735          91         250
+wise            1700        1735        3975         102         252
+CFHTvar           90          91         102         262           0
+PTFvar           249         250         252           0         341
+
+As well as merging targets across the individual programs, any targets that lay in the BOSS bright star mask
+allsky_bright_star_mask_pix.ply were excised from the target lists.
+
+Additional useful tags in the target file include KNOWNZ and KNOWNSOURCE, which are high-quality spectroscopic identifications for 
+some of the targets, mainly from Johan Comparat's CFHT/ELG ancillary program and DEEP2, but also other known sources from ADM's 
+BOSS known quasar file. The Comparat identifications only include objects with zwarning == 0 and the DEEP2 objects only include 
+zqualty >= 3, as documented here
+
+The individual selections comprising the program were conducted as outlined below. Whenever it is stated that targets were "matched 
+to the DR8 sweeps", this means that they were matched to the file produced by DJS that was named "objs-eboss-w3-dr8.fits"...this file 
+contained all Primary objects in the W3 region from the DR8 sweeps. Matching to the DR8 sweeps both places targets on the DR8 astrometric 
+system and reduces them to objects that could realistically be targeted by eBOSS.
+
+color box
+---------
+Objects for the color box were selected from the W3 coadded catalog available at the TeraPix CFHT website
+(http://T07.terapix.fr/T07/Wide/W3/Big-Merged/W3_fusion_sm2.cat). The objects were restricted in CFHT magnitudes to g < 22.8. No cut was
+ made on CFHT morphology.
+
+The following color cuts were conducted in CFHT ugr bands to excise the stellar locus:
+
+x = u - g
+y = g - r
+w = where( y - 0.5*x lt -0.2 OR y + 0.7*x lt 0.6 )
+
+The targets were then matched to the DR8 sweeps and restricted in SDSS bands to 17 < r < 22 and objc_type==6 (i.e. point source)
+
+Color box targets were assigned a priority of 1, so that they did not collide with variability selected targets.
+
+SDSS xdqsoz
+-----------
+
+SDSS xdqsoz classification was directly conducted on the DR8 sweeps, restricted in SDSSbands  to 17 < r < 22 and objc_type==6 (i.e. 
+point source) The xdqsoz algorithm (Bovy, Myers et al. 2012) was then run on the targets and the xdqsoz probability *integrated across 
+all redshifts* was calculated. The final targets were set to be those sources with PQSO > 0.2. This will suffer from some contamination
+at the high redshift end, but is a deliberate choice based on prior discussion on eBOSS targeting phonecons, in which some people
+favor a "redshift free" selection with xdqsoz.
+
+SDSS xdqsoz targets were assigned a priority of 1, so that they did not collide with variability selected targets.
+
+
+SDSS-WISE
+---------
+
+The DR8 sweeps file ('objs-eboss-w3-dr8.fits') was force-photometered at the SDSS source positions with the Tractor to extract WISE
+fluxes (in the file ' eboss-w3-v4-wise-dr9.fits'). 
+
+Calling the SDSS objects "a" and the WISE objects "b" the following logic was then applied:
+
+i=where(b.w1 NE 0 AND b.w2 NE 0) & a=a[i] & b=b[i] ; trim to measured objs                                                                            
+flux1 = (a.psfflux[1]+0.8*a.psfflux[2]+0.6*a.psfflux[3])/2.4
+flux1model = (a.modelflux[1]+0.8*a.modelflux[2]+0.6*a.modelflux[3])/2.4
+flux2 = (b.w1 + 0.5*b.w2)/1.5
+mag_opt = 22.5 - 2.5*alog10(flux1>0.1)
+mag_model = 22.5 - 2.5*alog10(flux1model>0.1)
+mdiff = mag_opt - mag_model ; PSF - model mags                                                                                                        
+gicolor = -2.5*alog10(a.psfflux[1]) + 2.5*alog10(a.psfflux[3])
+mag_wise = 22.5 - 2.5*alog10(flux2>0.1)
+iselect = where( (flux2 * a.psfflux[1] GT flux1 * a.psfflux[3] * 10^(3.0/2.5)) $
+                      AND mag_opt GT 17 AND mag_opt LT 22 $
+                      AND (a.objc_type EQ 6 OR mdiff LT 0.10) AND gicolor LT 1.5,cnt)
+
+This logic can be described as:
+
+(1) A stacked flux was created in SDSS gri (weighted as g:0.8r:0.6i), for both MODEL and PSF fluxes
+(2) A stacked flux was created in WISE W1 and W2 (weighted as W1:0.5W2) 
+(3) Only objects with stacked fluxes (in both WISE and SDSS) of more than 0.1 nanomaggies were retained as targets
+(4) Only objects with W2 fluxes of more than 0.1 nanomaggies were retained as targets 
+(5) The targets were cut to those objects with an SDSS stacked flux (mag_opt) of 17 < r < 22
+(6) The targets were cut to those objects with SDSS g - i < 1.5
+(7) The targets were assigned a slightly relaxed morphological cut such that *either* objc_type == 6 *or* 
+                 the difference between PSF and MODEL magnitudes being < 0.1 are targeted
+(8) The targets were cut to those objects with (mag_opt - m_wise) > (g-i) + 3.0 where mag_opt is the stacked optical 
+                 magnitude and m_wise is the stacked WISE magnitude
+
+SDSS-WISE targets were assigned a priority of 1, so that they did not collide with variability selected targets.
+
+-----------------------------------------------------------------------------------------------------------------------------------------
+PRIOR TO THIS POINT, THIS DOCUMENT WAS WRITTEN BY Adam D. Myers, Wyoming. AFTER THIS POINT IT WAS WRITTEN BY Christophe Yeche, CEA/SACLAY
+-----------------------------------------------------------------------------------------------------------------------------------------
+
+CFHT variability
+----------------
+
+1) Field CFHT deep 3, 1 Sq. deg.
+2) 3 years of observation for the light curves
+3) 3 variables Chi2, A and Gamma (for the last two variables related to the structure function see in Palanque, 2011 paper the exact definitions)
+4) The 3 variables are averaged over the 3 bands gri
+5) Color c1 and c3 are defined as:
+  c1=0.95*(u_mag-g_mag) + 0.31*(g_mag-r_mag) + 0.11*(r_mag-i_mag) ;
+  c3=-0.39*(u_mag-g_mag) + 0.79*(g_mag-r_mag) + 0.47*(r_mag-i_mag) ;
+
+
+Than we define two selections:
+A) Pure CFHT selection (~1/3 of the targets):
+  A_gri>0.08&&Chi2_gri>10.0&&gamma_gri>0.3&&(c3<0.6 -.33*c1)&&g_mag<23.0;
+
+
+B) CFHT + SDSS selection (~2/3 of the targets):
+(A_gri>0.08&&Chi2_gri>10.0&&gamma_gri>0.2&&g_mag<22.8&&type==6
+
+
+CFHT variability targets were set to the highest priority (0)
+
+PTF variability
+---------------
+
+1) Field CFHT: 3-4 Sq. deg (Nathalie could you described the 2 PTF fields used).
+2) 3-5 years of observation for the light curves
+3) 3 variables Chi2, A and Gamma (for the last two variables related to the structure function see in Palanque, 2011 paper the exact definitions)
+4) The 3 variables are just for R band linked to the r SDSS observation (with a color correction)
+5) Color c1 and c3 are defined as:
+  c1=0.95*(u_mag-g_mag) + 0.31*(g_mag-r_mag) + 0.11*(r_mag-i_mag) ;
+  c3=-0.39*(u_mag-g_mag) + 0.79*(g_mag-r_mag) + 0.47*(r_mag-i_mag) ;
+
+
+Than we define two selections:
+A) Pure PTF selection (~1/3 of the targets):
+chi2>10.0&&A>0.05&&gamma>0.1&&tmag_g<22.5&&mag_r>18.0&&c3<1.0-0.33*c1
+
+
+B) CFHT + SDSS selection (~2/3 of the targets):
+Chi2>10.0&&A>0.05&&gamma>0.1&&g_mag<22.5&&pQSO>0.1&&type==6)
+
+
+Note from ADM: PTF variability targets were matched to the DR8 sweeps for astrometry, which discarded some sources (~5%)
