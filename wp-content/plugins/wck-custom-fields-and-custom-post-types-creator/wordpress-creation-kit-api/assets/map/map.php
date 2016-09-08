@@ -30,6 +30,9 @@ function wck_map_field_add_meta( $meta, $id, $values, $element_id = '' ) {
 
         $args = get_post_meta( $field_set->ID, 'wck_' . ( !empty( $id ) ? 'cfc' : 'opc_field' ) . '_args', true );
 
+        if( empty( $args[0][ $meta_context . '-name' ] ) )
+            continue;
+
         if( $args[0][ $meta_context . '-name' ] !== $meta )
             continue;
 

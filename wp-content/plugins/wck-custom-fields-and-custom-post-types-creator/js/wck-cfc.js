@@ -54,6 +54,16 @@ jQuery(function(){
             jQuery( '#wck_cfc_fields .row-phone-format' ).hide();
         }
 
+        if( value == 'number' ) {
+            jQuery( '#wck_cfc_fields .row-min-number-value' ).show();
+            jQuery( '#wck_cfc_fields .row-max-number-value' ).show();
+            jQuery( '#wck_cfc_fields .row-number-step-value' ).show();
+        } else {
+            jQuery( '#wck_cfc_fields .row-min-number-value' ).hide();
+            jQuery( '#wck_cfc_fields .row-max-number-value' ).hide();
+            jQuery( '#wck_cfc_fields .row-number-step-value' ).hide();
+        }
+
         if( value == 'html' ) {
             jQuery( '#wck_cfc_fields .row-html-content' ).show();
             jQuery( '#wck_cfc_fields .row-default-value' ).hide();
@@ -73,7 +83,13 @@ jQuery(function(){
             jQuery( '#wck_cfc_fields .row-map-default-longitude' ).hide();
             jQuery( '#wck_cfc_fields .row-map-default-zoom' ).hide();
             jQuery( '#wck_cfc_fields .row-map-height' ).hide();
-            jQuery( '#wck_cfc_fields .row-default-value' ).show();
+        }
+
+        if( value == 'datepicker' ){
+            jQuery( '#wck_cfc_fields .row-date-format' ).show();
+        }
+        else{
+            jQuery( '#wck_cfc_fields .row-date-format' ).hide();
         }
 
     });
@@ -132,6 +148,16 @@ jQuery(function(){
             jQuery( this ).parent().parent().parent().children( ".row-phone-format" ).hide();
         }
 
+        if( value == 'number' ) {
+            jQuery( this ).parent().parent().parent().children( ".row-min-number-value" ).show();
+            jQuery( this ).parent().parent().parent().children( ".row-max-number-value" ).show();
+            jQuery( this ).parent().parent().parent().children( ".row-number-step-value" ).show();
+        } else {
+            jQuery( this ).parent().parent().parent().children( ".row-min-number-value" ).hide();
+            jQuery( this ).parent().parent().parent().children( ".row-max-number-value" ).hide();
+            jQuery( this ).parent().parent().parent().children( ".row-number-step-value" ).hide();
+        }
+
         if( value == 'html' ) {
             jQuery( this ).parent().parent().parent().children( ".row-html-content" ).show();
             jQuery( this ).parent().parent().parent().children( ".row-default-value" ).hide();
@@ -151,7 +177,12 @@ jQuery(function(){
             jQuery( this ).parent().parent().parent().children( '.row-map-default-longitude' ).hide();
             jQuery( this ).parent().parent().parent().children( '.row-map-default-zoom' ).hide();
             jQuery( this ).parent().parent().parent().children( '.row-map-height' ).hide();
-            jQuery( this ).parent().parent().parent().children( '.row-default-value' ).show();
+        }
+
+        if( value == 'datepicker' ) {
+            jQuery( this ).parent().parent().parent().children( ".row-date-format" ).show();
+        } else {
+            jQuery( this ).parent().parent().parent().children( ".row-date-format" ).hide();
         }
 
     });

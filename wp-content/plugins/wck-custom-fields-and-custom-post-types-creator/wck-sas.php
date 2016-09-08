@@ -119,6 +119,7 @@ function wck_sas_welcome($hook){
 		$default_plugin_headers = get_plugin_data($plugin_path);
 		$plugin_name = $default_plugin_headers['Name'];
 		$plugin_version = $default_plugin_headers['Version'];
+		$plugin_name_class = ( strpos( strtolower($plugin_name), 'pro' ) !== false ? 'Pro' : ( strpos( strtolower($plugin_name), 'hobbyist' ) !== false ? 'Hobbyist' : 'Free' ) );
 
         if( version_compare(PHP_VERSION, '5.3.0') < 0 ) { ?>
             <div class="notice-error notice">
@@ -129,9 +130,9 @@ function wck_sas_welcome($hook){
         <?php }
 ?>
 		<div class="wrap about-wrap">
+			<div class="wck-badge <?php echo $plugin_name_class; ?>"><span><?php printf( __( 'Version %s' ), $plugin_version ); ?></span></div>
 			<h1><?php printf( __( 'Welcome to %s', 'wck' ), $plugin_name ); ?></h1>
 			<div class="about-text"><?php _e( 'WCK helps you create <strong>repeater custom fields, custom post types</strong> and <strong>taxonomies</strong> in just a couple of clicks, directly from the WordPress admin interface. WCK content types will improve the usability of the sites you build, making them easy to manage by your clients. ', 'wck' ); ?></div>
-			<div class="wck-badge"><?php printf( __( 'Version %s', 'wck' ), $plugin_version ); ?></div>
 		</div>
 
 <?php

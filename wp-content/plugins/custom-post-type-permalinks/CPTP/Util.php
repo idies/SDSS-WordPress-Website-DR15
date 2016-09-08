@@ -13,10 +13,33 @@ class CPTP_Util {
 	private function __construct() {
 	}
 
+	/**
+	 * @return array
+	 */
 	public static function get_post_types() {
-		return get_post_types( array( '_builtin' => false, 'publicly_queryable' => true, 'show_ui' => true ) );
+		$post_type = get_post_types( array( '_builtin' => false, 'publicly_queryable' => true, 'show_ui' => true ) );
+		return array_filter( $post_type, array( __CLASS__, 'is_post_type_support_rewrite' ) );
+
 	}
 
+	/**
+	 * @param string $post_type
+	 *
+	 * @return bool
+	 */
+	private static function is_post_type_support_rewrite( $post_type ) {
+		$post_type_object = get_post_type_object( $post_type );
+		if ( false === $post_type_object->rewrite ) {
+			return false;
+		}
+		return true;
+	}
+
+	/**
+	 * @param bool $objects
+	 *
+	 * @return array
+	 */
 	public static function get_taxonomies( $objects = false ) {
 		if ( $objects ) {
 			$output = 'objects';
@@ -29,13 +52,58 @@ class CPTP_Util {
 
 	/**
 	 *
-	 * Get Custom Taxonomies parents.
+	 * Get Custom Taxonomies parents slug.
 	 *
 	 * @version 1.0
+	 *
+	 * @param int|WP_Term|object $term
+	 * @param string $taxonomy
+	 * @param string $separator
+	 * @param bool $nicename
+	 * @param array $visited
+	 *
+	 * @return string
 	 */
-	public static function get_taxonomy_parents( $id, $taxonomy = 'category', $link = false, $separator = '/', $nicename = false, $visited = array() ) {
+	public static function get_taxonomy_parents_slug( $term, $taxonomy = 'category', $separator = '/', $nicename = false, $visited = array() ) {
 		$chain = '';
-		$parent = get_term( $id, $taxonomy );
+		$parent = get_term( $term, $taxonomy );
+		if ( is_wp_error( $parent ) ) {
+			return $parent;
+		}
+
+		if ( $nicename ) {
+			$name = $parent->slug;
+		} else {
+			$name = $parent->name;
+		}
+
+		if ( $parent->parent && ( $parent->parent != $parent->term_id ) && ! in_array( $parent->parent, $visited ) ) {
+			$visited[] = $parent->parent;
+			$chain .= CPTP_Util::get_taxonomy_parents_slug( $parent->parent, $taxonomy, $separator, $nicename, $visited );
+		}
+		$chain .= $name.$separator;
+
+		return $chain;
+	}
+
+	/**
+	 *
+	 * Get Custom Taxonomies parents.
+	 *
+	 * @deprecated
+	 *
+	 * @param int|WP_Term|object $term
+	 * @param string $taxonomy
+	 * @param bool $link
+	 * @param string $separator
+	 * @param bool $nicename
+	 * @param array $visited
+	 *
+	 * @return string
+	 */
+	public static function get_taxonomy_parents( $term, $taxonomy = 'category', $link = false, $separator = '/', $nicename = false, $visited = array() ) {
+		$chain = '';
+		$parent = get_term( $term, $taxonomy );
 		if ( is_wp_error( $parent ) ) {
 			return $parent;
 		}

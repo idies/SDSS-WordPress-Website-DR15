@@ -1,12 +1,14 @@
-=== WCK - Custom Post Types and Custom Fields Creator ===
+=== Custom Post Types and Custom Fields creator - WCK ===
 
 Contributors: cozmoslabs, reflectionmedia, madalin.ungureanu, sareiodata, adispiac
 Donate link: http://www.cozmoslabs.com/wordpress-creation-kit/
-Tags: custom fields, custom field, wordpress custom fields, custom post type, custom post types, repeater fields, meta box, metabox, custom taxonomy, custom fields creator, post meta
+Tags: custom fields, custom field, wordpress custom fields, custom post type, custom post types, post types, repeater fields, meta box, metabox, custom taxonomy, custom fields creator, post meta
 
 Requires at least: 3.1
-Tested up to: 4.5.3
-Stable tag: 1.3.0
+Tested up to: 4.6
+Stable tag: 1.3.3
+License: GPLv2 or later
+License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
 A must have tool for creating custom fields, custom post types and taxonomies, fast and without any programming knowledge.
 
@@ -26,7 +28,7 @@ A must have tool for creating custom fields, custom post types and taxonomies, f
 [youtube http://www.youtube.com/watch?v=_ueYKlP_i7w]
 
 = Custom Fields =
-* Custom fields types: wysiwyg editor, upload, text, textarea, select, checkbox, radio
+* Custom fields types: WYSIWYG editor, upload, text, textarea, select, checkbox, radio, number, HTML, time-picker, phone, currency select, color picker, heading
 * Easy to create custom fields for any post type.
 * Support for **Repeater Fields** and **Repeater Groups** of custom fields.
 * Drag and Drop to sort the Repeater Fields.
@@ -44,7 +46,7 @@ A must have tool for creating custom fields, custom post types and taxonomies, f
 * Attach the taxonomy to built in or custom post types
 
 = WCK PRO =
-  The [WCK PRO version](http://www.cozmoslabs.com/wck-custom-fields-custom-post-types-plugin/) offers:
+  The [WCK PRO version](http://www.cozmoslabs.com/wck-custom-fields-custom-post-types-plugin/?utm_source=wp.org&utm_medium=pb-description-page&utm_campaign=WCKFree) offers:
   
 * **Swift Templates** - Build your front-end templates directly from the WordPress admin UI, without writing any PHP code. Easily display registered custom post types, custom fields and taxonomies in your current theme.
 * Front-end Posting - form builder for content creation and editing
@@ -52,19 +54,13 @@ A must have tool for creating custom fields, custom post types and taxonomies, f
 * More field types: Date-picker, Country Select, User Select, CPT Select
 * Premium Email Support for your project
   
- [See complete list of PRO features](http://www.cozmoslabs.com/wck-custom-fields-custom-post-types-plugin/)
+ [See complete list of PRO features](http://www.cozmoslabs.com/wck-custom-fields-custom-post-types-plugin/?utm_source=wp.org&utm_medium=pb-description-page&utm_campaign=WCKFree)
 
 = Website =
 http://www.cozmoslabs.com/wck-custom-fields-custom-post-types-plugin/
 
 = Announcement Post and Video =
 http://www.cozmoslabs.com/3747-wordpress-creation-kit-a-sparkling-new-custom-field-taxonomy-and-post-type-creator/
-
-= Documentation =
-http://www.cozmoslabs.com/docs/wordpress-creation-kit-documentation/
-
-= Bug Submission and Forum Support =
-http://www.cozmoslabs.com/forums/forum/wordpresscreationkit/
 
 == Installation ==
 
@@ -143,6 +139,23 @@ Creating a taxonomy generally automatically creates a special query variable usi
 10. Taxonomy listing
 
 == Changelog ==
+= 1.3.3 =
+* Added date format option for Datepicker Field
+* Fixed notices when multiple single boxes were present and the first one had a required error
+* New menu icon
+
+= 1.3.2 =
+* Added Number field type
+* Removed notice regarding post thumbnail on certain themes
+* New branding to match website
+
+= 1.3.1 =
+* Fixed preview draft not showing the correct custom fields in certain conditions
+* Fixed a fatal error that was happening in certain conditions when adding a new Custom Fields Creator Meta Box
+
+= 1.3.0 =
+* Security Fixes
+
 = 1.2.9 =
 * Added Lables field in Custom Fields Creator next to Options for checkboxes, selects and radios
 

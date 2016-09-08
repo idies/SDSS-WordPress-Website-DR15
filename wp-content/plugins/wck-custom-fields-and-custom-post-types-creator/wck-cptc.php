@@ -334,7 +334,7 @@ if( !file_exists( dirname(__FILE__).'/wck-stp.php' ) ) {
     {
         ?>
         <a href="http://www.cozmoslabs.com/wck-custom-fields-custom-post-types-plugin/?utm_source=wpbackend&utm_medium=clientsite&utm_campaign=WCKFree"><img
-                src="<?php echo plugins_url('/images/banner_pro.png', __FILE__) ?>?v=1" width="260" height="385"
+                src="<?php echo plugins_url('/images/banner_pro.png', __FILE__) ?>?v=1" width="254" height="448"
                 alt="WCK-PRO"/></a>
     <?php
     }
@@ -377,7 +377,7 @@ add_action( 'init', 'wck_cpt_make_sure_thumbnail_support_works', 11 );
 function wck_cpt_make_sure_thumbnail_support_works(){
     global $_wp_theme_features;
 
-    if( is_array( $_wp_theme_features["post-thumbnails"] ) ){
+    if( isset( $_wp_theme_features["post-thumbnails"] ) && is_array( $_wp_theme_features["post-thumbnails"] ) ){
         $post_types_with_thumbnails = $_wp_theme_features["post-thumbnails"][0];
 
         $cpts = get_option('wck_cptc');

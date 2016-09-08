@@ -71,8 +71,13 @@ class CPTP_Module_Permalink extends CPTP_Module {
 		}
 
 		$post_type = $post->post_type;
-		$permalink = $wp_rewrite->get_extra_permastruct( $post_type );
 		$pt_object = get_post_type_object( $post_type );
+
+		if ( false === $pt_object->rewrite ) {
+			return $post_link;
+		}
+
+		$permalink = $wp_rewrite->get_extra_permastruct( $post_type );
 
 		$permalink = str_replace( '%post_id%', $post->ID, $permalink );
 		$permalink = str_replace( '%' . $post_type . '_slug%', $pt_object->rewrite['slug'], $permalink );
@@ -210,7 +215,7 @@ class CPTP_Module_Permalink extends CPTP_Module {
 					$term_slug = $term_obj->slug;
 
 					if ( isset( $term_obj->parent ) and 0 != $term_obj->parent ) {
-						$term_slug = CPTP_Util::get_taxonomy_parents( $term_obj->parent, $taxonomy, false, '/', true ) . $term_slug;
+						$term_slug = CPTP_Util::get_taxonomy_parents_slug( $term_obj->parent, $taxonomy, '/', true ) . $term_slug;
 					}
 				}
 
@@ -269,6 +274,13 @@ class CPTP_Module_Permalink extends CPTP_Module {
 		if ( ! $post_parent ) {
 			return $link;
 		}
+
+		$pt_object = get_post_type_object( $post_parent->post_type );
+
+		if ( false === $pt_object->rewrite ) {
+			return $link;
+		}
+
 		$permalink   = CPTP_Util::get_permalink_structure( $post_parent->post_type );
 		$post_type   = get_post_type_object( $post_parent->post_type );
 
@@ -344,7 +356,7 @@ class CPTP_Module_Permalink extends CPTP_Module {
 		}
 
 		if ( ! $taxonomy->rewrite['hierarchical'] ) {
-			$termlink = str_replace( $term->slug . '/', CPTP_Util::get_taxonomy_parents( $term->term_id, $taxonomy->name, false, '/', true ), $termlink );
+			$termlink = str_replace( $term->slug . '/', CPTP_Util::get_taxonomy_parents_slug( $term->term_id, $taxonomy->name, '/', true ), $termlink );
 		}
 
 		return $termlink;

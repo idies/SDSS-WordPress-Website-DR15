@@ -20,6 +20,11 @@ final class NF_Admin_Menus_Forms extends NF_Abstracts_Menu
         }
     }
 
+    public function get_page_title()
+    {
+        return __( 'Forms', 'ninja-forms' );
+    }
+
     public function admin_init()
     {
         if( isset( $_GET[ 'form_id' ] ) && ! is_numeric( $_GET[ 'form_id' ] ) && 'new' != $_GET[ 'form_id' ] ) {
@@ -92,9 +97,14 @@ final class NF_Admin_Menus_Forms extends NF_Abstracts_Menu
 
         if( ! $form ) die( 'Template not found' );
 
-        $form = base64_decode( $form );
+        $form = json_decode( html_entity_decode( $form ), true );
 
         $form_id = Ninja_Forms()->form()->import_form( $form );
+
+        if( ! $form_id ){
+            $error_message = ( function_exists( 'json_last_error_msg' ) && json_last_error_msg() ) ? json_last_error_msg() : __( 'Form Template Import Error.', 'ninja-forms' );
+            wp_die( $error_message );
+        }
 
         header( "Location: " . admin_url( "admin.php?page=ninja-forms&form_id=$form_id" ) );
         exit();
@@ -121,6 +131,7 @@ final class NF_Admin_Menus_Forms extends NF_Abstracts_Menu
         /**
          * JS Libraries
          */
+        wp_enqueue_script( 'wp-util' );
         wp_enqueue_script( 'jquery-autoNumeric', Ninja_Forms::$url . 'assets/js/lib/jquery.autoNumeric.min.js', array( 'jquery', 'backbone' ) );
         wp_enqueue_script( 'jquery-maskedinput', Ninja_Forms::$url . 'assets/js/lib/jquery.maskedinput.min.js', array( 'jquery', 'backbone' ) );
         wp_enqueue_script( 'backbone-marionette', Ninja_Forms::$url . 'assets/js/lib/backbone.marionette.min.js', array( 'jquery', 'backbone' ) );
@@ -134,6 +145,10 @@ final class NF_Admin_Menus_Forms extends NF_Abstracts_Menu
         wp_enqueue_script( 'jquery-mobile-events', Ninja_Forms::$url . 'assets/js/lib/jquery.mobile-events.min.js', array( 'jquery' ) );
         wp_enqueue_script( 'jquery-ui-touch-punch', Ninja_Forms::$url . 'assets/js/lib/jquery.ui.touch-punch.min.js', array( 'jquery' ) );
         wp_enqueue_script( 'jquery-classy-wiggle', Ninja_Forms::$url . 'assets/js/lib/jquery.classywiggle.min.js', array( 'jquery' ) );
+        wp_enqueue_script( 'moment-with-locale', Ninja_Forms::$url . 'assets/js/lib/moment-with-locales.min.js', array( 'jquery' ) );
+        wp_enqueue_script( 'modernizr', Ninja_Forms::$url . 'assets/js/lib/modernizr.min.js', array( 'jquery' ) );
+        wp_enqueue_script( 'pikaday', Ninja_Forms::$url . 'assets/js/lib/pikaday.min.js', array( 'moment-with-locale' ) );
+        wp_enqueue_script( 'pikaday-responsive', Ninja_Forms::$url . 'assets/js/lib/pikaday-responsive.min.js', array( 'pikaday', 'modernizr' ) );
 
         wp_enqueue_script( 'bootstrap', Ninja_Forms::$url . 'assets/js/lib/bootstrap.min.js', array( 'jquery' ) );
         wp_enqueue_script( 'codemirror', Ninja_Forms::$url . 'assets/js/lib/codemirror.min.js', array( 'jquery' ) );
@@ -143,14 +158,16 @@ final class NF_Admin_Menus_Forms extends NF_Abstracts_Menu
 
 
         wp_enqueue_script( 'nf-builder', Ninja_Forms::$url . 'assets/js/min/builder.js', array( 'jquery', 'jquery-ui-core', 'jquery-ui-draggable', 'jquery-ui-droppable', 'jquery-ui-sortable', 'jquery-effects-bounce', 'wp-color-picker' ) );
+        wp_localize_script( 'nf-builder', 'nfi18n', Ninja_Forms::config( 'i18nBuilder' ) );
 
         wp_localize_script( 'nf-builder', 'nfAdmin', array(
             'ajaxNonce'         => wp_create_nonce( 'ninja_forms_builder_nonce' ),
             'requireBaseUrl'    => Ninja_Forms::$url . 'assets/js/',
-            'previewurl'        => site_url() . '/?nf_preview_form=',
+            'previewurl'        => home_url() . '/?nf_preview_form=',
             'wp_locale'         => $wp_locale->number_format,
             'editFormText'      => __( 'Edit Form', 'ninja-forms' ),
-            'mobile'            => ( wp_is_mobile() ) ? 1: 0
+            'mobile'            => ( wp_is_mobile() ) ? 1: 0,
+            'dateFormat'        => Ninja_Forms()->get_setting( 'date_format' )
         ));
 
         do_action( 'nf_admin_enqueue_scripts' );
@@ -180,10 +197,15 @@ final class NF_Admin_Menus_Forms extends NF_Abstracts_Menu
 
                 $type = $field->get_setting( 'type' );
 
-                if( ! isset( Ninja_Forms()->fields[ $type ] ) ) continue;
+                $field_id = $field->get_id();
+
+                if( ! isset( Ninja_Forms()->fields[ $type ] ) ){
+                    $field = NF_Fields_Unknown::create( $field );
+                }
 
                 $settings = $field->get_settings();
-                $settings['id'] = $field->get_id();
+                $settings[ 'id' ] =  $field_id;
+
 
                 foreach ($settings as $key => $setting) {
                     if (is_numeric($setting)) $settings[$key] = floatval($setting);
@@ -282,14 +304,14 @@ final class NF_Admin_Menus_Forms extends NF_Abstracts_Menu
 
             $defaults = $field_type_settings[ $id ][ 'settingDefaults' ];
             $defaults = array_merge( $defaults, $settings );
-            $defaults[ 'isSaved' ] = TRUE;
+            $defaults[ 'saved' ] = TRUE;
 
             $field_type_settings[ $id ][ 'settingDefaults' ] = $defaults;
         }
 
         ?>
         <script>
-            var fieldTypeData     = <?php echo wp_json_encode( $field_type_settings ); ?>;
+            var fieldTypeData     = <?php echo wp_json_encode( array_values( $field_type_settings ) ); ?>;
             var fieldSettings     = <?php echo wp_json_encode( array_values( $master_settings ) ); ?>;
             var fieldTypeSections = <?php echo wp_json_encode( $field_type_sections ); ?>;
             // console.log( fieldTypeData );
@@ -359,7 +381,7 @@ final class NF_Admin_Menus_Forms extends NF_Abstracts_Menu
 
         ?>
         <script>
-            var actionTypeData = <?php echo wp_json_encode( $action_type_settings ); ?>;
+            var actionTypeData = <?php echo wp_json_encode( array_values( $action_type_settings ) ); ?>;
             var actionSettings = <?php echo wp_json_encode( array_values( $master_settings_list ) ); ?>;
             // console.log( actionTypeData );
         </script>
@@ -396,7 +418,7 @@ final class NF_Admin_Menus_Forms extends NF_Abstracts_Menu
         }
         ?>
         <script>
-        var formSettingTypeData = <?php echo wp_json_encode( $form_settings_types )?>;
+        var formSettingTypeData = <?php echo wp_json_encode( array_values( $form_settings_types ) )?>;
         var formSettings = <?php echo wp_json_encode( array_values( $master_settings ) )?>;
         </script>
         <?php
@@ -494,19 +516,7 @@ final class NF_Admin_Menus_Forms extends NF_Abstracts_Menu
 
     protected function _fetch_action_feed()
     {
-        $actions = get_transient( 'ninja-forms-builder-actions-feed' );
-
-        $bust = ( isset( $_GET[ 'nf-bust-actions-feed' ] ) );
-
-        if( $bust || ! $actions ) {
-            $actions = wp_remote_get('https://ninjaforms.com/?action_feed=true');
-            $actions = wp_remote_retrieve_body($actions);
-            $actions = json_decode($actions, true);
-
-            set_transient( 'ninja-forms-builder-actions-feed', $actions, WEEK_IN_SECONDS );
-        }
-
-        return $actions;
+        return Ninja_Forms::config( 'AvailableActions' );
     }
 
     protected function setting_group_priority( $a, $b )
@@ -517,5 +527,9 @@ final class NF_Admin_Menus_Forms extends NF_Abstracts_Menu
         return $priority[ 0 ] - $priority[ 1 ];
     }
 
+    public function get_capability()
+    {
+        return apply_filters( 'ninja_forms_admin_parent_menu_capabilities', $this->capability );
+    }
 
 }

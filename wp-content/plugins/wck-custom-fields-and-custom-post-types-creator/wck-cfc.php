@@ -150,7 +150,7 @@ function wck_cfc_create_box(){
 
 	/* set up field types */
 
-	$field_types = array( 'heading', 'text', 'textarea', 'select', 'checkbox', 'radio', 'phone', 'upload', 'wysiwyg editor', 'datepicker', 'timepicker', 'colorpicker', 'country select', 'user select', 'cpt select', 'currency select', 'html', 'map' );
+	$field_types = array( 'heading', 'text', 'number', 'textarea', 'select', 'checkbox', 'radio', 'phone', 'upload', 'wysiwyg editor', 'datepicker', 'timepicker', 'colorpicker', 'country select', 'user select', 'cpt select', 'currency select', 'html', 'map' );
 
 	$field_types = apply_filters( 'wck_field_types', $field_types );
 
@@ -170,13 +170,17 @@ function wck_cfc_create_box(){
 		array( 'type' => 'text', 'title' => __( 'Options', 'wck' ), 'slug' => 'options', 'description' => __( 'Options for field types "select", "checkbox" and "radio". For multiple options separate them with a ",".', 'wck' ) ),
 		array( 'type' => 'text', 'title' => __( 'Labels', 'wck' ), 'slug' => 'labels', 'description' => __( 'Labels for field types "select", "checkbox" and "radio". For multiple options separate them with a ",".', 'wck' ) ),
 		array( 'type' => 'text', 'title' => __( 'Phone Format', 'wck' ), 'slug' => 'phone-format', 'default' => '(###) ###-####', 'description' => __( "You can use: # for numbers, parentheses ( ), - sign, + sign, dot . and spaces.", 'wck' ) .'<br>'.  __( "Eg. (###) ###-####", 'wck' ) .'<br>'. __( "Empty field won't check for correct phone number.", 'wck' ) ),
+		array( 'type' => 'text', 'title' => __( 'Min Number Value', 'wck' ), 'slug' => 'min-number-value', 'description' => __( "Min allowed number value (0 to allow only positive numbers)", 'wck' ) .'<br>'. __( "Leave it empty for no min value", 'wck' ) ),
+		array( 'type' => 'text', 'title' => __( 'Max Number Value', 'wck' ), 'slug' => 'max-number-value', 'description' => __( "Max allowed number value (0 to allow only negative numbers)", 'wck' ) .'<br>'. __( "Leave it empty for no max value", 'wck' ) ),
+		array( 'type' => 'text', 'title' => __( 'Number Step Value', 'wck' ), 'slug' => 'number-step-value', 'description' => __( "Step value 1 to allow only integers, 0.1 to allow integers and numbers with 1 decimal", 'wck' ) .'<br>'. __( "To allow multiple decimals use for eg. 0.01 (for 2 deciamls) and so on", 'wck' ) .'<br>'. __( "You can also use step value to specify the legal number intervals (eg. step value 2 will allow only -4, -2, 0, 2 and so on)", 'wck' ) .'<br>'. __( "Leave it empty for no restriction", 'wck' ) ),
 		array( 'type' => 'checkbox', 'title' => __( 'Attach upload to post', 'wck' ), 'slug' => 'attach-upload-to-post', 'description' => __( 'Uploads will be attached to the post if this is checked', 'wck' ), 'options' => array( 'yes' ), 'default' => 'yes' ),
 		array( 'type' => 'text', 'title' => __( 'Number of rows', 'wck' ), 'slug' => 'number-of-rows', 'description' => __( 'Number of rows for the textarea', 'wck' ), 'default' => '5' ),
         array( 'type' => 'select', 'title' => __( 'Readonly', 'wck' ), 'slug' => 'readonly', 'options' => array( 'false', 'true' ), 'default' => 'false', 'description' => __( 'Whether the textarea is readonly or not', 'wck' ) ),
         array( 'type' => 'text', 'title' => __( 'Default Latitude', 'wck' ), 'slug' => 'map-default-latitude', 'description' => __( 'The latitude at which the map should be displayed when no pins are attached.', 'wck' ), 'default' => 0 ),
         array( 'type' => 'text', 'title' => __( 'Default Longitude', 'wck' ), 'slug' => 'map-default-longitude', 'description' => __( 'The longitude at which the map should be displayed when no pins are attached.', 'wck' ), 'default' => 0 ),
         array( 'type' => 'text', 'title' => __( 'Default Zoom', 'wck' ), 'slug' => 'map-default-zoom', 'description' => __( 'Add a number from 0 to 19. The higher the number the higher the zoom.', 'wck' ), 'default' => 15 ),
-        array( 'type' => 'text', 'title' => __( 'Map Height', 'wck' ), 'slug' => 'map-height', 'description' => __( 'The height of the map.', 'wck' ), 'default' => 350 )
+        array( 'type' => 'text', 'title' => __( 'Map Height', 'wck' ), 'slug' => 'map-height', 'description' => __( 'The height of the map.', 'wck' ), 'default' => 350 ),
+		array( 'type' => 'select', 'title' => __( 'Date Format', 'wck' ), 'slug' => 'date-format', 'description' => __( 'The format of the datepicker date', 'wck' ), 'options' => array( '%Default - dd-mm-yy%dd-mm-yy', '%Datepicker default - mm/dd/yy%mm/dd/yy', '%ISO 8601 - yy-mm-dd%yy-mm-dd', '%Short - d M, y%d M, y', '%Medium - d MM, y%d MM, y', '%Full - DD, d MM, yy%DD, d MM, yy', '%With text - \'day\' d \'of\' MM \'in the year\' yy%\'day\' d \'of\' MM \'in the year\' yy' ), 'default' => 'dd-mm-yy' ),
 	));
 
 
@@ -319,6 +323,20 @@ function wck_cfc_create_boxes_args(){
 
                     if( !empty( $wck_cfc_field['map-height'] ) )
                         $fields_inner_array['map_height'] = trim( $wck_cfc_field['map-height'] );
+
+					if( !empty( $wck_cfc_field['min-number-value'] ) || ( isset( $wck_cfc_field['min-number-value'] ) && $wck_cfc_field['min-number-value'] == '0' ) )
+						$fields_inner_array['min-number-value'] = trim( $wck_cfc_field['min-number-value'] );
+
+					if( !empty( $wck_cfc_field['max-number-value'] ) || ( isset( $wck_cfc_field['max-number-value'] ) && $wck_cfc_field['max-number-value'] == '0' ) )
+						$fields_inner_array['max-number-value'] = trim( $wck_cfc_field['max-number-value'] );
+
+					if( !empty( $wck_cfc_field['number-step-value'] ) )
+						$fields_inner_array['number-step-value'] = trim( $wck_cfc_field['number-step-value'] );
+
+					if( $wck_cfc_field['field-type'] === 'datepicker' ) {
+						if( !empty( $wck_cfc_field['date-format'] ) )
+							$fields_inner_array['date-format'] = $wck_cfc_field['date-format'];
+					}
 
 					$fields_array[] = $fields_inner_array;
 				}
@@ -625,7 +643,7 @@ if( !file_exists( dirname(__FILE__).'/wck-stp.php' ) ) {
     {
         ?>
         <a href="http://www.cozmoslabs.com/wck-custom-fields-custom-post-types-plugin/?utm_source=wpbackend&utm_medium=clientsite&utm_campaign=WCKFree"><img
-                src="<?php echo plugins_url('/images/banner_pro.png', __FILE__) ?>?v=1" width="260" height="385"
+                src="<?php echo plugins_url('/images/banner_pro.png', __FILE__) ?>?v=1" width="254" height="448"
                 alt="WCK-PRO"/></a>
     <?php
     }
@@ -704,7 +722,7 @@ add_filter( 'wck_field_types', 'wck_cfc_filter_field_types' );
 function wck_cfc_filter_field_types( $field_types ){
 	$wck_premium_update = WCK_PLUGIN_DIR.'/update/';
 	if ( !file_exists ($wck_premium_update . 'update-checker.php'))
-		$field_types = array( 'text', 'textarea', 'select', 'checkbox', 'radio', 'upload', 'wysiwyg editor', 'heading', 'colorpicker', 'currency select', 'phone', 'timepicker', 'html' );
+		$field_types = array( 'text', 'textarea', 'select', 'checkbox', 'radio', 'upload', 'wysiwyg editor', 'heading', 'colorpicker', 'currency select', 'phone', 'timepicker', 'html', 'number' );
 
 	return $field_types;
 }
@@ -727,6 +745,12 @@ function wck_cfc_make_options_required( $meta_array, $meta, $values, $id ) {
 			$meta_array[$key]['required'] ? $meta_array[$key]['was_required'] = true : $meta_array[$key]['was_required'] = false;
 			$meta_array[$key]['required'] = true;
 			add_filter( "wck_required_test_{$meta}_" . Wordpress_Creation_Kit::wck_generate_slug( $field['title'], $field ), 'wck_phone_field_error', 10, 6 );
+		}
+
+		if( $field['type'] == 'number' ) {
+			$meta_array[$key]['required'] ? $meta_array[$key]['was_required'] = true : $meta_array[$key]['was_required'] = false;
+			$meta_array[$key]['required'] = true;
+			add_filter( "wck_required_test_{$meta}_" . Wordpress_Creation_Kit::wck_generate_slug( $field['title'], $field ), 'wck_number_field_error', 10, 6 );
 		}
 	}
 
@@ -760,6 +784,37 @@ function wck_phone_error_message( $message, $value, $required_field ) {
 	$message = apply_filters( "wck_invalid_phone_message", __( "Please enter a valid phone number for field ", "wck" ) . "$required_field \n" );
 
 	return $message;
+}
+
+function wck_number_field_error( $bool, $value, $id, $field, $meta, $fields ) {
+	foreach( $fields as $key => $field_array ) {
+		$field_slug = Wordpress_Creation_Kit::wck_generate_slug( $field_array['title'], $field_array );
+		if( $field_slug == $field ) {
+			if( ! empty( $value ) && ! is_numeric( $value ) ) {
+				add_filter( "wck_required_message_{$meta}_{$field_slug}", create_function( '$message, $value, $required_field', '$message = apply_filters( "wck_number_error_message", __( "Please enter numbers only for field ", "wck" ) . "$required_field \n" ); return $message;' ), 10, 3 );
+				return true;
+			}
+
+			if( ! empty( $field_array['number-step-value'] ) && ! empty( $value ) && ( sprintf( round( $value / $field_array['number-step-value'] ) ) != sprintf( $value / $field_array['number-step-value'] ) ) ) {
+				add_filter( "wck_required_message_{$meta}_{$field_slug}", create_function( '$message, $value, $required_field', '$number_step = '. $field_array['number-step-value'] .'; $message = apply_filters( "wck_number_error_message", "$required_field" . __( " field value must be a multiplier of ", "wck" ) . "$number_step \n" ); return $message;' ), 10, 3 );
+				return true;
+			}
+
+			if( ( ! empty( $field_array['min-number-value'] ) || $field_array['min-number-value'] == '0' ) && ( ! empty( $value ) || $value == '0' ) && $value < $field_array['min-number-value'] ) {
+				add_filter( "wck_required_message_{$meta}_{$field_slug}", create_function( '$message, $value, $required_field', '$number_min = '. $field_array['min-number-value'] .'; $message = apply_filters( "wck_number_error_message", "$required_field" . __( " field value must be greater than or equal to ", "wck" ) . "$number_min \n" ); return $message;' ), 10, 3 );
+				return true;
+			}
+
+			if( ( ! empty( $field_array['max-number-value'] ) || $field_array['max-number-value'] == '0' ) && ( ! empty( $value ) || $value == '0' ) && $value > $field_array['max-number-value'] ) {
+				add_filter( "wck_required_message_{$meta}_{$field_slug}", create_function( '$message, $value, $required_field', '$number_max = '. $field_array['max-number-value'] .'; $message = apply_filters( "wck_number_error_message", "$required_field" . __( " field value must be less than or equal to ", "wck" ) . "$number_max \n" ); return $message;' ), 10, 3 );
+				return true;
+			}
+
+			if( isset( $field_array['was_required'] ) && $field_array['was_required'] && empty( $value ) && $value != '0' ) {
+				return true;
+			}
+		}
+	}
 }
 
 ?>

@@ -102,8 +102,9 @@ class Wordpress_Creation_Kit{
 		add_action("wp_ajax_wck_remove_meta".$this->args['meta_name'], array( &$this, 'wck_remove_meta') );
 		add_action("wp_ajax_wck_reorder_meta".$this->args['meta_name'], array( &$this, 'wck_reorder_meta') );
 
-        if( file_exists( dirname(__FILE__).'/wck-fep.php' ) && ( !isset( $wck_fep ) || $wck_fep == 'enabled' ) ){
-            add_action("wp_ajax_nopriv_wck_add_meta".$this->args['meta_name'], array( &$this, 'wck_add_meta') );
+		$wck_tools = get_option('wck_tools');
+        if( file_exists( dirname(__FILE__).'/wck-fep/wck-fep.php' ) && ( empty( $wck_tools ) ||  ( !empty( $wck_tools[0]["frontend-posting"] ) && $wck_tools[0]["frontend-posting"] == 'enabled' ) ) ){
+			add_action("wp_ajax_nopriv_wck_add_meta".$this->args['meta_name'], array( &$this, 'wck_add_meta') );
             add_action("wp_ajax_nopriv_wck_update_meta".$this->args['meta_name'], array( &$this, 'wck_update_meta') );
             add_action("wp_ajax_nopriv_wck_show_update".$this->args['meta_name'], array( &$this, 'wck_show_update_form') );
             add_action("wp_ajax_nopriv_wck_refresh_list".$this->args['meta_name'], array( &$this, 'wck_refresh_list') );
@@ -375,7 +376,8 @@ class Wordpress_Creation_Kit{
                             /* see if we have any posted values */
                             if( !empty( $_GET['postedvalues'] ) ){
                                 $posted_values = unserialize( urldecode( base64_decode( $_GET['postedvalues'] ) ) );
-                                $value = $posted_values[$meta][Wordpress_Creation_Kit::wck_generate_slug( $details['title'], $details )];
+								if( !empty( $posted_values[$meta][Wordpress_Creation_Kit::wck_generate_slug( $details['title'], $details )] ) )
+                                	$value = $posted_values[$meta][Wordpress_Creation_Kit::wck_generate_slug( $details['title'], $details )];
                             }
                             else if( !empty( $results[0] ) && !empty( $results[0][Wordpress_Creation_Kit::wck_generate_slug( $details['title'], $details )] ) )
                                 $value = $results[0][Wordpress_Creation_Kit::wck_generate_slug( $details['title'], $details )];
@@ -1230,17 +1232,17 @@ class Wordpress_Creation_Kit{
 
                         /* test if we have errors for the required fields */
                         $errors = self::wck_test_required( $this->args['meta_array'], $meta_name, $meta_values, $post_id );
+						global $wck_single_forms_posted_values;
+						$wck_single_forms_posted_values[$meta_name] = $meta_values;
                         if( !empty( $errors ) ){
                             /* if we have errors then add them in the global. We do this so we get all errors from all single metaboxes that might be on that page */
                             global $wck_single_forms_errors;
-                            global $wck_single_forms_posted_values;
                             if( !empty( $errors['errorfields'] ) ){
                                 foreach( $errors['errorfields'] as $key => $field_name ){
                                     $errors['errorfields'][$key] = $this->args['meta_name']. '_' .$field_name;
                                 }
                             }
                             $wck_single_forms_errors[] = $errors;
-                            $wck_single_forms_posted_values[$meta_name] = $meta_values;
                         }
                         else {
 

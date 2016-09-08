@@ -1,6 +1,9 @@
 #wck_cfc_fields .row-options,
 #wck_cfc_fields .row-labels,
 #wck_cfc_fields .row-phone-format,
+#wck_cfc_fields .row-min-number-value,
+#wck_cfc_fields .row-max-number-value,
+#wck_cfc_fields .row-number-step-value,
 #wck_cfc_fields .row-attach-upload-to-post,
 #wck_cfc_fields .row-cpt,
 #wck_cfc_fields .row-number-of-rows,
@@ -10,7 +13,8 @@
 #wck_cfc_fields .row-map-default-latitude,
 #wck_cfc_fields .row-map-default-longitude,
 #wck_cfc_fields .row-map-default-zoom,
-#wck_cfc_fields .row-map-height {
+#wck_cfc_fields .row-map-height,
+#wck_cfc_fields .row-date-format{
 	display:none;
 }
 
@@ -22,11 +26,15 @@
 #container_wck_cfc_fields .row-html-content,
 #container_wck_cfc_fields .row-default-text,
 #container_wck_cfc_fields .row-phone-format,
+#container_wck_cfc_fields .row-min-number-value,
+#container_wck_cfc_fields .row-max-number-value,
+#container_wck_cfc_fields .row-number-step-value,
 #container_wck_cfc_fields .row-readonly,
 #container_wck_cfc_fields .row-map-default-latitude,
 #container_wck_cfc_fields .row-map-default-longitude,
 #container_wck_cfc_fields .row-map-default-zoom,
-#container_wck_cfc_fields .row-map-height {
+#container_wck_cfc_fields .row-map-height,
+#container_wck_cfc_fields .row-date-format{
 	display:none;
 }
 
@@ -43,6 +51,9 @@
 
 #container_wck_cfc_fields .element_type_html .row-html-content,
 #container_wck_cfc_fields .element_type_phone .row-phone-format,
+#container_wck_cfc_fields .element_type_number .row-min-number-value,
+#container_wck_cfc_fields .element_type_number .row-max-number-value,
+#container_wck_cfc_fields .element_type_number .row-number-step-value,
 #container_wck_cfc_fields .element_type_cpt-select .row-cpt,
 #container_wck_cfc_fields .element_type_checkbox .row-options,
 #container_wck_cfc_fields .element_type_checkbox .row-labels,
@@ -57,7 +68,8 @@
 #container_wck_cfc_fields .element_type_map .row-map-default-latitude,
 #container_wck_cfc_fields .element_type_map .row-map-default-longitude,
 #container_wck_cfc_fields .element_type_map .row-map-default-zoom,
-#container_wck_cfc_fields .element_type_map .row-map-height {
+#container_wck_cfc_fields .element_type_map .row-map-height,
+#container_wck_cfc_fields .element_type_datepicker .row-date-format{
 	display:block;
 }
 
