@@ -5,8 +5,8 @@ Donate link: http://www.cozmoslabs.com/wordpress-creation-kit/
 Tags: custom fields, custom field, wordpress custom fields, custom post type, custom post types, post types, repeater fields, meta box, metabox, custom taxonomy, custom fields creator, post meta
 
 Requires at least: 3.1
-Tested up to: 4.6
-Stable tag: 1.3.3
+Tested up to: 4.6.1
+Stable tag: 2.0.2
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -139,6 +139,16 @@ Creating a taxonomy generally automatically creates a special query variable usi
 10. Taxonomy listing
 
 == Changelog ==
+= 2.0.2 =
+* Fixed an issue with the unserialized conversion page when fields had same names
+
+= 2.0.1 =
+* Fixed issue with Custom Fields Creator when fields had the same name as the meta name
+
+= 2.0.0 =
+* We now save every custom field in it's own separate post meta with an editable meta_key
+* UI improvements to repeater sortable table
+
 = 1.3.3 =
 * Added date format option for Datepicker Field
 * Fixed notices when multiple single boxes were present and the first one had a required error

@@ -65,6 +65,7 @@ class Wordpress_Creation_Kit{
 							'post_id' => '',
 							'single' => false,
 							'unserialize_fields' => false,
+							'unserialize' => true,
 							'sortable' => true,
 							'context' => 'post_meta'
 						);
@@ -315,6 +316,8 @@ class Wordpress_Creation_Kit{
 				require( dirname( __FILE__ ) . '/fields/' . $details['type'] . '.php' );
 			}
 
+			$element = apply_filters( "wck_field_before_description", $element, $meta, $details );
+
 			if( ! empty( $details['description'] ) ) {
 				$element .= '<p class="description">' . $details['description'] . '</p>';
 			}
@@ -449,7 +452,7 @@ class Wordpress_Creation_Kit{
 					
 					$form .= '<li class="row-'. esc_attr( Wordpress_Creation_Kit::wck_generate_slug( $details['title'], $details ) ) .'">';
 					
-					$form .= self::wck_output_form_field( $meta, $details, $value, 'edit_form', $id ); 
+					$form .= self::wck_output_form_field( $meta, $details, apply_filters( "wck_cfc_filter_edit_form_value_{$meta}_".Wordpress_Creation_Kit::wck_generate_slug( $details['title'], $details ) , $value, $results, $element_id, $id ), 'edit_form', $id );
 					
 					$form .= '</li>';
 					
@@ -543,7 +546,7 @@ class Wordpress_Creation_Kit{
 				/* filter display value */
 				/* keep this one for backwards compatibility */	
 				$value = apply_filters( "wck_displayed_value_{$meta}_element_{$j}", $value );
-				$value = apply_filters( "wck_displayed_value_{$meta}_".Wordpress_Creation_Kit::wck_generate_slug( $details['title'], $details ), $value );
+				$value = apply_filters( "wck_displayed_value_{$meta}_".Wordpress_Creation_Kit::wck_generate_slug( $details['title'], $details ), $value, $results, $element_id, $id );
 
 				/* display it differently based on field type*/
 				if( $details['type'] == 'upload' ){	
@@ -765,7 +768,7 @@ class Wordpress_Creation_Kit{
 	}	
 
 	/* Helper function for required fields */
-	function wck_test_required( $meta_array, $meta, $values, $id ){
+	function wck_test_required( $meta_array, $meta, $values, $id, $elemet_id = false ){
 		$fields = apply_filters( 'wck_before_test_required', $meta_array, $meta, $values, $id );
 		$required_fields = array();
 		$required_fields_with_errors = array();
@@ -782,7 +785,7 @@ class Wordpress_Creation_Kit{
 
         if( !empty( $values ) ){
 			foreach( $required_fields as $key => $title ){
-                if( !array_key_exists( $key, $values ) || ( array_key_exists( $key, $values ) && apply_filters( "wck_required_test_{$meta}_{$key}", empty( $values[$key] ), $values[$key], $id, $key, $meta, $fields ) ) ) {
+                if( !array_key_exists( $key, $values ) || ( array_key_exists( $key, $values ) && apply_filters( "wck_required_test_{$meta}_{$key}", empty( $values[$key] ), $values[$key], $id, $key, $meta, $fields, $values, $elemet_id ) ) ) {
 					$required_message .= apply_filters( "wck_required_message_{$meta}_{$key}", __( "Please enter a value for the required field ", "wck" ) . "$required_fields[$key] \n", ( isset($values[$key]) ? $values[$key] : '' ), $required_fields[$key] );
 					$required_fields_with_errors[] = $key;
 				}
@@ -888,7 +891,25 @@ class Wordpress_Creation_Kit{
 			update_post_meta($id, $meta, $results);
 		else if ( $this->args['context'] == 'option' )
 			update_option( $meta,  wp_unslash( $results ) );
-		
+
+		if( $this->args['unserialize'] && $this->args['context'] == 'post_meta' ){
+			/* first entry doesn't have a suffix bus starting from the second entry we have a 0 based index */
+			$number_of_entries = count( $results );
+			if( $number_of_entries == 1  )
+				$meta_suffix = '';
+			else
+				$meta_suffix = '_'.( $number_of_entries-1);
+
+			if( !empty( $values ) ){
+				foreach( $values as $name => $value ){
+					/* check to see if we already have a meta name like this from the old structure to avoid conflicts */
+					$name = Wordpress_Creation_Kit::wck_generate_unique_meta_name_for_unserialized_field( $id, $name, $meta );
+					update_post_meta($id, $name.$meta_suffix, $value);
+				}
+			}
+		}
+
+		/* backwards compatibility */
 		/* if unserialize_fields is true add for each entry separate post meta for every element of the form  */
 		if( $this->args['unserialize_fields'] && $this->args['context'] == 'post_meta' ){
 			
@@ -932,7 +953,7 @@ class Wordpress_Creation_Kit{
 		$values = apply_filters( "wck_update_meta_filter_values_{$meta}", $values, $element_id );
 		
 		/* check required fields */
-		$errors = self::wck_test_required( $this->args['meta_array'], $meta, $values, $id );
+		$errors = self::wck_test_required( $this->args['meta_array'], $meta, $values, $id, $element_id );
 		if( $errors != '' ){
 			header( 'Content-type: application/json' );
 			die( json_encode( $errors ) );
@@ -951,7 +972,25 @@ class Wordpress_Creation_Kit{
 			update_post_meta($id, $meta, $results);
 		else if ( $this->args['context'] == 'option' )
 			update_option( $meta, wp_unslash( $results ) );
-		
+
+		if( $this->args['unserialize'] && $this->args['context'] == 'post_meta' ){
+			/* first entry doesn't have a suffix bus starting from the second entry we have a 0 based index */
+
+			if( $element_id == 0  )
+				$meta_suffix = '';
+			else
+				$meta_suffix = '_'.$element_id;
+
+			if( !empty( $values ) ){
+				foreach( $values as $name => $value ){
+					/* check to see if we already have a meta name like this from the old structure to avoid conflicts */
+					$name = Wordpress_Creation_Kit::wck_generate_unique_meta_name_for_unserialized_field( $id, $name, $meta );
+					update_post_meta( $id, $name.$meta_suffix, $value );
+				}
+			}
+		}
+
+		/* backwards compatibility */
 		/* if unserialize_fields is true update the corresponding post metas for every element of the form  */
 		if( $this->args['unserialize_fields'] && $this->args['context'] == 'post_meta' ){
 			
@@ -1083,9 +1122,44 @@ class Wordpress_Creation_Kit{
 			update_post_meta($id, $meta, $results);
 		else if ( $this->args['context'] == 'option' )
 			update_option( $meta, wp_unslash( $results ) );
+
+
+		/* TODO: optimize so that it updates from the deleted element forward */
+		/* if unserialize_fields is true delete the corresponding post metas */
+		if( $this->args['unserialize'] && $this->args['context'] == 'post_meta' ){
+
+			/* delete all the unserialized meta so we can add them again */
+			$meta_suffix = '';
+			$meta_counter = 0;
+			if( !empty( $old_results ) ) {
+				foreach ( $old_results as $result ) {
+					foreach ( $result as $name => $value ) {
+						/* check to see if we already have a meta name like this from the old structure to avoid conflicts */
+						$name = Wordpress_Creation_Kit::wck_generate_unique_meta_name_for_unserialized_field( $id, $name, $meta );
+						delete_post_meta( $id, $name . $meta_suffix );
+					}
+					$meta_counter ++;
+					$meta_suffix = '_'.$meta_counter;
+				}
+			}
+
+			/* now add the remaining values as unserialized */
+			$meta_suffix = '';
+			$meta_counter = 0;
+			if( !empty( $results ) && count( $results ) != 0 ){
+				foreach( $results as $result ){
+					foreach ( $result as $name => $value){
+						$name = Wordpress_Creation_Kit::wck_generate_unique_meta_name_for_unserialized_field( $id, $name, $meta );
+						update_post_meta($id, $name.$meta_suffix, $value);
+					}
+					$meta_counter ++;
+					$meta_suffix = '_'.$meta_counter;
+				}
+			}
+
+		}
 		
-		
-		
+		/* backwards compatibility */
 		/* TODO: optimize so that it updates from the deleted element forward */
 		/* if unserialize_fields is true delete the corresponding post metas */
 		if( $this->args['unserialize_fields'] && $this->args['context'] == 'post_meta' ){
@@ -1159,8 +1233,28 @@ class Wordpress_Creation_Kit{
 			update_post_meta($id, $meta, $results);
 		else if ( $this->args['context'] == 'option' )
 			update_option( $meta, wp_unslash( $results ) );
-		
-		
+
+
+		if( $this->args['unserialize'] && $this->args['context'] == 'post_meta' ){
+
+			$meta_suffix = '';
+			$meta_counter = 0;
+			if( !empty( $new_results ) ){
+				foreach( $new_results as $result ){
+					foreach ( $result as $name => $value){
+						/* check to see if we already have a meta name like this from the old structure to avoid conflicts */
+						$name = Wordpress_Creation_Kit::wck_generate_unique_meta_name_for_unserialized_field( $id, $name, $meta );
+						update_post_meta($id, $name.$meta_suffix, $value);
+					}
+					$meta_counter++;
+					$meta_suffix = '_'.$meta_counter;
+				}
+			}
+
+		}
+
+
+		/* backwards compatibility */
 		/* if unserialize_fields is true reorder all the coresponding post metas  */
 		if( $this->args['unserialize_fields'] && $this->args['context'] == 'post_meta' ){			
 			
@@ -1251,7 +1345,20 @@ class Wordpress_Creation_Kit{
 
                             /* no errors so we can save */
                             update_post_meta($post_id, $meta_name, array($meta_values));
-                            /* handle unserialized fields */
+
+
+							if ($this->args['unserialize']) {
+								if (!empty($this->args['meta_array'])) {
+									foreach ($this->args['meta_array'] as $meta_field) {
+										/* check to see if we already have a meta name like this from the old structure to avoid conflicts */
+										$name = Wordpress_Creation_Kit::wck_generate_unique_meta_name_for_unserialized_field( $post_id, Wordpress_Creation_Kit::wck_generate_slug( $meta_field['title'], $meta_field ), $meta_name );
+										update_post_meta($post_id, $name, $_POST[$this->args['meta_name'] . '_' . Wordpress_Creation_Kit::wck_generate_slug( $meta_field['title'], $meta_field )]);
+									}
+								}
+							}
+
+							/* backwards compatibility */
+							/* handle unserialized fields */
                             if ($this->args['unserialize_fields']) {
                                 if (!empty($this->args['meta_array'])) {
                                     foreach ($this->args['meta_array'] as $meta_field) {
@@ -1498,6 +1605,30 @@ class Wordpress_Creation_Kit{
 		    $slug = rawurldecode( sanitize_title_with_dashes( remove_accents( $string ) ) );
 
         return $slug;
+	}
+
+	/**
+	 * Function that makes sure we have a unique meta name for the unserialized structure
+	 * @param $id
+	 * @param $meta_name
+	 * @param $group_name
+	 * @return string
+	 */
+	static function wck_generate_unique_meta_name_for_unserialized_field( $id, $meta_name, $group_name ){
+		if( function_exists('wck_cfc_check_group_name_exists') ){
+			if( wck_cfc_check_group_name_exists( $meta_name ) ){
+				$meta_name = $group_name.'_'.$meta_name;
+			}
+		}
+		else{
+			$existing_meta = get_post_meta( $id, $meta_name, true );
+			if( !empty( $existing_meta ) ){
+				if( is_array( $existing_meta ) ){
+					$meta_name = $group_name.'_'.$meta_name;
+				}
+			}
+		}
+		return $meta_name;
 	}
 }
 

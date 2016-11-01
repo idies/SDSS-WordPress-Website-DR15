@@ -93,12 +93,20 @@ td.wck-number{
 	list-style:none;
 }
 
+.mb-table-container tr{
+	background-color:#FFFFFF;
+}
+
 .mb-table-container tr:nth-child(2n+1) {
     background-color:#FCFCFC;
 }
 
 .mb-table-container tr:last-child td {
     border-bottom: 0 none;
+}
+
+.mb-table-container tr.wck-ui-state-highlight{
+	min-height:100px;
 }
 
 .mb-table-container tr  td {

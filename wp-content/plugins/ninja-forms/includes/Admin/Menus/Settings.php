@@ -4,7 +4,7 @@ final class NF_Admin_Menus_Settings extends NF_Abstracts_Submenu
 {
     public $parent_slug = 'ninja-forms';
 
-    public $menu_slug = 'settings';
+    public $menu_slug = 'nf-settings';
 
     public $priority = 11;
 
@@ -113,6 +113,12 @@ final class NF_Admin_Menus_Settings extends NF_Abstracts_Submenu
         if( ! isset( $_POST[ $this->_prefix ] ) ) return;
 
         $settings = $_POST[ 'ninja_forms' ];
+
+        if( isset( $settings[ 'currency' ] ) ){
+            $currency = sanitize_text_field( $settings[ 'currency' ] );
+            $currency_symbols = Ninja_Forms::config( 'CurrencySymbol' );
+            $settings[ 'currency_symbol' ] = ( isset( $currency_symbols[ $currency ] ) ) ? $currency_symbols[ $currency ] : '';
+        }
 
         foreach( $settings as $id => $value ){
             $value = sanitize_text_field( $value );

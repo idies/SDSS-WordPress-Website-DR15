@@ -61,6 +61,10 @@ final class NF_Display_Render
             }
         }
 
+        $currency = $form->get_setting( 'currency', Ninja_Forms()->get_setting( 'currency' ) );
+        $currency_symbol = Ninja_Forms::config( 'CurrencySymbol' );
+        $form->update_setting( 'currency_symbol', ( isset( $currency_symbol[ $currency ] ) ) ? $currency_symbol[ $currency ] : '' );
+
         $title = apply_filters( 'ninja_forms_form_title', $form->get_setting( 'title' ), $form_id );
         $form->update_setting( 'title', $title );
 
@@ -83,7 +87,45 @@ final class NF_Display_Render
         if( empty( $form_fields ) ){
             echo __( 'No Fields Found.', 'ninja-forms' );
         } else {
+
+            // TODO: Replace unique field key checks with a refactored model/factory.
+            $unique_field_keys = array();
+            $form_cache = get_option( 'nf_form_' . $form_id, false );
+            $cache_updated = false;
+
             foreach ($form_fields as $field) {
+
+                $field_id = $field->get_id();
+
+                /*
+                 * Duplicate field check.
+                 * TODO: Replace unique field key checks with a refactored model/factory.
+                 */
+                $field_key = $field->get_setting( 'key' );
+                if( in_array( $field_key, $unique_field_keys ) || '' == $field_key ){
+
+                    // Delete the field.
+                    Ninja_Forms()->request( 'delete-field' )->data( array( 'field_id' => $field_id ) )->dispatch();
+
+                    // Remove the field from cache.
+                    if( $form_cache ) {
+                        if( isset( $form_cache[ 'fields' ] ) ){
+                            foreach( $form_cache[ 'fields' ] as $cached_field_key => $cached_field ){
+                                if( ! isset( $cached_field[ 'id' ] ) ) continue;
+                                if( $field_id != $cached_field[ 'id' ] ) continue;
+
+                                // Flag cache to update.
+                                $cache_updated = true;
+
+                                unset( $form_cache[ 'fields' ][ $cached_field_key ] ); // Remove the field.
+                            }
+                        }
+                    }
+
+                    continue; // Skip the duplicate field.
+                }
+                array_push( $unique_field_keys, $field_key ); // Log unique key.
+                /* END Duplicate field check. */
 
                 $field_type = $field->get_settings('type');
 
@@ -154,21 +196,19 @@ final class NF_Display_Render
                         do_shortcode( $settings['value'] );
                         $ob = ob_get_clean();
 
-                        if( $ob ){
-                            $settings['value'] = $ob;
+                        if( ! $ob ) {
+                            $settings['value'] = do_shortcode( $settings['value'] );
                         }
                     }
                 }
 
                 // TODO: Find a better way to do this.
                 if ('shipping' == $settings['type']) {
-                    // TODO: Does the currency marker need to stripped here?
-                    $settings['shipping_cost'] = str_replace( array( '$', '£', '€' ), '', $settings['shipping_cost']);
+                    $settings['shipping_cost'] = preg_replace ('/[^\d,\.]/', '', $settings['shipping_cost']);
                     $settings['shipping_cost'] = str_replace( Ninja_Forms()->get_setting( 'currency_symbol' ), '', $settings['shipping_cost']);
                     $settings['shipping_cost'] = number_format($settings['shipping_cost'], 2);
                 } elseif ('product' == $settings['type']) {
-                    // TODO: Does the currency marker need to stripped here?
-                    $settings['product_price'] = str_replace( array( '$', '£', '€' ), '', $settings['product_price']);
+                    $settings['product_price'] = preg_replace ('/[^\d,\.]/', '', $settings[ 'product_price' ] );
                     $settings['product_price'] = str_replace( Ninja_Forms()->get_setting( 'currency_symbol' ), '', $settings['product_price']);
                     $settings['product_price'] = number_format($settings['product_price'], 2);
                 } elseif ('total' == $settings['type'] && isset($settings['value'])) {
@@ -181,7 +221,13 @@ final class NF_Display_Render
 
                 $fields[] = apply_filters( 'ninja_forms_localize_field_settings_' . $field_type, $settings, $form );
             }
+
+            if( $cache_updated ) {
+                update_option('nf_form_' . $form_id, $form_cache); // Update form cache without duplicate fields.
+            }
         }
+
+        $fields = apply_filters( 'ninja_forms_display_fields', $fields );
 
         // Output Form Container
         do_action( 'ninja_forms_before_container', $form_id, $form->get_settings(), $form_fields );
@@ -232,6 +278,10 @@ final class NF_Display_Render
         }
 
         $form[ 'settings' ][ 'is_preview' ] = TRUE;
+
+        $currency = ( isset( $form[ 'settings' ][ 'currency' ] ) && $form[ 'settings' ][ 'currency' ] ) ? $form[ 'settings' ][ 'currency' ] : Ninja_Forms()->get_setting( 'currency' ) ;
+        $currency_symbol = Ninja_Forms::config( 'CurrencySymbol' );
+        $form[ 'settings' ][ 'currency_symbol' ] = ( isset( $currency_symbol[ $currency ] ) ) ? $currency_symbol[ $currency ] : '';
 
         $before_form = apply_filters( 'ninja_forms_display_before_form', '', $form_id, TRUE );
         $form[ 'settings' ][ 'beforeForm'] = $before_form;
@@ -301,6 +351,7 @@ final class NF_Display_Render
 
                 if( 'list' == $field[ 'settings' ][ 'parentType' ] && isset( $field['settings'][ 'options' ] ) && is_array( $field['settings'][ 'options' ] ) ){
                     $field['settings'][ 'options' ] = apply_filters( 'ninja_forms_render_options', $field['settings'][ 'options' ], $field['settings'] );
+                    $field['settings'][ 'options' ] = apply_filters( 'ninja_forms_render_options_' . $field['settings'][ 'type' ], $field['settings'][ 'options' ], $field['settings'] );
                 }
 
                 if (isset($field['settings']['default'])) {
@@ -315,20 +366,20 @@ final class NF_Display_Render
                         do_shortcode( $field['settings']['value'] );
                         $ob = ob_get_clean();
 
-                        if( $ob ){
-                            $field['settings']['value'] = $ob;
+                        if( ! $ob ) {
+                            $field['settings']['value'] = do_shortcode( $field['settings']['value'] );
                         }
                     }
                 }
 
                 // TODO: Find a better way to do this.
                 if ('shipping' == $field['settings']['type']) {
-                    $field['settings']['shipping_cost'] = str_replace( array( '$', '£', '€' ), '', $field['settings']['shipping_cost'] );
+                    $field['settings']['shipping_cost'] = preg_replace ('/[^\d,\.]/', '', $field['settings']['shipping_cost'] );
                     $field['settings']['shipping_cost'] = str_replace( Ninja_Forms()->get_setting( 'currency_symbol' ), '', $field['settings']['shipping_cost'] );
                     $field['settings']['shipping_cost'] = number_format($field['settings']['shipping_cost'], 2);
                 } elseif ('product' == $field['settings']['type']) {
                     // TODO: Does the currency marker need to stripped here?
-                    $field['settings']['product_price'] = str_replace( array( '$', '£', '€' ), '', $field['settings']['product_price'] );
+                    $field['settings']['product_price'] = preg_replace ('/[^\d,\.]/', '', $field['settings']['product_price'] );
                     $field['settings']['product_price'] = str_replace( Ninja_Forms()->get_setting( 'currency_symbol' ), '', $field['settings']['product_price'] );
                     $field['settings']['product_price'] = number_format($field['settings']['product_price'], 2);
                 } elseif ('total' == $field['settings']['type']) {
@@ -374,57 +425,61 @@ final class NF_Display_Render
         $form = Ninja_Forms()->form( $form_id )->get();
         $is_preview = ( $form->get_tmp_id() );
 
+        $ver     = Ninja_Forms::VERSION;
         $js_dir  = Ninja_Forms::$url . 'assets/js/min/';
         $css_dir = Ninja_Forms::$url . 'assets/css/';
 
-        wp_enqueue_media();
-        wp_enqueue_style( 'jBox',               $css_dir . 'jBox.css'          );
-        wp_enqueue_style( 'summernote',         $css_dir . 'summernote.css'    );
-        wp_enqueue_style( 'codemirror',         $css_dir . 'codemirror.css'    );
-        wp_enqueue_style( 'codemirror-monokai', $css_dir . 'monokai-theme.css' );
-        wp_enqueue_style( 'rating',             $css_dir . 'rating.css'        );
-        wp_enqueue_style( 'pikaday-responsive', $css_dir . 'pikaday-package.css' );
 
         switch( Ninja_Forms()->get_setting( 'opinionated_styles' ) ) {
             case 'light':
-                wp_enqueue_style( 'nf-display',      $css_dir . 'display-opinions-light.css' );
+                wp_enqueue_style( 'nf-display',      $css_dir . 'display-opinions-light.css', array( 'dashicons' ) );
                 wp_enqueue_style( 'nf-font-awesome', $css_dir . 'font-awesome.min.css'       );
                 break;
             case 'dark':
-                wp_enqueue_style( 'nf-display',      $css_dir . 'display-opinions-dark.css' );
+                wp_enqueue_style( 'nf-display',      $css_dir . 'display-opinions-dark.css', array( 'dashicons' )  );
                 wp_enqueue_style( 'nf-font-awesome', $css_dir . 'font-awesome.min.css'      );
                 break;
             default:
-                wp_enqueue_style( 'nf-display',      $css_dir . 'display-structure.css'     );
+                wp_enqueue_style( 'nf-display',      $css_dir . 'display-structure.css', array( 'dashicons' ) );
         }
 
         if( $is_preview || self::form_uses_recaptcha( $form_id ) ) {
             $recaptcha_lang = Ninja_Forms()->get_setting('recaptcha_lang');
-            wp_enqueue_script('google-recaptcha', 'https://www.google.com/recaptcha/api.js?hl=' . $recaptcha_lang, array('jquery'));
+            wp_enqueue_script('google-recaptcha', 'https://www.google.com/recaptcha/api.js?hl=' . $recaptcha_lang, array( 'jquery' ), $ver );
         }
 
         if( $is_preview || self::form_uses_datepicker( $form_id ) ) {
-            wp_enqueue_script('nf-front-end--datepicker', $js_dir . 'front-end--datepicker.min.js', array('jquery'));
+            wp_enqueue_style( 'pikaday-responsive', $css_dir . 'pikaday-package.css', $ver );
+            wp_enqueue_script('nf-front-end--datepicker', $js_dir . 'front-end--datepicker.min.js', array( 'jquery' ), $ver );
         }
 
         if( $is_preview || self::form_uses_inputmask( $form_id ) ) {
-            wp_enqueue_script('nf-front-end--inputmask', $js_dir . 'front-end--inputmask.min.js', array('jquery'));
+            wp_enqueue_script('nf-front-end--inputmask', $js_dir . 'front-end--inputmask.min.js', array( 'jquery' ), $ver );
         }
 
-        // if( $is_preview || self::form_uses_rte( $form_id ) ) {
-            wp_enqueue_script('nf-front-end--rte', $js_dir . 'front-end--rte.min.js', array('jquery'));
-        // }
+         if( $is_preview || self::form_uses_rte( $form_id ) ) {
+             if( $is_preview || self::form_uses_textarea_media( $form_id ) ) {
+                wp_enqueue_media();
+             }
+
+            wp_enqueue_style( 'summernote',         $css_dir . 'summernote.css'   , $ver );
+            wp_enqueue_style( 'codemirror',         $css_dir . 'codemirror.css'   , $ver );
+            wp_enqueue_style( 'codemirror-monokai', $css_dir . 'monokai-theme.css', $ver );
+            wp_enqueue_script('nf-front-end--rte', $js_dir . 'front-end--rte.min.js', array( 'jquery' ), $ver );
+         }
 
         if( $is_preview || self::form_uses_helptext( $form_id ) ) {
-            wp_enqueue_script('nf-front-end--helptext', $js_dir . 'front-end--helptext.min.js', array('jquery'));
+            wp_enqueue_style( 'jBox', $css_dir . 'jBox.css', $ver );
+            wp_enqueue_script('nf-front-end--helptext', $js_dir . 'front-end--helptext.min.js', array( 'jquery' ), $ver );
         }
 
         if( $is_preview || self::form_uses_starrating( $form_id ) ) {
-            wp_enqueue_script('nf-front-end--starrating', $js_dir . 'front-end--starrating.min.js', array('jquery'));
+            wp_enqueue_style( 'rating', $css_dir . 'rating.css', Ninja_Forms::VERSION );
+            wp_enqueue_script('nf-front-end--starrating', $js_dir . 'front-end--starrating.min.js', array( 'jquery' ), $ver );
         }
 
-        wp_enqueue_script( 'nf-front-end-deps',        $js_dir . 'front-end-deps.js',             array( 'jquery', 'backbone' ) );
-        wp_enqueue_script( 'nf-front-end',             $js_dir . 'front-end.js',                  array( 'nf-front-end-deps'  ) );
+        wp_enqueue_script( 'nf-front-end-deps', $js_dir . 'front-end-deps.js', array( 'jquery', 'backbone' ), $ver );
+        wp_enqueue_script( 'nf-front-end',      $js_dir . 'front-end.js',      array( 'nf-front-end-deps'  ), $ver );
 
         wp_localize_script( 'nf-front-end', 'nfi18n', Ninja_Forms::config( 'i18nFrontEnd' ) );
 
@@ -528,6 +583,14 @@ final class NF_Display_Render
     {
         foreach( Ninja_Forms()->form( $form_id )->get_fields() as $field ){
             if( $field->get_setting( 'textarea_rte' ) ) return true;
+        }
+        return false;
+    }
+
+    protected static function form_uses_textarea_media( $form_id )
+    {
+        foreach( Ninja_Forms()->form( $form_id )->get_fields() as $field ){
+            if( $field->get_setting( 'textarea_media' ) ) return true;
         }
         return false;
     }

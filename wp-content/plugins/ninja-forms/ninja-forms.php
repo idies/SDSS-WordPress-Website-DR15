@@ -3,7 +3,7 @@
 Plugin Name: Ninja Forms
 Plugin URI: http://ninjaforms.com/
 Description: Ninja Forms is a webform builder with unparalleled ease of use and features.
-Version: 3.0.2
+Version: 3.0.11
 Author: The WP Ninjas
 Author URI: http://ninjaforms.com
 Text Domain: ninja-forms
@@ -51,7 +51,7 @@ if( get_option( 'ninja_forms_load_deprecated', FALSE ) && ! ( isset( $_POST[ 'nf
         /**
          * @since 3.0
          */
-        const VERSION = '3.0.2';
+        const VERSION = '3.0.11';
 
         /**
          * @var Ninja_Forms
@@ -142,6 +142,8 @@ if( get_option( 'ninja_forms_load_deprecated', FALSE ) && ! ( isset( $_POST[ 'nf
          */
         protected $settings = array();
 
+        protected $requests = array();
+
         /**
          * Main Ninja_Forms Instance
          *
@@ -200,6 +202,12 @@ if( get_option( 'ninja_forms_load_deprecated', FALSE ) && ! ( isset( $_POST[ 'nf
                 self::$instance->controllers[ 'preview' ]     = new NF_AJAX_Controllers_Preview();
                 self::$instance->controllers[ 'submission' ]  = new NF_AJAX_Controllers_Submission();
                 self::$instance->controllers[ 'savedfields' ] = new NF_AJAX_Controllers_SavedFields();
+
+                /*
+                 * Async Requests
+                 */
+                require_once Ninja_Forms::$dir . 'includes/Libraries/BackgroundProcessing/classes/wp-async-request.php';
+                self::$instance->requests[ 'delete-field' ] = new NF_AJAX_Requests_DeleteField();
 
                 /*
                  * WP-CLI Commands
@@ -429,6 +437,13 @@ if( get_option( 'ninja_forms_load_deprecated', FALSE ) && ! ( isset( $_POST[ 'nf
             return $this->session;
         }
 
+        public function request( $action )
+        {
+            if( ! isset( $this->requests[ $action ] ) ) return new NF_AJAX_Requests_NullRequest();
+
+            return $this->requests[ $action ];
+        }
+
 	    /**
 	     * Get a setting
 	     *
@@ -475,7 +490,7 @@ if( get_option( 'ninja_forms_load_deprecated', FALSE ) && ! ( isset( $_POST[ 'nf
 	     */
         public function update_settings( $settings = array() )
         {
-            if( ! is_array( $this->settings ) ) $this->settings = array( $this->settings );
+            if( ! is_array( $this->settings ) ) $this->settings = array();
 
             if( $settings && is_array( $settings ) ) {
                 $this->settings = array_merge($this->settings, $settings);

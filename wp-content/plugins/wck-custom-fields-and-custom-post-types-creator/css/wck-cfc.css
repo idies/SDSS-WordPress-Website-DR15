@@ -113,3 +113,35 @@ li.slug-title span{
 #icon-wck-page{
 	background:url( ../images/wck-32x32.png ) 0 0 no-repeat;;
 }
+
+
+.button.wck-cfc-edit-slug{
+	margin: 2px 0 0 5px;
+}
+
+#wck_cfc_fields #field-slug.doing-ajax{
+	-webkit-animation-name: ajax-input; /* Chrome, Safari, Opera */
+	-webkit-animation-duration: 0.5s; /* Chrome, Safari, Opera */
+	-webkit-animation-iteration-count: infinite; /* Chrome, Safari, Opera */
+	animation-name: ajax-input;
+	animation-duration: 0.5s;
+	animation-iteration-count: infinite;
+}
+/* Chrome, Safari, Opera */
+@-webkit-keyframes ajax-input {
+	0%  {opacity: 1;}
+	50% {opacity: 0.7;}
+	100%  {opacity: 1;}
+}
+
+/* Standard syntax */
+@keyframes ajax-input {
+	0%  {opacity: 1;}
+	50% {opacity: 0.7;}
+	100%  {opacity: 1;}
+}
+
+.wck-overwrite-slug{
+	display:inline-block;
+	padding-left:20px;
+}

@@ -412,6 +412,8 @@ final class NF_Database_Models_Form extends NF_Abstracts_Model
 
             unset( $field[ 'default_value' ] );
             unset( $field[ 'default_value_type' ] );
+        } else if ( isset ( $field[ 'default_value' ] ) ) {
+            $field[ 'default' ] = $field[ 'default_value' ];
         }
 
         if( 'list' == $field[ 'type' ] ) {
@@ -433,7 +435,7 @@ final class NF_Database_Models_Form extends NF_Abstracts_Model
             }
 
             if( isset( $field[ 'list' ][ 'options' ] ) ) {
-                $field[ 'options' ] = $field[ 'list' ][ 'options' ];
+                $field[ 'options' ] = array_values( $field[ 'list' ][ 'options' ] );
                 unset( $field[ 'list' ][ 'options' ] );
             }
 
@@ -544,6 +546,16 @@ final class NF_Database_Models_Form extends NF_Abstracts_Model
                     'desc_text' => ''
                 ));
             }
+        }
+
+        /*
+         * Convert inside label position over to placeholder
+         */
+        if ( isset ( $field[ 'label_pos' ] ) && 'inside' == $field[ 'label_pos' ] ) {
+            if ( ! isset ( $field[ 'placeholder' ] ) || empty ( $field[ 'placeholder' ] ) ) {
+                $field[ 'placeholder' ] = $field[ 'label' ];
+            }
+            $field[ 'label_pos' ] = 'hidden';
         }
 
         return apply_filters( 'ninja_forms_upgrade_field', $field );

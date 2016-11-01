@@ -186,4 +186,35 @@ jQuery(function(){
         }
 
     });
+
+    /* edit slug functionality */
+    jQuery( "#wck-cfc-fields" ).on( "click", ".wck-cfc-edit-slug", function(){
+        jQuery(this).prev( "input[type='text']" ).removeAttr( "readonly" );
+    });
+
+    jQuery( "#wck-cfc-fields" ).on( "blur", "#wck_cfc_fields.wck-add-form #field-title", function(e){
+
+        fieldTitle = jQuery(this).val();
+        titleField = jQuery(this);
+        slugField = jQuery( '#field-slug', titleField.closest( ".mb-list-entry-fields" ) );
+        addButton = jQuery( '.button-primary', titleField.closest( ".mb-list-entry-fields" ) );
+
+        if( slugField[0].hasAttribute("readonly") ) {
+            addButton.attr( 'disabled', 'disabled' );
+            addButton.css( 'pointer-events', 'none' )
+            slugField.addClass( 'doing-ajax' );
+            jQuery.post(wckAjaxurl, {action: "wck_generate_slug", field_title: fieldTitle}, function (response) {
+                if (response != 'failed') {
+                    slugField.val(response);
+                    slugField.removeClass( 'doing-ajax' );
+                }
+                addButton.removeAttr( 'disabled' );
+                addButton.css( 'pointer-events', 'auto' );
+            });
+        }
+        
+
+
+    });
+
 });

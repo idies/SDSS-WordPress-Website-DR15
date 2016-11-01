@@ -2,8 +2,8 @@
 Contributors: dnesscarkey
 Tags: tags in page, category in page, tags in post type, category in post type, tags in custom post type, category in custom post type,  
 Requires at least: 3.0.
-Tested up to: 4.5.3
-Stable tag: 2.0
+Tested up to: 4.6.1
+Stable tag: 2.1
 
 This plugin allow you to use tags and category in pages and post type.
 
@@ -38,6 +38,9 @@ Note: We don't monitor support forum here. Please visit our <a href="http://dine
 1. Admin Setting
 
 == Changelog ==
+
+= 2.1 =
+* Category Menu Fix
 
 = 2.0 =
 * Added settings link in plugin list.

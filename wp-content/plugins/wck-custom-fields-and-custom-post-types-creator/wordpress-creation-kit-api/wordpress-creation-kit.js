@@ -190,8 +190,11 @@ function removeMeta(value, id, element_id, nonce){
 /* reorder elements through drag and drop */
 function mb_sortable_elements() {				
 		jQuery( ".mb-table-container tbody" ).not( jQuery( ".mb-table-container.single tbody, .mb-table-container.not-sortable tbody" ) ).sortable({
+			start: function(event, ui){
+				jQuery( ui.placeholder ).height(jQuery( ui.item ).height());
+			},
 			update: function(event, ui){
-				
+
 				var value = jQuery(this).parent().siblings('.wck-add-form').attr('id');				
 				var id = jQuery(this).parent().attr('post');
 				
@@ -229,7 +232,8 @@ function mb_sortable_elements() {
 					
 				});
 			},
-            items: "> tr"
+            items: "> tr",
+			placeholder: "wck-ui-state-highlight"
 		});
 		/*I don't know if this is necessary. Remove when I have more time for tests */
 		jQuery( "#sortable:not(select)" ).disableSelection();
