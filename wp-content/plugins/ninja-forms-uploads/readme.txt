@@ -3,9 +3,8 @@ Contributors: kstover, jameslaws
 Donate link: http://ninjaforms.com
 Tags: form, forms
 Requires at least: 1.0
-Tested up to: 4.6
-Stable tag: 3.0.3
-
+Tested up to: 4.7
+Stable tag: 3.0.5
 
 License: GPLv2 or later
 
@@ -27,6 +26,24 @@ This section describes how to install the plugin and get it working.
 For help and video tutorials, please visit our website: [NinjaForms.com](http://ninjaforms.com)
 
 == Changelog ==
+
+= 3.0.5 (07 December 2016) =
+
+*Bugs:*
+
+* Fixed a bug that could cause file upload fields to fail with Ninja Forms versions > 3.0.17.
+
+= 3.0.4 (3 November 2016) =
+
+*Bugs:*
+
+* Fixed a bug with the Max File Upload Size setting.
+* Whitelisting file types should now work as explained in the help text.
+* File names can now be based upon the values of other fields using merge tags.
+
+*Changes:*
+
+* Added missing help text to the admin.
 
 = 3.0.3 (28 September 2016) =
 

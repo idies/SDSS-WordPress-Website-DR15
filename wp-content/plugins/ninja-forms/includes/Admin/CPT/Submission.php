@@ -19,7 +19,7 @@ class NF_Admin_CPT_Submission
         add_action( 'admin_print_styles', array( $this, 'enqueue_scripts' ) );
 
         // Filter Post Row Actions
-        add_filter( 'post_row_actions', array( $this, 'post_row_actions' ) );
+        add_filter( 'post_row_actions', array( $this, 'post_row_actions' ), 10, 2 );
 
         // Change our submission columns.
         add_filter( 'manage_nf_sub_posts_columns', array( $this, 'change_columns' ) );
@@ -30,8 +30,11 @@ class NF_Admin_CPT_Submission
         // Save our metabox values
         add_action( 'save_post', array( $this, 'save_nf_sub' ), 10, 2 );
 
-        add_action( 'add_meta_boxes', array( $this, 'add_meta_boxes' ), 10, 2 );
+        add_action( 'add_meta_boxes', array( $this, 'add_meta_boxes' ), 10, 1 );
         add_action( 'add_meta_boxes', array( $this, 'remove_meta_boxes' ) );
+
+        // Filter our submission capabilities
+        add_filter( 'user_has_cap', array( $this, 'cap_filter' ), 10, 3 );
 
         // Filter our hidden columns by form ID.
         add_action( 'wp', array( $this, 'filter_hidden_columns' ) );
@@ -78,7 +81,18 @@ class NF_Admin_CPT_Submission
             'has_archive'         => true,
             'exclude_from_search' => true,
             'publicly_queryable'  => true,
-            'capability_type'     => 'page',
+            'capability_type' => 'nf_sub',
+            'capabilities' => array(
+                'publish_posts' => 'nf_sub',
+                'edit_posts' => 'nf_sub',
+                'edit_others_posts' => 'nf_sub',
+                'delete_posts' => 'nf_sub',
+                'delete_others_posts' => 'nf_sub',
+                'read_private_posts' => 'nf_sub',
+                'edit_post' => 'nf_sub',
+                'delete_post' => 'nf_sub',
+                'read_post' => 'nf_sub',
+            ),
         );
         register_post_type( $this->cpt_slug, $args );
     }
@@ -94,17 +108,20 @@ class NF_Admin_CPT_Submission
 
         wp_enqueue_script( 'subs-cpt',
             Ninja_Forms::$url . 'deprecated/assets/js/min/subs-cpt.min.js',
-            array( 'jquery' ) );
+            array( 'jquery', 'jquery-ui-datepicker' ) );
 
         wp_localize_script( 'subs-cpt', 'nf_sub', array( 'form_id' => $form_id ) );
     }
 
-    public function post_row_actions( $actions )
+    public function post_row_actions( $actions, $sub )
     {
-        if( $this->cpt_slug == get_post_type() ){
+        if ( $this->cpt_slug == get_post_type() ){
             unset( $actions[ 'view' ] );
             unset( $actions[ 'inline hide-if-no-js' ] );
+            $export_url = add_query_arg( array( 'action' => 'export', 'post[]' => $sub->ID ) );
+            $actions[ 'export' ] = sprintf( '<a href="%s">%s</a>', $export_url, __( 'Export', 'ninja-forms' ) );
         }
+
         return $actions;
     }
 
@@ -114,23 +131,34 @@ class NF_Admin_CPT_Submission
 
         $form_id = absint( $_GET[ 'form_id' ] );
 
+        static $columns;
+
+        if( $columns ) return $columns;
+        
         $columns = array(
             'cb'    => '<input type="checkbox" />',
             'id' => __( '#', 'ninja-forms' ),
         );
 
-        $fields = Ninja_Forms()->form( $form_id )->get_fields();
+        $form_cache = get_option( 'nf_form_' . $form_id );
 
-        foreach( $fields as $field ) {
+        $form_fields = Ninja_Forms()->form( $form_id )->get_fields();
+
+        foreach( $form_fields as $field ) {
+
+            if( is_object( $field ) ) {
+                $field = array(
+                    'id' => $field->get_id(),
+                    'settings' => $field->get_settings()
+                );
+            }
 
             $hidden_field_types = apply_filters( 'nf_sub_hidden_field_types', array() );
-            if( in_array( $field->get_setting( 'type' ), array_values( $hidden_field_types ) ) ) continue;
+            if( in_array( $field[ 'settings' ][ 'type' ], array_values( $hidden_field_types ) ) ) continue;
 
-            $id = $field->get_id();
-            $label = $field->get_setting( 'label' );
-            $admin_label = $field->get_setting( 'admin_label' );
-
-            $columns[ $id ] = ( $admin_label ) ? $admin_label : $label;
+            $id = $field[ 'id' ];
+            $label = $field[ 'settings' ][ 'label' ];
+            $columns[ $id ] = ( isset( $field[ 'settings' ][ 'admin_label' ] ) && $field[ 'settings' ][ 'admin_label' ] ) ? $field[ 'settings' ][ 'admin_label' ] : $label;
         }
 
         $columns['sub_date'] = __( 'Date', 'ninja-forms' );
@@ -152,8 +180,13 @@ class NF_Admin_CPT_Submission
 
         if( is_numeric( $column ) ){
             $value = $sub->get_field_value( $column );
-            $field = Ninja_Forms()->form()->get_field( $column );
-            echo apply_filters( 'ninja_forms_custom_columns', $value, $field );
+
+            static $fields;
+            if( ! isset( $fields[ $column ] ) ) {
+                $fields[$column] = Ninja_Forms()->form()->get_field($column);
+            }
+            $field = $fields[$column];
+            echo apply_filters( 'ninja_forms_custom_columns', $value, $field, $sub_id );
         }
 
     }
@@ -196,7 +229,7 @@ class NF_Admin_CPT_Submission
     /**
      * Meta Boxes
      */
-    public function add_meta_boxes( $post_type, $post )
+    public function add_meta_boxes( $post_type )
     {
         add_meta_box(
             'nf_sub_fields',
@@ -235,6 +268,14 @@ class NF_Admin_CPT_Submission
         Ninja_Forms::template( 'admin-metabox-sub-fields.html.php', compact( 'fields', 'sub', 'hidden_field_types' ) );
     }
 
+    public static function sort_fields( $a, $b )
+    {
+        if ( $a->get_setting( 'order' ) == $b->get_setting( 'order' ) ) {
+            return 0;
+        }
+        return ( $a->get_setting( 'order' ) < $b->get_setting( 'order' ) ) ? -1 : 1;
+    }
+
     /**
      * Info Meta Box
      *
@@ -266,6 +307,15 @@ class NF_Admin_CPT_Submission
     {
         // Remove the default Publish metabox
         remove_meta_box( 'submitdiv', 'nf_sub', 'side' );
+    }
+
+    public function cap_filter( $allcaps, $cap, $args )
+    {
+        $sub_cap = apply_filters('ninja_forms_admin_submissions_capabilities', 'manage_options');
+        if (!empty($allcaps[$sub_cap])) {
+            $allcaps['nf_sub'] = true;
+        }
+        return $allcaps;
     }
 
     /**

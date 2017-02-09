@@ -111,7 +111,7 @@ class Ninja_Forms {
         // Fire our Ninja Forms init action.
         do_action( 'nf_admin_init', self::$instance );
     }
-    
+
     /**
      * Run some admin stuff on admin_notices hook.
      *
@@ -265,7 +265,8 @@ class Ninja_Forms {
 
         // Plugin version
         if ( ! defined( 'NF_PLUGIN_VERSION' ) )
-            define( 'NF_PLUGIN_VERSION', '3.0.11' );
+            define( 'NF_PLUGIN_VERSION', '3.0.27' );
+
 
         // Plugin Folder Path
         if ( ! defined( 'NF_PLUGIN_DIR' ) )

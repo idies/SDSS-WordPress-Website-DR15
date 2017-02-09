@@ -3,7 +3,29 @@
 <div id="nf-builder" class="grey"></div>
 
 <script id="tmpl-nf-builder" type="text/template">
-    <div id="nf-app-admin-header"><div id="nf-logo"></div><a href="admin.php?page=ninja-forms" class="fa fa-times"></a></div>
+    <div id="nf-app-admin-header">
+        <div id="nf-logo"></div>
+        <?php
+        /*
+         * TODO: Make this much more dynamic.
+         */
+        $nf_settings = get_option( 'ninja_forms_settings' );
+        $disable_admin_notices = ( isset ( $nf_settings[ 'disable_admin_notices' ] ) ) ? $nf_settings[ 'disable_admin_notices' ] : false;
+
+        if( ! function_exists( 'NF_Layouts' ) && ! $disable_admin_notices ) {
+            $u_id = get_option( 'nf_aff', false );
+            if ( !$u_id ) $u_id = apply_filters( 'ninja_forms_affiliate_id', false );
+            $link = 'https://ninjaforms.com/extensions/layout-styles/?utm_medium=plugin&utm_source=plugin-builder&utm_campaign=Ninja+Forms+Builder&utm_content=Layout+and+Styles';
+            if ( $u_id ) {
+                $link = 'http://www.shareasale.com/r.cfm?u=' . $u_id . '&b=812237&m=63061&afftrack=&urllink=' . $link;
+            }
+        ?>
+            <a href="<?php echo $link; ?>" target="_blank" class="nf-cta-bubble"><?php printf( __( "Create multi-column form layouts with Layout & Styles...%slearn more now!%s", 'ninja-forms' ), '<span>', '</span>' ); ?></a>
+        <?php
+        }
+        ?>
+
+        <a href="admin.php?page=ninja-forms" class="fa fa-times"></a></div>
     <div id="nf-overlay"></div>
     <div id="nf-header"></div>
     <div id="nf-main" class="nf-app-main"></div>
@@ -401,6 +423,31 @@
     </div>
 </script>
 
+<script id="tmpl-nf-edit-setting-option-repeater-wrap" type="text/template">
+    <div class="{{{ data.renderClasses() }}}" {{{ data.renderVisible() }}}>
+        {{{ data.renderSetting() }}}
+        <span class="nf-setting-error"></span>
+        <span class="nf-import-options" style="display:none">
+            <?php _e( 'Please use the following format', 'ninja-forms' ); ?>:
+            <br>
+            <br>
+            <strong><?php _e( 'Label, Value, Calc Value', 'ninja-forms' ); ?></strong>
+            <br>
+            <br>
+            <em>
+            Example:
+            </em>
+            <pre>
+Label One, value-one, 1
+Label Two, value-two, 2
+Label Three, value-three, 3
+            </pre>
+            <textarea></textarea>
+            <a href="#" class="nf-button primary nf-import extra"><?php _e( 'Import', 'ninja-forms' ); ?></a>
+        </span>
+    </div>
+</script>
+
 <script id="tmpl-nf-edit-setting-error" type="text/template">
     <div>{{{ data.error }}}</div>
 </script>
@@ -530,7 +577,7 @@
 </script>
 
 <script id="tmpl-nf-edit-setting-option-repeater-error" type="text/template">
-    {{{ data.errors[ Object.keys( errors )[0] ] }}}
+    {{{ data.renderErrors() }}}
 </script>
 
 <script id="tmpl-nf-edit-setting-option-repeater-default-row" type="text/template">
