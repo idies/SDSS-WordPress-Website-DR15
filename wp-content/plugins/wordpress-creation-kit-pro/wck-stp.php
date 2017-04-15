@@ -8,7 +8,7 @@ add_action( 'init', 'wck_stp_create_swift_template_cpt', 20 );
 function wck_stp_create_swift_template_cpt(){
 	if( is_admin() && current_user_can( 'edit_theme_options' ) ){		
 		$labels = array(
-			'name' => _x( 'WCK Swift Templates (Beta)', 'post type general name'),
+			'name' => _x( 'WCK Swift Templates', 'post type general name'),
 			'singular_name' => _x( 'Swift Template', 'post type singular name'),
 			'add_new' => _x( 'Add New', 'Swift Template' ),
 			'add_new_item' => __( "Add New Swift Template", "wck" ),
@@ -75,10 +75,10 @@ function wck_stp_print_scripts($hook){
 		wp_enqueue_style('wck-codemirror-fullscreen-css');		
 		
 		wp_register_script('wck-codemirror-js', plugins_url('wordpress-creation-kit-api/wck-stp/codemirror/codemirror-compressed.js', __FILE__), array( ), '1.0' );
-		wp_enqueue_script('wck-codemirror-js');				
+		wp_enqueue_script('wck-codemirror-js');
 
 		wp_register_script('wck-stp-codemirror-init-js', plugins_url('wordpress-creation-kit-api/wck-stp/js/wck-stp-codemirror.js', __FILE__), array( 'jquery' ), '1.0' );
-		wp_enqueue_script('wck-stp-codemirror-init-js');		
+		wp_enqueue_script('wck-stp-codemirror-init-js');
 		
 		//initiate default css and js for Swift Templates
 		wp_register_style('wck-stp-backend-css', plugins_url('wordpress-creation-kit-api/wck-stp/css/wck-stp.css', __FILE__) );
@@ -95,12 +95,30 @@ function wck_stp_print_scripts($hook){
 add_action( 'wp_enqueue_scripts', 'wck_stp_front' );
 
 /**
- * Enqueue plugin style-file
+ * Enqueue plugin scripts style files
+ *
  */
 function wck_stp_front() {
+
     // Respects SSL, Style.css is relative to the current file
     wp_register_style( 'wck-stp-front-style', plugins_url('wordpress-creation-kit-api/wck-stp/css/wck-stp-front.css', __FILE__) );
     wp_enqueue_style( 'wck-stp-front-style' );
+
+    $wck_tools = get_option( 'wck_tools' );
+
+    if( empty( $wck_tools ) || ( !empty( $wck_tools[0]['swift-templates'] ) && $wck_tools[0]['swift-templates'] == 'enabled' ) ){
+
+    	// map field
+	    $options = get_option( 'wck_extra_options' );
+
+	    if( !empty( $options[0]['google-maps-api'] ) ) {
+	        wp_enqueue_script( 'wck-google-maps-api-script', 'https://maps.googleapis.com/maps/api/js?key=' . $options[0]['google-maps-api'] . '&libraries=places', array('jquery') );
+	        wp_enqueue_script( 'wck-google-maps-script', plugin_dir_url( __FILE__ ) . 'wordpress-creation-kit-api/assets/map/map.js', array('jquery') );
+	        wp_enqueue_style( 'wck-google-maps-style', plugin_dir_url( __FILE__ ) . 'wordpress-creation-kit-api/assets/map/map.css' );
+	    }
+
+    }
+
 }
 
 

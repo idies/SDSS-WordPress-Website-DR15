@@ -122,11 +122,11 @@ function wck_fep_create_boxes(){
 	
 	/* set up the fields array */
 	$fep_box_args_fields = array( 				
-		array( 'type' => 'select', 'title' => __( 'Post Type', 'wck' ), 'options' => $post_type_names, 'default-option' => true, 'description' => __( 'Select in what post type the entries of this form will be added.', 'wck' ), 'required' => true ),				
-		array( 'type' => 'radio', 'title' => __( 'Anonymous posting', 'wck' ), 'options' => array( 'yes', 'no' ), 'default' => 'no', 'description' => __( 'Enable anonymous posting. If enabled users can use this form without being logged in.', 'wck' ) ),				
-		array( 'type' => 'user select', 'title' => __( 'Assign to user', 'wck' ), 'description' => __( 'The user that the posts are assigned to with "Anonymous posting". Defaults to admin', 'wck' ) ),
-		array( 'type' => 'radio', 'title' => __( 'Admin Approval', 'wck' ), 'options' => array( 'yes', 'no' ), 'default' => 'no', 'description' => __( 'Enable Admin Approval. If enabled the entries from this form will be set as drafts and will require an admin to approve them.', 'wck' ) ),				
-		array( 'type' => 'select', 'title' => __( 'Shortcode Page', 'wck' ), 'options' => $page_names, 'values' => $page_ids, 'default-option' => true, 'description' => __( 'The page on which the shortcode will be placed. You can come back and edit this later.', 'wck' ) ),				
+		array( 'type' => 'select', 'title' => __( 'Post Type', 'wck' ), 'slug' => 'post-type', 'options' => $post_type_names, 'default-option' => true, 'description' => __( 'Select in what post type the entries of this form will be added.', 'wck' ), 'required' => true ),
+		array( 'type' => 'radio', 'title' => __( 'Anonymous posting', 'wck' ), 'slug' => 'anonymous-posting', 'options' => array( 'yes', 'no' ), 'default' => 'no', 'description' => __( 'Enable anonymous posting. If enabled users can use this form without being logged in.', 'wck' ) ),
+		array( 'type' => 'user select', 'title' => __( 'Assign to user', 'wck' ), 'slug' => 'assign-to-user', 'description' => __( 'The user that the posts are assigned to with "Anonymous posting". Defaults to admin', 'wck' ) ),
+		array( 'type' => 'radio', 'title' => __( 'Admin Approval', 'wck' ), 'slug' => 'admin-approval', 'options' => array( 'yes', 'no' ), 'default' => 'no', 'description' => __( 'Enable Admin Approval. If enabled the entries from this form will be set as drafts and will require an admin to approve them.', 'wck' ) ),
+		array( 'type' => 'select', 'title' => __( 'Shortcode Page', 'wck' ), 'slug' => 'shortcode-page', 'options' => $page_names, 'values' => $page_ids, 'default-option' => true, 'description' => __( 'The page on which the shortcode will be placed. You can come back and edit this later.', 'wck' ) ),
 	);
 	
 	/* set up the box arguments */
@@ -148,8 +148,8 @@ function wck_fep_create_boxes(){
 	
 	/* set up the fields array */
 	$fep_box_fields_fields = array(		
-		array( 'type' => 'select', 'title' => __( 'Field Type', 'wck' ), 'options' => $default_fields_titles, 'default-option' => true, 'description' => __( 'The field type', 'wck' ), 'required' => true ),
-		array( 'type' => 'radio', 'title' => __( 'Required', 'wck' ), 'options' => array( 'yes', 'no' ), 'default' => 'no', 'description' => __( 'Is this field required?', 'wck' ) )
+		array( 'type' => 'select', 'title' => __( 'Field Type', 'wck' ), 'slug' => 'field-type', 'options' => $default_fields_titles, 'default-option' => true, 'description' => __( 'The field type', 'wck' ), 'required' => true ),
+		array( 'type' => 'radio', 'title' => __( 'Required', 'wck' ), 'slug' => 'required', 'options' => array( 'yes', 'no' ), 'default' => 'no', 'description' => __( 'Is this field required?', 'wck' ) )
 	);	
 	
 	/* add to Field Types all the taxonomies registered for the post type selected in the Form Setup */
@@ -189,14 +189,14 @@ function wck_fep_create_boxes(){
 	
 	/* set up the labels array */
 	$fep_box_label_fields = array(		
-		array( 'type' => 'text', 'title' => __( 'Post Title', 'wck' ), 'description' => __( 'Change the "Post Title" label', 'wck' ) ),
-		array( 'type' => 'text', 'title' => __( 'Post Content', 'wck' ), 'description' => __( 'Change the "Post Content" label', 'wck' ) ),		
-		array( 'type' => 'text', 'title' => __( 'Post Excerpt', 'wck' ), 'description' => __( 'Change the "Post Excerpt" label', 'wck' ) ),		
-		array( 'type' => 'text', 'title' => __( 'Featured Image', 'wck' ), 'description' => __( 'Change the "Featured Image" label', 'wck' ) ),		
-		array( 'type' => 'text', 'title' => __( 'Add Post', 'wck' ), 'description' => __( 'Change the "Add Post" label for the submit button', 'wck' ) ),		
-		array( 'type' => 'text', 'title' => __( 'Update Post', 'wck' ), 'description' => __( 'Change the "Update Post" label for the submit button', 'wck' ) ),		
-		array( 'type' => 'text', 'title' => __( 'Post Added', 'wck' ), 'description' => __( 'Change the "Post Added" success message', 'wck' ) ),		
-		array( 'type' => 'text', 'title' => __( 'Post Updated', 'wck' ), 'description' => __( 'Change the "Post Updated" success message', 'wck' ) )		
+		array( 'type' => 'text', 'title' => __( 'Post Title', 'wck' ), 'slug' => 'post-title', 'description' => __( 'Change the "Post Title" label', 'wck' ) ),
+		array( 'type' => 'text', 'title' => __( 'Post Content', 'wck' ), 'slug' => 'post-content', 'description' => __( 'Change the "Post Content" label', 'wck' ) ),
+		array( 'type' => 'text', 'title' => __( 'Post Excerpt', 'wck' ), 'slug' => 'post-excerpt', 'description' => __( 'Change the "Post Excerpt" label', 'wck' ) ),
+		array( 'type' => 'text', 'title' => __( 'Featured Image', 'wck' ), 'slug' => 'featured-image', 'description' => __( 'Change the "Featured Image" label', 'wck' ) ),
+		array( 'type' => 'text', 'title' => __( 'Add Post', 'wck' ), 'slug' => 'add-post', 'description' => __( 'Change the "Add Post" label for the submit button', 'wck' ) ),
+		array( 'type' => 'text', 'title' => __( 'Update Post', 'wck' ), 'slug' => 'update-post', 'description' => __( 'Change the "Update Post" label for the submit button', 'wck' ) ),
+		array( 'type' => 'text', 'title' => __( 'Post Added', 'wck' ), 'slug' => 'post-added', 'description' => __( 'Change the "Post Added" success message', 'wck' ) ),
+		array( 'type' => 'text', 'title' => __( 'Post Updated', 'wck' ), 'slug' => 'post-updated', 'description' => __( 'Change the "Post Updated" success message', 'wck' ) )
 	);		
 	
 	/* set up the box arguments */
@@ -275,8 +275,8 @@ function wck_fep_get_taxonomies_for_post_type( $post_id ){
 }
 
 /* Add an extra verification for the Field Type select in the Form Fields Meta Box. Throw error if the field type is allready added  */
-add_filter( 'wck_required_test_wck_fep_fields_field-type', 'wck_fep_ceck_field_type', 10, 3 );
-function wck_fep_ceck_field_type( $bool, $value, $post_id ){	
+add_filter( 'wck_required_test_wck_fep_fields_field-type', 'wck_fep_ceck_field_type', 10, 6 );
+function wck_fep_ceck_field_type( $bool, $value, $post_id, $field, $meta, $fields ){
 	$wck_fep_fields = get_post_meta( $post_id, 'wck_fep_fields', true );
 	
 	$allready_exists = false;
@@ -293,8 +293,8 @@ function wck_fep_ceck_field_type( $bool, $value, $post_id ){
 	return ( $allready_exists || empty($value) );
 }
 /* Message filter if the allready existing error is thrown */
-add_filter( 'wck_required_message_wck_fep_fields_field-type', 'wck_fep_change_fields_message', 10, 2 );
-function wck_fep_change_fields_message( $message, $value ){
+add_filter( 'wck_required_message_wck_fep_fields_field-type', 'wck_fep_change_fields_message', 10, 3 );
+function wck_fep_change_fields_message( $message, $value, $required_field ){
 	if( empty( $value ) )
 		return $message;	
 	else
@@ -328,7 +328,7 @@ function wck_fep_change_field_type_select( $id ){
 	}
 	
 	/* build the select html */
-	$select_html = '<option value=\"\">'. __( '...Chose', 'wck' ) .'</option>';
+	$select_html = '<option value=\"\">'. __( '...Choose', 'wck' ) .'</option>';
 	foreach( $default_fields_titles as $default_fields_title ){
 		$select_html .= '<option value=\"'. $default_fields_title .'\">'. $default_fields_title .'</option>';
 	}	
@@ -534,6 +534,8 @@ function wck_fep_change_form_labels(){
 					if( !empty( $wck_fep_label ) ){
 						foreach( $wck_fep_label as $field_slug => $new_label ){						
 							if( !empty( $new_label ) ){
+								/* take care of special characters */
+								$new_label = esc_html( $new_label );
 								$this_form_name = Wordpress_Creation_Kit::wck_generate_slug( $form->post_title );
 								/*  Create the anonymous (lambda-style) function to add to pur filters */
 								$wck_fep_change_labels_and_messages = create_function('$label,$form_name','
@@ -567,21 +569,28 @@ function wck_fep_change_form_labels(){
 	}
 }
 
-/* Show "Assign to user" row  */
-add_filter( "wck_element_class_wck_fep_args", 'wck_fep_dispaly_list_assign_user', 10, 4 );
-function wck_fep_dispaly_list_assign_user( $wck_element_class, $meta, $results, $element_id ){
-	$wck_element_class = '';	
-	if( $results[$element_id]['anonymous-posting'] == 'yes' )
-		$wck_element_class = " class='anonymous-posting-enabled'";	
-	return $wck_element_class;
+/* register FEP labels for translation with wpml */
+add_action( "update_post_meta", 'wck_fep_register_labels_for_translation', 10, 4 );
+function wck_fep_register_labels_for_translation( $meta_id, $object_id, $meta_key, $_meta_value ){
+    if( $meta_key == 'wck_fep_labels' ){
+        if( !empty( $_meta_value[0] ) ) {
+            foreach( $_meta_value[0] as $field_key => $field_value ) {
+                if (function_exists('icl_register_string')) {
+                    icl_register_string('plugin wck', 'fep_label_' . $field_key . '_translation', $field_value );
+                }
+            }
+        }
+    }
 }
 
-
-add_filter("wck_update_container_class_wck_fep_args", 'wck_fep_update_form_assign_user', 10, 4 );
-function wck_fep_update_form_assign_user( $wck_update_container_css_class, $meta, $results, $element_id ){
-	if( $results[$element_id]['anonymous-posting'] == 'yes' )
-		$wck_update_container_css_class = " class='update_container_$meta anonymous-posting-enabled'";
-	return $wck_update_container_css_class;
+/* Show "Assign to user" row  */
+add_filter("wck_add_form_class_wck_fep_args", 'wck_fep_update_form_assign_user', 10, 3 );
+function wck_fep_update_form_assign_user( $wck_update_container_css_class, $meta, $results ){
+	if( !empty( $results ) ) {
+        if ($results[0]['anonymous-posting'] == 'yes')
+            $wck_update_container_css_class = "update_container_$meta anonymous-posting-enabled";
+        return $wck_update_container_css_class;
+    }
 }
 
 /* Contextual Help */
@@ -801,8 +810,8 @@ class Fep_Lilo_Shortcode {
 		/* print scripts */
 		add_action('wp_footer', array(__CLASS__, 'print_script'));
 		/* set up ajax hooks */
-		add_action( 'wp_ajax_wck_fep_register_user', array( &$this, 'wck_fep_register_user' ) );
-		add_action( 'wp_ajax_nopriv_wck_fep_register_user', array( &$this, 'wck_fep_register_user' ) );
+		add_action( 'wp_ajax_wck_fep_register_user', array( 'Fep_Lilo_Shortcode', 'wck_fep_register_user' ) );
+		add_action( 'wp_ajax_nopriv_wck_fep_register_user', array( 'Fep_Lilo_Shortcode', 'wck_fep_register_user' ) );
 	}
 	
 	/**

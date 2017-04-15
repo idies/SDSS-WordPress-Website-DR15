@@ -53,18 +53,18 @@ function wck_sas_create_box(){
 				
 		/* set up the tools array */			
 		$sas_tools_activate = array(
-			array( 'type' => 'radio', 'title' => __( 'Custom Fields Creator', 'wck' ), 'options' => array( 'enabled', 'disabled' ), 'default' => 'enabled' ),
-			array( 'type' => 'radio', 'title' => __( 'Custom Post Type Creator', 'wck' ), 'options' => array( 'enabled', 'disabled' ), 'default' => 'enabled' ),
-			array( 'type' => 'radio', 'title' => __( 'Custom Taxonomy Creator', 'wck' ), 'options' => array( 'enabled', 'disabled' ), 'default' => 'enabled' ),
+			array( 'type' => 'radio', 'title' => __( 'Custom Fields Creator', 'wck' ), 'slug' => 'custom-fields-creator', 'options' => array( 'enabled', 'disabled' ), 'default' => 'enabled' ),
+			array( 'type' => 'radio', 'title' => __( 'Custom Post Type Creator', 'wck' ), 'slug' => 'custom-post-type-creator', 'options' => array( 'enabled', 'disabled' ), 'default' => 'enabled' ),
+			array( 'type' => 'radio', 'title' => __( 'Custom Taxonomy Creator', 'wck' ), 'slug' => 'custom-taxonomy-creator', 'options' => array( 'enabled', 'disabled' ), 'default' => 'enabled' ),
 		);
 		if( file_exists( dirname(__FILE__).'/wck-fep.php' ) )
-			$sas_tools_activate[] = array( 'type' => 'radio', 'title' => __( 'Frontend Posting', 'wck' ), 'options' => array( 'enabled', 'disabled' ), 'default' => 'enabled' );
+			$sas_tools_activate[] = array( 'type' => 'radio', 'title' => __( 'Frontend Posting', 'wck' ), 'slug' => 'frontend-posting', 'options' => array( 'enabled', 'disabled' ), 'default' => 'enabled' );
 		if( file_exists( dirname(__FILE__).'/wck-opc.php' ) )
-			$sas_tools_activate[] = array( 'type' => 'radio', 'title' => __( 'Option Pages Creator', 'wck' ), 'options' => array( 'enabled', 'disabled' ), 'default' => 'enabled' );
+			$sas_tools_activate[] = array( 'type' => 'radio', 'title' => __( 'Option Pages Creator', 'wck' ), 'slug' => 'option-pages-creator', 'options' => array( 'enabled', 'disabled' ), 'default' => 'enabled' );
 		if( file_exists( dirname(__FILE__).'/wck-stp.php' ) )
-			$sas_tools_activate[] = array( 'type' => 'radio', 'title' => __( 'Swift Templates', 'wck' ), 'options' => array( 'enabled', 'disabled' ), 'default' => 'enabled' );
+			$sas_tools_activate[] = array( 'type' => 'radio', 'title' => __( 'Swift Templates', 'wck' ), 'slug' => 'swift-templates', 'options' => array( 'enabled', 'disabled' ), 'default' => 'enabled' );
 		if( !file_exists( dirname(__FILE__).'/wck-stp.php' ) && !file_exists( dirname(__FILE__).'/wck-fep.php' )  )
-			$sas_tools_activate[] = array( 'type' => 'radio', 'title' => __( 'Swift Templates and Front End Posting', 'wck' ), 'options' => array( 'enabled', 'disabled' ), 'default' => 'enabled' );
+			$sas_tools_activate[] = array( 'type' => 'radio', 'title' => __( 'Swift Templates and Front End Posting', 'wck' ), 'slug' => 'swift-templates-and-front-end-posting', 'options' => array( 'enabled', 'disabled' ), 'default' => 'enabled' );
 			
 		/* set up the box arguments */
 		$args = array(
@@ -79,6 +79,35 @@ function wck_sas_create_box(){
 
 		/* create the box */
 		new Wordpress_Creation_Kit( $args );
+
+
+        /* set up the extra settings array */
+        $sas_extra_options = array();
+
+        if( file_exists( dirname( __FILE__ ) . '/wordpress-creation-kit-api/fields/map.php' ) )
+            $sas_extra_options[] = array( 'type' => 'text', 'title' => __( 'Google Maps API', 'wck' ), 'description' => __( 'Enter your Google Maps API key ( <a href="https://console.developers.google.com/flows/enableapi?apiid=maps_backend" target="_blank">Get your API key</a> )', 'wck' ), 'required' => false );
+
+        /* if there are extra options add the box */
+        if( !empty( $sas_extra_options ) ) {
+
+            /* set up the box arguments */
+            $args = array(
+                'metabox_id' => 'wck_extra_options',
+                'metabox_title' => __( 'Extra Settings', 'wck' ),
+                'post_type' => 'sas-page',
+                'meta_name' => 'wck_extra_options',
+                'meta_array' => $sas_extra_options,
+                'context' 	=> 'option',
+                'single' => true,
+                'sortable' => false
+            );
+
+            /* create the box */
+            if (file_exists ($wck_premium_update . 'update-checker.php'))
+                new Wordpress_Creation_Kit( $args );
+
+        }
+
 	}
 }
 
@@ -90,11 +119,20 @@ function wck_sas_welcome($hook){
 		$default_plugin_headers = get_plugin_data($plugin_path);
 		$plugin_name = $default_plugin_headers['Name'];
 		$plugin_version = $default_plugin_headers['Version'];
+		$plugin_name_class = ( strpos( strtolower($plugin_name), 'pro' ) !== false ? 'Pro' : ( strpos( strtolower($plugin_name), 'hobbyist' ) !== false ? 'Hobbyist' : 'Free' ) );
+
+        if( version_compare(PHP_VERSION, '5.3.0') < 0 ) { ?>
+            <div class="notice-error notice">
+                <p>
+                    <?php _e('<strong>You are using a very old version of PHP</strong> (5.2.x or older) which has serious security and performance issues. Please ask your hoster to provide you with an upgrade path to 5.6 or 7.0','wck'); ?>
+                </p>
+            </div>
+        <?php }
 ?>
 		<div class="wrap about-wrap">
+			<div class="wck-badge <?php echo $plugin_name_class; ?>"><span><?php printf( __( 'Version %s' ), $plugin_version ); ?></span></div>
 			<h1><?php printf( __( 'Welcome to %s', 'wck' ), $plugin_name ); ?></h1>
 			<div class="about-text"><?php _e( 'WCK helps you create <strong>repeater custom fields, custom post types</strong> and <strong>taxonomies</strong> in just a couple of clicks, directly from the WordPress admin interface. WCK content types will improve the usability of the sites you build, making them easy to manage by your clients. ', 'wck' ); ?></div>
-			<div class="wck-badge"><?php printf( __( 'Version %s', 'wck' ), $plugin_version ); ?></div>
 		</div>
 
 <?php
@@ -149,21 +187,11 @@ function wck_sas_quickintro($hook){
 	}
 }
 
-/* add refresh to page. Needed to display the serial notification. Need to refactor in the future so it works via ajax. */
-add_action("wck_refresh_list_wck_serial", "wck_serial_after_refresh_list");
-add_action("wck_refresh_entry_wck_serial", "wck_serial_after_refresh_list");
-add_action("wck_refresh_list_wck_tools", "wck_serial_after_refresh_list");
-add_action("wck_refresh_entry_wck_tools", "wck_serial_after_refresh_list");
-function wck_serial_after_refresh_list(){
-	echo '<script type="text/javascript">window.location="'. get_admin_url() . 'admin.php?page=sas-page&updated=true' .'";</script>';
-}
-
 /* Notify user of when he enters his serial number. 
  * Also Check if serial is valid on meta_name creation and update 
  */
-add_filter('wck_metabox_content_wck_serial', 'wck_sas_serial_notification', 10, 2);
-add_filter('wck_after_update_metabox_content_wck_serial', 'wck_sas_serial_notification', 10, 2);
-function wck_sas_serial_notification($list){
+add_action( "wck_after_add_form_wck_serial_element_0", 'wck_sas_serial_notification' );
+function wck_sas_serial_notification(){
 
 	wck_sas_check_serial_number();
 	$status = get_option('wck_serial_status');
@@ -177,8 +205,11 @@ function wck_sas_serial_notification($list){
 	if ( $status == 'found') $notif = '<p class="serial-notification green">' . __( 'Wohoo! Your serial number is valid and you have access to automatic updates.', 'wck' ) . ' </p>'; 
 	
 	if ( $status == 'expired') $notif = '<p class="serial-notification red">' . __( 'It seems your serial number has <strong>expired</strong>. To continue receiving access to product downloads, automatic updates and support please update your serial number for another year from <a href="http://www.cozmoslabs.com/account/?utm_source=WCK-sas&utm_medium=dashboard&utm_campaign=WCK-Renewal" target="_blank"><strong>your account page</strong></a>.', 'wck' ) . ' </p>';
-				
-	return $list . $notif; 
+
+    if ( strpos( $status, 'about' ) === 0 ) $notif = '<p class="serial-notification yellow">' . __( 'Your WordPress Creation Kit serial number is about to expire. To continue receiving access to product downloads, automatic updates and support please update your serial number for another year from <a href="http://www.cozmoslabs.com/account/?utm_source=WCK-sas&utm_medium=dashboard&utm_campaign=WCK-Renewal" target="_blank"><strong>your account page</strong></a>.', 'wck' ) . ' </p>';
+
+    if( !empty( $notif ) )
+	    echo $notif;
 }
 
 /* Check if serial is valid on Start and Settings page load. 
@@ -204,11 +235,11 @@ function wck_sas_check_serial_number(){
 		update_option( 'wck_serial_status', 'noserial' ); //server down
 	} else {
 		$response = wp_remote_get( 'http://updatemetadata.cozmoslabs.com/checkserial/?serialNumberSent='.$serial );
-		
+
 		if (is_wp_error($response)){
 			update_option( 'wck_serial_status', 'serverDown' ); //server down
-				
-		}elseif((trim($response['body']) != 'notFound') && (trim($response['body']) != 'found') && (trim($response['body']) != 'expired')){
+
+		}elseif( (trim($response['body']) != 'notFound') && (trim($response['body']) != 'found') && (trim($response['body']) != 'expired') && strpos( trim($response['body']), 'aboutToExpire') === false ){
 			update_option( 'wck_serial_status', 'serverDown' );  //unknown response parameter
 		}else{
 			update_option( 'wck_serial_status', trim($response['body']) ); //either found, notFound or expired
@@ -293,10 +324,10 @@ if (file_exists ($wck_premium_update . 'update-checker.php')) {
     if ($wck_serial_status == 'notFound' || $wck_serial_status == 'noserial' || $wck_serial_status == '') {
         new wck_add_serial_notices('wck', sprintf(__('<p>Your <strong>WordPress Creation Kit</strong> serial number is invalid or missing. <br/>Please %1$sregister your copy%2$s of WCK to receive access to automatic updates and support. Need a license key? %3$sPurchase one now%4$s</p>', 'wck'), "<a href='admin.php?page=sas-page'>", "</a>", "<a href='http://www.cozmoslabs.com/wck-custom-fields-custom-post-types-plugin/?utm_source=WCK&utm_medium=dashboard&utm_campaign=WCK-SN-Purchase' target='_blank' class='button-primary'>", "</a>"), 'wck_serial_status');
     } elseif ($wck_serial_status == 'expired') {
-        new wck_add_serial_notices('wck_expired', sprintf(__('<p style="position:relative;">Your <strong>WordPress Creation Kit</strong> licence has expired. <br/>Please %1$sRenew Your Licence%2$s to continue receiving access to product downloads, automatic updates and support. %3$sRenew now and get 50&#37; off %4$s %5$sDismiss%6$s</p>', 'wck'), "<a href='http://www.cozmoslabs.com/downloads/wordpress-creation-kit-".$wck_version."-yearly-renewal/?utm_source=WCK&utm_medium=dashboard&utm_campaign=WCK-Renewal' target='_blank'>", "</a>", "<a href='http://www.cozmoslabs.com/downloads/wordpress-creation-kit-".$wck_version."-yearly-renewal/?utm_source=WCK&utm_medium=dashboard&utm_campaign=WCK-Renewal' target='_blank' class='button-primary'>", "</a>", "<a href='" . add_query_arg('wck_expired_dismiss_notification', '0') . "' class='wck-dismiss-notification' style='position:absolute; right:0px; top:50%; margin-top:-7px;'>", "</a>"), 'wck_serial_status');
+        new wck_add_serial_notices('wck_expired', sprintf(__('<p style="position:relative;">Your <strong>WordPress Creation Kit</strong> licence has expired. <br/>Please %1$sRenew Your Licence%2$s to continue receiving access to product downloads, automatic updates and support. %3$sRenew now and get 50&#37; off %4$s %5$sDismiss%6$s</p>', 'wck'), "<a href='http://www.cozmoslabs.com/downloads/wordpress-creation-kit-".$wck_version."-yearly-renewal/?utm_source=WCK&utm_medium=dashboard&utm_campaign=WCK-Renewal' target='_blank'>", "</a>", "<a href='". esc_url( "http://www.cozmoslabs.com/downloads/wordpress-creation-kit-".$wck_version."-yearly-renewal/?utm_source=WCK&utm_medium=dashboard&utm_campaign=WCK-Renewal") ."' target='_blank' class='button-primary'>", "</a>", "<a href='" . esc_url( add_query_arg('wck_expired_dismiss_notification', '0') ) . "' class='wck-dismiss-notification' style='position:absolute; right:0px; top:50%; margin-top:-7px;'>", "</a>"), 'wck_serial_status');
     } elseif (strpos($wck_serial_status, 'aboutToExpire') === 0) {
-        $serial_status_parts = explode('#', $wppb_profile_builder_pro_hobbyist_serial_status);
+        $serial_status_parts = explode( '#', $wck_serial_status );
         $date = $serial_status_parts[1];
-        new wck_add_serial_notices('wck_about_to_expire', sprintf(__('<p style="position:relative;">Your <strong>WordPress Creation Kit</strong> serial number is about to expire on %5$s. <br/>Please %1$sRenew Your Licence%2$s to continue receiving access to product downloads, automatic updates and support. %3$sRenew now and get 50&#37; off %4$s %6$sDismiss%7$s</p>', 'wck'), "<a href='http://www.cozmoslabs.com/downloads/wordpress-creation-kit-".$wck_version."-yearly-renewal/?utm_source=WCK&utm_medium=dashboard&utm_campaign=WCK-Renewal'>", "</a>", "<a href='http://www.cozmoslabs.com/downloads/wordpress-creation-kit-".$wck_version."-yearly-renewal/?utm_source=WCK&utm_medium=dashboard&utm_campaign=WCK-Renewal' target='_blank' class='button-primary'>", "</a>", $date, "<a href='" . add_query_arg('wck_about_to_expire_dismiss_notification', '0') . "' class='wck-dismiss-notification' style='position:absolute; right:0px; top:50%; margin-top:-7px;'>", "</a>"), 'wck_serial_status');
+        new wck_add_serial_notices('wck_about_to_expire', sprintf(__('<p style="position:relative;">Your <strong>WordPress Creation Kit</strong> serial number is about to expire on %5$s. <br/>Please %1$sRenew Your Licence%2$s to continue receiving access to product downloads, automatic updates and support. %3$sRenew now and get 50&#37; off %4$s %6$sDismiss%7$s</p>', 'wck'), "<a href='http://www.cozmoslabs.com/downloads/wordpress-creation-kit-".$wck_version."-yearly-renewal/?utm_source=WCK&utm_medium=dashboard&utm_campaign=WCK-Renewal'>", "</a>", "<a href='". esc_url( "http://www.cozmoslabs.com/downloads/wordpress-creation-kit-".$wck_version."-yearly-renewal/?utm_source=WCK&utm_medium=dashboard&utm_campaign=WCK-Renewal" ) ."' target='_blank' class='button-primary'>", "</a>", $date, "<a href='" . esc_url( add_query_arg('wck_about_to_expire_dismiss_notification', '0') ) . "' class='wck-dismiss-notification' style='position:absolute; right:0px; top:50%; margin-top:-7px;'>", "</a>"), 'wck_serial_status');
     }
 }

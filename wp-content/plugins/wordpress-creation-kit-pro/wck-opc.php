@@ -58,7 +58,6 @@ function wck_opc_create_option_pages_cpt(){
 
 /* hook to create options field cpt */
 add_action( 'init', 'wck_opc_create_option_fields_cpt' );
-
 function wck_opc_create_option_fields_cpt(){	
 	if( is_admin() && current_user_can( 'edit_theme_options' ) ){		
 		$labels = array(
@@ -126,14 +125,14 @@ function wck_opc_create_box(){
 	
 	/* set up the fields array */
 	$opc_box_args_fields = array(
-		array( 'type' => 'text', 'title' => __( 'Page name in menu', 'wck' ), 'description' => __( 'The name of the option page in the menu.', 'wck' ), 'required' => true ),				
-		array( 'type' => 'select', 'title' => __( 'Display', 'wck' ), 'options' => array( 'As toplevel page', 'Under Appearance menu', 'Under Settings menu' ), 'default-option' => true, 'description' => __( 'Choose where in the admin menu should the page appear', 'wck' ) ),		
-		array( 'type' => 'text', 'title' => __( 'Page Title', 'wck' ), 'description' => __( 'The title that is displayed on the page. If this is not filled in then it\'s the same as Page name in menu', 'wck' ) ),				
-		array( 'type' => 'select', 'title' => __( 'Page Type', 'wck' ), 'options' => array( '%Toplevel Page%menu_page', '%Submenu Page%submenu_page' ), 'default-option' => true, 'description' => __( 'Choose what type the page should be. IMPORTANT: this overrides the Display option.', 'wck' ) ),
-		array( 'type' => 'text', 'title' => __( 'Parent Slug (for Submenu Page)', 'wck' ), 'description' => __( 'The slug name for the parent menu (or the file name of a standard WordPress admin page) For examples see http://codex.wordpress.org/Function_Reference/add_submenu_page $parent_slug parameter', 'wck' ) ),				
-		array( 'type' => 'text', 'title' => __( 'Position (for Toplevel Page)', 'wck' ), 'description' => __( 'The position in the menu order this menu should appear. Available for toplevel pages only.', 'wck' ) ),						
-		array( 'type' => 'text', 'title' => __( 'Capability', 'wck' ), 'description' => __( 'The capability required for this menu to be displayed to the user. Defaults to "edit_theme_options"', 'wck' ) ),				
-		array( 'type' => 'text', 'title' => __( 'Icon Url (for Toplevel Page)', 'wck' ), 'description' => __( 'The icon for the menu button', 'wck' ) ),						
+		array( 'type' => 'text', 'title' => __( 'Page name in menu', 'wck' ), 'slug' => 'page-name-in-menu', 'description' => __( 'The name of the option page in the menu.', 'wck' ), 'required' => true ),
+		array( 'type' => 'select', 'title' => __( 'Display', 'wck' ), 'slug' => 'display', 'options' => array( 'As toplevel page', 'Under Appearance menu', 'Under Settings menu' ), 'default-option' => true, 'description' => __( 'Choose where in the admin menu should the page appear', 'wck' ) ),
+		array( 'type' => 'text', 'title' => __( 'Page Title', 'wck' ), 'slug' => 'page-title', 'description' => __( 'The title that is displayed on the page. If this is not filled in then it\'s the same as Page name in menu', 'wck' ) ),
+		array( 'type' => 'select', 'title' => __( 'Page Type', 'wck' ), 'slug' => 'page-type', 'options' => array( '%Toplevel Page%menu_page', '%Submenu Page%submenu_page' ), 'default-option' => true, 'description' => __( 'Choose what type the page should be. IMPORTANT: this overrides the Display option.', 'wck' ) ),
+		array( 'type' => 'text', 'title' => __( 'Parent Slug (for Submenu Page)', 'wck' ), 'slug' => 'parent-slug-for-submenu-page', 'description' => __( 'The slug name for the parent menu (or the file name of a standard WordPress admin page) For examples see http://codex.wordpress.org/Function_Reference/add_submenu_page $parent_slug parameter', 'wck' ) ),
+		array( 'type' => 'text', 'title' => __( 'Position (for Toplevel Page)', 'wck' ), 'slug' => 'position-for-toplevel-page', 'description' => __( 'The position in the menu order this menu should appear. Available for toplevel pages only.', 'wck' ) ),
+		array( 'type' => 'text', 'title' => __( 'Capability', 'wck' ), 'slug' => 'capability', 'description' => __( 'The capability required for this menu to be displayed to the user. Defaults to "edit_theme_options"', 'wck' ) ),
+		array( 'type' => 'text', 'title' => __( 'Icon Url (for Toplevel Page)', 'wck' ), 'slug' => 'icon-url-for-toplevel-page', 'description' => __( 'The icon for the menu button', 'wck' ) ),
 	);
 		
 	/* set up the box arguments */
@@ -167,11 +166,11 @@ function wck_opc_create_box(){
 	
 	/* set up the fields arguments array */
 	$opc_box_fields_fields = apply_filters( 'wck_opc_box_fields_fields', array(		
-		array( 'type' => 'text', 'title' => __( 'Group Title', 'wck' ), 'description' => __( 'The name of the group field', 'wck' ), 'required' => true ),
-		array( 'type' => 'select', 'title' => __( 'Option Page', 'wck' ), 'options' => $all_option_pages_titles, 'default-option' => true, 'description' => __( 'Select the option page here', 'wck' ), 'required' => true ),
-		array( 'type' => 'text', 'title' => __( 'Option Name', 'wck' ), 'description' => __( 'The name of the option. Must be unique, only lowercase letters, no spaces and no special characters.', 'wck' ), 'required' => true ),
-		array( 'type' => 'select', 'title' => __( 'Repeater', 'wck' ), 'options' => array( 'false', 'true' ), 'default' => 'false', 'description' => __( 'Whether the box supports just one entry or if it is a repeater field. By default it is a single field.', 'wck' ) ),
-		array( 'type' => 'select', 'title' => __( 'Sortable', 'wck' ), 'options' => array( 'true', 'false' ), 'default' => 'false', 'description' => __( 'Whether the entries are sortable or not. This is valid for repeater fields.', 'wck' ) ),
+		array( 'type' => 'text', 'title' => __( 'Group Title', 'wck' ), 'slug' => 'group-title', 'description' => __( 'The name of the group field', 'wck' ), 'required' => true ),
+		array( 'type' => 'select', 'title' => __( 'Option Page', 'wck' ), 'slug' => 'option-page', 'options' => $all_option_pages_titles, 'default-option' => true, 'description' => __( 'Select the option page here', 'wck' ), 'required' => true ),
+		array( 'type' => 'text', 'title' => __( 'Option Name', 'wck' ), 'slug' => 'option-name', 'description' => __( 'The name of the option. Must be unique, only lowercase letters, no spaces and no special characters.', 'wck' ), 'required' => true ),
+		array( 'type' => 'select', 'title' => __( 'Repeater', 'wck' ), 'slug' => 'repeater', 'options' => array( 'false', 'true' ), 'default' => 'false', 'description' => __( 'Whether the box supports just one entry or if it is a repeater field. By default it is a single field.', 'wck' ) ),
+		array( 'type' => 'select', 'title' => __( 'Sortable', 'wck' ), 'slug' => 'sortable', 'options' => array( 'true', 'false' ), 'default' => 'false', 'description' => __( 'Whether the entries are sortable or not. This is valid for repeater fields.', 'wck' ) ),
 	) );	
 	
 	/* set up the box arguments */
@@ -189,7 +188,9 @@ function wck_opc_create_box(){
 	new Wordpress_Creation_Kit( $args );
 	
 	/* set up field types */
-	$field_types = array( 'text', 'textarea', 'select', 'checkbox', 'radio', 'upload', 'wysiwyg editor', 'datepicker', 'country select', 'user select', 'cpt select' );
+
+	$field_types = array( 'heading', 'text', 'number', 'textarea', 'select', 'checkbox', 'radio', 'phone', 'upload', 'wysiwyg editor', 'datepicker', 'timepicker', 'colorpicker', 'country select', 'user select', 'cpt select', 'currency select', 'html', 'map' );
+
 	$field_types = apply_filters( 'wck_field_types', $field_types );
 	
 	/* setup post types */
@@ -197,13 +198,27 @@ function wck_opc_create_box(){
 	
 	/* set up the fields array */
 	$opc_box_fields_fields = array(
-		array( 'type' => 'text', 'title' => __( 'Field Title', 'wck' ), 'description' => __( 'Title of the field. A slug will automatically be generated.', 'wck' ), 'required' => true ),
-		array( 'type' => 'select', 'title' => __( 'Field Type', 'wck' ), 'options' => $field_types, 'default-option' => true, 'description' => __( 'The field type', 'wck' ), 'required' => true ),
-		array( 'type' => 'textarea', 'title' => __( 'Description', 'wck' ), 'description' => 'The description of the field.' ),				
-		array( 'type' => 'select', 'title' => __( 'Required', 'wck' ), 'options' => array( 'false', 'true' ), 'default' => 'false', 'description' => __( 'Whether the field is required or not', 'wck' ) ),
-		array( 'type' => 'select', 'title' => __( 'CPT', 'wck' ), 'options' => $post_types, 'default' => 'post', 'description' => __( 'Select what custom post type should be used in the CPT Select.', 'wck' ) ),		
-		array( 'type' => 'text', 'title' => __( 'Default Value', 'wck' ), 'description' => __( 'Default value of the field. For Checkboxes if there are multiple values separate them with a ","', 'wck' ) ),
-		array( 'type' => 'text', 'title' => __( 'Options', 'wck' ), 'description' => __( 'Options for field types "select", "checkbox" and "radio". For multiple options separate them with a ",". You can use the following structure if you want the label to be different from the value: %LabelOne%valueone,%LabelTwo%valuetwo,%LabelThree%valuethree', 'wck' ) ),		
+		array( 'type' => 'text', 'title' => __( 'Field Title', 'wck' ), 'slug' => 'field-title', 'description' => __( 'Title of the field. A slug will automatically be generated.', 'wck' ), 'required' => true ),
+		array( 'type' => 'select', 'title' => __( 'Field Type', 'wck' ), 'slug' => 'field-type', 'options' => $field_types, 'default-option' => true, 'description' => __( 'The field type', 'wck' ), 'required' => true ),
+		array( 'type' => 'textarea', 'title' => __( 'Description', 'wck' ), 'slug' => 'description', 'description' => 'The description of the field.' ),
+		array( 'type' => 'select', 'title' => __( 'Required', 'wck' ), 'slug' => 'required', 'options' => array( 'false', 'true' ), 'default' => 'false', 'description' => __( 'Whether the field is required or not', 'wck' ) ),
+		array( 'type' => 'select', 'title' => __( 'CPT', 'wck' ), 'slug' => 'cpt', 'options' => $post_types, 'default' => 'post', 'description' => __( 'Select what custom post type should be used in the CPT Select.', 'wck' ) ),
+		array( 'type' => 'text', 'title' => __( 'Default Value', 'wck' ), 'slug' => 'default-value', 'description' => __( 'Default value of the field. For Checkboxes if there are multiple values separate them with a ","', 'wck' ) ),
+		array( 'type' => 'textarea', 'title' => __( 'Default Text', 'wck' ), 'slug' => 'default-text', 'description' => __( 'Default text of the textarea.', 'wck' ) ),
+		array( 'type' => 'textarea', 'title' => __( 'HTML Content', 'wck' ), 'slug' => 'html-content', 'description' => __( 'Add you HTML (or text) content.', 'wck' ) ),
+		array( 'type' => 'text', 'title' => __( 'Options', 'wck' ), 'slug' => 'options', 'description' => __( 'Options for field types "select", "checkbox" and "radio". For multiple options separate them with a ",".', 'wck' ) ),
+		array( 'type' => 'text', 'title' => __( 'Labels', 'wck' ), 'slug' => 'labels', 'description' => __( 'Labels for field types "select", "checkbox" and "radio". For multiple options separate them with a ",".', 'wck' ) ),
+		array( 'type' => 'text', 'title' => __( 'Phone Format', 'wck' ), 'slug' => 'phone-format', 'default' => '(###) ###-####', 'description' => __( "You can use: # for numbers, parentheses ( ), - sign, + sign, dot . and spaces.", 'wck' ) .'<br>'.  __( "Eg. (###) ###-####", 'wck' ) .'<br>'. __( "Empty field won't check for correct phone number.", 'wck' ) ),
+		array( 'type' => 'text', 'title' => __( 'Min Number Value', 'wck' ), 'slug' => 'min-number-value', 'description' => __( "Min allowed number value (0 to allow only positive numbers)", 'wck' ) .'<br>'. __( "Leave it empty for no min value", 'wck' ) ),
+		array( 'type' => 'text', 'title' => __( 'Max Number Value', 'wck' ), 'slug' => 'max-number-value', 'description' => __( "Max allowed number value (0 to allow only negative numbers)", 'wck' ) .'<br>'. __( "Leave it empty for no max value", 'wck' ) ),
+		array( 'type' => 'text', 'title' => __( 'Number Step Value', 'wck' ), 'slug' => 'number-step-value', 'description' => __( "Step value 1 to allow only integers, 0.1 to allow integers and numbers with 1 decimal", 'wck' ) .'<br>'. __( "To allow multiple decimals use for eg. 0.01 (for 2 deciamls) and so on", 'wck' ) .'<br>'. __( "You can also use step value to specify the legal number intervals (eg. step value 2 will allow only -4, -2, 0, 2 and so on)", 'wck' ) .'<br>'. __( "Leave it empty for no restriction", 'wck' ) ),
+		array( 'type' => 'text', 'title' => __( 'Number of rows', 'wck' ), 'slug' => 'number-of-rows', 'description' => __( 'Number of rows for the textarea', 'wck' ), 'default' => '5' ),
+        array( 'type' => 'select', 'title' => __( 'Readonly', 'wck' ), 'slug' => 'readonly', 'options' => array( 'false', 'true' ), 'default' => 'false', 'description' => __( 'Whether the textarea is readonly or not', 'wck' ) ),
+        array( 'type' => 'text', 'title' => __( 'Default Latitude', 'wck' ), 'slug' => 'map-default-latitude', 'description' => __( 'The latitude at which the map should be displayed when no pins are attached.', 'wck' ), 'default' => 0 ),
+        array( 'type' => 'text', 'title' => __( 'Default Longitude', 'wck' ), 'slug' => 'map-default-longitude', 'description' => __( 'The longitude at which the map should be displayed when no pins are attached.', 'wck' ), 'default' => 0 ),
+        array( 'type' => 'text', 'title' => __( 'Default Zoom', 'wck' ), 'slug' => 'map-default-zoom', 'description' => __( 'Add a number from 0 to 19. The higher the number the higher the zoom.', 'wck' ), 'default' => 15 ),
+        array( 'type' => 'text', 'title' => __( 'Map Height', 'wck' ), 'slug' => 'map-height', 'description' => __( 'The height of the map.', 'wck' ), 'default' => 350 ),
+		array( 'type' => 'select', 'title' => __( 'Date Format', 'wck' ), 'slug' => 'date-format', 'description' => __( 'The format of the datepicker date', 'wck' ), 'options' => array( '%Default - dd-mm-yy%dd-mm-yy', '%Datepicker default - mm/dd/yy%mm/dd/yy', '%ISO 8601 - yy-mm-dd%yy-mm-dd', '%Short - d M, y%d M, y', '%Medium - d MM, y%d MM, y', '%Full - DD, d MM, yy%DD, d MM, yy', '%With text - \'day\' d \'of\' MM \'in the year\' yy%\'day\' d \'of\' MM \'in the year\' yy' ), 'default' => 'dd-mm-yy' ),
 	);	
 	
 	/* set up the box arguments */
@@ -378,7 +393,6 @@ function wck_opc_create_pages(){
 
 /* hook to create option fields groups */
 add_action( 'init', 'wck_opc_create_option_pages_fields' );
-
 function wck_opc_create_pages_args(){
 	$args = array(
 		'post_type' => 'wck-option-field',
@@ -402,7 +416,13 @@ function wck_opc_create_pages_args(){
 			$fields_array = array();
 			if( !empty( $wck_opc_fields ) ){
 				foreach( $wck_opc_fields as $wck_opc_field ){
-					$fields_inner_array = array( 'type' => $wck_opc_field['field-type'], 'title' => $wck_opc_field['field-title'] ); 
+					$fields_inner_array = array( 'type' => $wck_opc_field['field-type'], 'title' => $wck_opc_field['field-title'] );
+
+					if( !empty( $wck_opc_field['field-slug'] ) )
+						$fields_inner_array['slug'] = $wck_opc_field['field-slug'];
+					else
+						$fields_inner_array['slug'] = Wordpress_Creation_Kit::wck_generate_slug( $wck_opc_field['field-title'] );
+
 					if( !empty( $wck_opc_field['description'] ) )
 						$fields_inner_array['description'] = $wck_opc_field['description']; 
 					if( !empty( $wck_opc_field['required'] ) )
@@ -411,17 +431,76 @@ function wck_opc_create_pages_args(){
 						$fields_inner_array['cpt'] = $wck_opc_field['cpt']; 					
 					if( !empty( $wck_opc_field['default-value'] ) )
 						$fields_inner_array['default'] = $wck_opc_field['default-value'];
+                    if( isset( $wck_opc_field['default-text'] ) && !empty( $wck_opc_field['default-text'] ) )
+                        $fields_inner_array['default'] = $wck_opc_field['default-text'];
 					if( !empty( $wck_opc_field['options'] ) ){
-						$fields_inner_array['options'] = explode( ',', $wck_opc_field['options'] );
+						$fields_inner_array['options'] = array_map( 'trim', explode( ',', $wck_opc_field['options'] ) );
+
+                        if( !empty( $wck_opc_field['labels'] ) ){
+                            $labels = array_map( 'trim', explode( ',', $wck_opc_field['labels'] ) );
+                        }
 						
 						if( !empty( $fields_inner_array['options'] ) ){
 							foreach( $fields_inner_array['options'] as  $key => $value ){
 								$fields_inner_array['options'][$key] = trim( $value );
+                                if( strpos( $value, '%' ) === false && !empty( $labels[$key] ) )
+                                    $fields_inner_array['options'][$key] = '%'.$labels[$key].'%'.$value;
 							}
 						}
 						
-					}				
-						
+					}
+
+                    if( !empty( $wck_opc_field['number-of-rows'] ) )
+                        $fields_inner_array['number_of_rows'] = trim( $wck_opc_field['number-of-rows'] );
+
+                    if( !empty( $wck_opc_field['readonly'] ) )
+                        $fields_inner_array['readonly'] = $wck_opc_field['readonly'] == 'true' ? true : false;
+
+					if( ! empty( $wck_opc_field['phone-format'] ) ) {
+						$phone_format_description = __( 'Required phone number format: ', 'wck' ) . $wck_opc_field['phone-format'];
+						$phone_format_description = apply_filters( 'wck_phone_format_description', $phone_format_description );
+						if( $wck_opc_field['field-type'] === 'phone' ) {
+							$fields_inner_array['phone-format'] = $wck_opc_field['phone-format'];
+							if( ! empty( $wck_opc_field['description'] ) ) {
+								$fields_inner_array['description'] .= '<br>' . $phone_format_description;
+							} else {
+								$fields_inner_array['description'] = $phone_format_description;
+							}
+						}
+					}
+
+
+                    if( $wck_opc_field['field-type'] === 'html' && isset( $wck_opc_field['html-content'] ) ) {
+                        $fields_inner_array['html-content'] = $wck_opc_field['html-content'];
+                    }
+
+
+                    if( isset( $wck_opc_field['map-default-latitude'] ) )
+                        $fields_inner_array['map_default_latitude'] = trim( $wck_opc_field['map-default-latitude'] );
+
+                    if( isset( $wck_opc_field['map-default-longitude'] ) )
+                        $fields_inner_array['map_default_longitude'] = trim( $wck_opc_field['map-default-longitude'] );
+
+                    if( !empty( $wck_opc_field['map-default-zoom'] ) )
+                        $fields_inner_array['map_default_zoom'] = trim( $wck_opc_field['map-default-zoom'] );
+
+                    if( !empty( $wck_opc_field['map-height'] ) )
+                        $fields_inner_array['map_height'] = trim( $wck_opc_field['map-height'] );
+
+					if( !empty( $wck_opc_field['min-number-value'] ) || ( isset( $wck_opc_field['min-number-value'] ) && $wck_opc_field['min-number-value'] == '0' ) )
+						$fields_inner_array['min-number-value'] = trim( $wck_opc_field['min-number-value'] );
+
+					if( !empty( $wck_opc_field['max-number-value'] ) || ( isset( $wck_opc_field['max-number-value'] ) && $wck_opc_field['max-number-value'] == '0' ) )
+						$fields_inner_array['max-number-value'] = trim( $wck_opc_field['max-number-value'] );
+
+					if( !empty( $wck_opc_field['number-step-value'] ) )
+						$fields_inner_array['number-step-value'] = trim( $wck_opc_field['number-step-value'] );
+
+					if( $wck_opc_field['field-type'] === 'datepicker' ) {
+						if( !empty( $wck_opc_field['date-format'] ) )
+							$fields_inner_array['date-format'] = $wck_opc_field['date-format'];
+					}
+
 					$fields_array[] = $fields_inner_array;
 				}
 			}
@@ -466,7 +545,6 @@ function wck_opc_create_option_pages_fields(){
 }
 
 
-
 /* Filter post update message */
 add_filter( 'post_updated_messages', 'wck_opc_filter_post_update_message' );
 function wck_opc_filter_post_update_message($messages){
@@ -483,8 +561,8 @@ function wck_opc_filter_post_update_message($messages){
 
 
 /* Meta Name Verification */
-add_filter( 'wck_required_test_wck_opc_field_args_option-name', 'wck_opc_ceck_option_name', 10, 3 );
-function wck_opc_ceck_option_name( $bool, $value, $post_id ){
+add_filter( 'wck_required_test_wck_opc_field_args_option-name', 'wck_opc_ceck_option_name', 10, 6 );
+function wck_opc_ceck_option_name( $bool, $value, $post_id, $field, $meta, $fields ){
 	global $wpdb;
 	
 	$wck_opc_field_args = get_post_meta( $post_id, 'wck_opc_field_args', true );
@@ -515,8 +593,8 @@ function wck_opc_ceck_option_name( $bool, $value, $post_id ){
 	return ( $check_option_existance || empty($value) || $contains_spaces || $contains_uppercase );
 }
 
-add_filter( 'wck_required_message_wck_opc_field_args_option-name', 'wck_opc_change_option_message', 10, 2 );
-function wck_opc_change_option_message( $message, $value ){
+add_filter( 'wck_required_message_wck_opc_field_args_option-name', 'wck_opc_change_option_message', 10, 3 );
+function wck_opc_change_option_message( $message, $value, $required_field ){
 	if( empty( $value ) )
 		return $message;
 	else if( strpos( $value, ' ' ) !== false )
@@ -533,39 +611,40 @@ function wck_opc_change_option_name( $meta, $id, $values, $element_id ){
 	global $wpdb;
 	if( $meta == 'wck_opc_field_args' ){
 		$wck_opc_field_args = get_post_meta( $id, 'wck_opc_field_args', true );		
-		
-		if( $wck_opc_field_args[0]['option-name'] != $values['option-name'] ){			
-			$wpdb->update( 
-				$wpdb->options, 
-				array( 'option_name' => $values['option-name'] ), 
-				array( 'option_name' => $wck_opc_field_args[0]['option-name'] )				
-			);
-		}
-		
+		if( !empty( $wck_opc_field_args ) ) {
+            if ($wck_opc_field_args[0]['option-name'] != $values['option-name']) {
+                $wpdb->update(
+                    $wpdb->options,
+                    array('option_name' => $values['option-name']),
+                    array('option_name' => $wck_opc_field_args[0]['option-name'])
+                );
+            }
+        }
 	}
 }
 
 /* Change Field Title in db if field changed */
 add_action( 'wck_before_update_meta', 'wck_opc_change_field_title', 10, 4 );
 function wck_opc_change_field_title( $meta, $id, $values, $element_id ){
-	if( $meta == 'wck_opc_fields' ){
-		$wck_opc_fields = get_post_meta( $id, 'wck_opc_fields', true );
-		
-		if( $wck_opc_fields[$element_id]['field-title'] != $values['field-title'] ){						
-			
-			$wck_opc_field_args = get_post_meta( $id, 'wck_opc_field_args', true );
-			$option_name = $wck_opc_field_args[0]['option-name'];					
-			
-			$results = get_option( $option_name );
-			if( !empty( $results ) ){
-				foreach( $results as $key => $result ){			
-					$results[$key][ Wordpress_Creation_Kit::wck_generate_slug( $values['field-title'] ) ] = $results[$key][ Wordpress_Creation_Kit::wck_generate_slug( $wck_opc_fields[$element_id]['field-title'] ) ];
-					unset( $results[$key][ Wordpress_Creation_Kit::wck_generate_slug( $wck_opc_fields[$element_id]['field-title'] ) ] );
-				}
-			}
-			update_option( $option_name, $results );
-			
-		}
+	if( $meta == 'wck_opc_fields' ) {
+        $wck_opc_fields = get_post_meta($id, 'wck_opc_fields', true);
+
+        if(!empty($wck_opc_fields)){
+            if ($wck_opc_fields[$element_id]['field-title'] != $values['field-title']) {
+
+                $wck_opc_field_args = get_post_meta($id, 'wck_opc_field_args', true);
+                $option_name = $wck_opc_field_args[0]['option-name'];
+
+                $results = get_option($option_name);
+                if (!empty($results)) {
+                    foreach ($results as $key => $result) {
+                        $results[$key][Wordpress_Creation_Kit::wck_generate_slug($values['field-title'])] = $results[$key][Wordpress_Creation_Kit::wck_generate_slug($wck_opc_fields[$element_id]['field-title'])];
+                        unset($results[$key][Wordpress_Creation_Kit::wck_generate_slug($wck_opc_fields[$element_id]['field-title'])]);
+                    }
+                }
+                update_option($option_name, $results);
+            }
+        }
 	}
 }
 
@@ -575,47 +654,43 @@ function wck_opc_change_option_page_arg( $meta, $id, $values, $element_id ){
 	global $wpdb;
 	if( $meta == 'wck_opc_args' ){
 		$wck_opc_args = get_post_meta( $id, 'wck_opc_args', true );
-		
-		if( $wck_opc_args[$element_id]['page-name-in-menu'] != $values['page-name-in-menu'] ){						
-			
-			/* Get all Option Fields */
-			$args = array(
-				'post_type' => 'wck-option-field',
-				'numberposts' => -1
-			);
-			
-			$all_option_fields = get_posts( $args );
-			if( !empty( $all_option_fields ) ){
-				foreach( $all_option_fields as $all_option_field ){
-					$option_field_args = get_post_meta( $all_option_field->ID, 'wck_opc_field_args', true );					
-					if( !empty( $option_field_args ) ){						
-						if( $option_field_args[0]['option-page'] == Wordpress_Creation_Kit::wck_generate_slug( $wck_opc_args[$element_id]['page-name-in-menu'] ) ){
-							$option_field_args[0]['option-page'] = Wordpress_Creation_Kit::wck_generate_slug( $values['page-name-in-menu'] );							
-							update_post_meta( $all_option_field->ID, 'wck_opc_field_args', $option_field_args );
-						}
-					}
-				}
-			}			
-		}
+		if( !empty( $wck_opc_args ) ){
+            if ($wck_opc_args[$element_id]['page-name-in-menu'] != $values['page-name-in-menu']) {
+
+                /* Get all Option Fields */
+                $args = array(
+                    'post_type' => 'wck-option-field',
+                    'numberposts' => -1
+                );
+
+                $all_option_fields = get_posts($args);
+                if (!empty($all_option_fields)) {
+                    foreach ($all_option_fields as $all_option_field) {
+                        $option_field_args = get_post_meta($all_option_field->ID, 'wck_opc_field_args', true);
+                        if (!empty($option_field_args)) {
+                            if ($option_field_args[0]['option-page'] == Wordpress_Creation_Kit::wck_generate_slug($wck_opc_args[$element_id]['page-name-in-menu'])) {
+                                $option_field_args[0]['option-page'] = Wordpress_Creation_Kit::wck_generate_slug($values['page-name-in-menu']);
+                                update_post_meta($all_option_field->ID, 'wck_opc_field_args', $option_field_args);
+                            }
+                        }
+                    }
+                }
+            }
+        }
 	}
 }
 
-/* save page title on adding or ipdating the option page */
+/* save page title on adding or updating the option page */
 add_action( 'wck_before_add_meta', 'wck_opc_update_page_title', 10, 3 );
 add_action( 'wck_before_update_meta', 'wck_opc_update_page_title', 10, 3 );
 function wck_opc_update_page_title( $meta, $id, $values ){
+    global $wpdb;
 	if( $meta == 'wck_opc_args' ){
-		$update_post['ID'] = $id;
-		$update_post['post_title'] = $values['page-name-in-menu'];
-		$update_post['post_status'] = 'publish';
-		wp_update_post( $update_post );
+        $wpdb->update( $wpdb->posts, array( 'post_title' =>  stripslashes( $values['page-name-in-menu'] ), 'post_status' => 'publish' ), array( 'ID' => $id ) );
 	}
 	
 	if( $meta == 'wck_opc_field_args' ){
-		$update_post['ID'] = $id;
-		$update_post['post_title'] = $values['group-title'];
-		$update_post['post_status'] = 'publish';
-		wp_update_post( $update_post );
+        $wpdb->update( $wpdb->posts, array( 'post_title' =>  stripslashes( $values['group-title'] ), 'post_status' => 'publish' ), array( 'ID' => $id ) );
 	}
 }
 
@@ -624,7 +699,7 @@ add_filter( 'wck_field_types', 'wck_opc_filter_field_types' );
 function wck_opc_filter_field_types( $field_types ){
 	$wck_premium_update = WCK_PLUGIN_DIR.'/update/';
 	if ( !file_exists ($wck_premium_update . 'update-checker.php'))
-		$field_types = array( 'text', 'textarea', 'select', 'checkbox', 'radio', 'upload', 'wysiwyg editor' );
+		$field_types = array( 'text', 'textarea', 'select', 'checkbox', 'radio', 'upload', 'wysiwyg editor', 'heading', 'colorpicker', 'currency select', 'phone', 'timepicker', 'html', 'number' );
 	
 	return $field_types;
 }

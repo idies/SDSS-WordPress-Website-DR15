@@ -1,17 +1,19 @@
 === WordPress Creation Kit === 
 
-Contributors: reflectionmedia, madalin.ungureanu, sareiodata
+Contributors: cozmoslabs, reflectionmedia, madalin.ungureanu, sareiodata, adispiac
 Donate link: http://www.cozmoslabs.com/wordpress-creation-kit-sale-page/
 Tags: custom fields, custom field, wordpress custom fields, advanced custom fields, custom post type, custom post types, post types, repeater fields, repeater, repeatable, meta box, meta boxes, metabox, taxonomy, taxonomies, custom taxonomy, custom taxonomies, custom, custom fields creator, post meta, meta, get_post_meta, post creator, cck, content types, types
 
 Requires at least: 3.1
-Tested up to: 4.0
-Stable tag: 2.1.2
+Tested up to: 4.7.1
+Stable tag: 2.4.0
 
 A must have tool for creating custom fields, custom post types and taxonomies, fast and without any programming knowledge.
 
 
 == Description ==
+
+**Like this plugin?** Consider leaving a [5 star review](https://wordpress.org/support/view/plugin-reviews/wck-custom-fields-and-custom-post-types-creator?filter=5).
 
 **WordPress Creation Kit** consists of three tools that can help you create and maintain custom post types, custom taxonomies and most importantly, custom fields and metaboxes for your posts, pages or CPT's.
 
@@ -271,3 +273,167 @@ Hooks from wck-static-metabox class no longer execute on frontend or when loadin
 Changed the design of the upload buttons in frontend posting
 Implemented Serial Number Notices
 Changes to WCK deactivate function so it doesn't throw notices
+
+2.1.3
+Changed the way Single Forms are displayed and saved.
+Added 'slug' parameter to API and we use it so we can translate labels
+Added filter for taxonomy term name
+Added support for search in media library for the upload field
+Add support for the link in the listed upload fields
+Add support for link on image/icon that points to attachement page in backend
+Changed the order of the CKEDITOR.config.allowedContent = true to be above the call to initialized the textarea
+Now metaboxes or pages don't appear for users that shouldn't
+
+2.1.4
+Fixed major issue that prevented publishing new metaboxes (CFC)
+Added a footer message asking users to leave a review if they enjoyed WCK
+
+2.1.5
+Aligned "Help" wit "WCK" in contextual help red button
+Fixed some issues with translations
+Fixed issue with checkbox not saving in single Options Metaboxes
+Fixed issue with updating profile without password in FEP dashboard that removed password
+Add support for 'post_author_id' in Swift Templates
+Removed pro banner from sidebar on the pro version
+We now run the Custom Post Type and  Custom Taxonomy register function sooner on the init hook
+Add CKEditor Justify addon for enabling the align buttons
+
+
+2.1.6
+Select field can now display lables when outputting values
+Minor security improvements
+We no longer get .js errors when a Select field has no options
+Renamed class Mustache_Autoloader to WCK_Mustache_Autoloader to avoid class redeclaration error from other plugins
+Change names of some variables in Swift Templates .js to fix conflict with the Avada theme builder
+Added global filter for a form element output
+Added a filter in WCK Front End Posting dashboard for posts query
+Fixed typo in Meta Box Creator
+
+2.1.7
+We now allow  Custom Post Types and Custom Taxonomies to be available via REST API by adding 'show_in_rest' attribute
+
+2.1.8
+Fixed issue with Front End Posting that deleted post title, content or excerpt if the field wasn't present in the Front End Posting edit form
+Fixed typo from 'Chose' to 'Choose'
+
+
+2.1.9
+We now display error message when meta name contains uppercase letters
+We now display error when taxonomy name contains uppercase letters or spaces
+Nopriv ajax actions now are available only when Front End Posting  is enabled
+Fixed issues with post thumbnail and themes that added thumbnail support for specific post types in Custom Post Types Creator
+Removed notice when WPML was active in certain cases
+Users with the capability to 'edit_others_posts' can now edit them from the frontend in Front End Posting as well
+
+
+2.2.0
+When renaming a taxonomy we now make sure the terms get ported as well
+We now make sure we have jquery when loading the FEP form
+Fixed a issue where a Mustache class sometimes reported that it was already loaded
+
+
+2.2.1
+Added additional labels to Post Type Creator and Taxonomy Creator
+We now check the post type name to not have spaces, capital letters or hyphens
+When changing a custom post type name the existing posts get ported as well
+
+2.2.2
+Minor security improvements
+Added filter for the 'rewrite' argument in the Custom Taxonomy Creator: 'wck_ctc_register_taxonomy_rewrite_arg'
+Added hooks in WCK_Page_Creator api to allow extra content before and after metaboxes: 'wck_page_creator_before_meta_boxes' and 'wck_page_creator_after_meta_boxes'
+Added wp_nonce to edit post links in Front End Posting Dashboard
+Swift Templates divs now have a unique class to allow customization per template
+
+2.2.3
+We now load the translation files from the theme first if they exist in the folder:local_wck_lang
+Now in Custom Fields Creator the Options field for selects,radios and checkboxes is required so you can't create those field without any options
+Single forms now keep their values when form throws alert required message so you don't have to input the values again
+Swift Templates: rewritten the meta queries. Reduced them by a factor of 8 which should greatly improve performance on large databases
+Swift Templates: fixed upload field image metadata for repeater field and alt text for featured image
+
+2.2.4
+Changed way we make sure swift templates is not run in the header by mistake because of Yoast SEO
+Added new filter for registration errors
+
+2.2.5
+Swift template post content now attempts to embed automatically embedable links
+Front End Posting form now can only edit posts of the set post type in the form arguments
+Small change in saving single metaboxes
+Fixed a possible conflict with ACF Pro
+
+2.2.6
+Added Heading field type
+Added Colorpicker field type
+Added Currency field type
+Added number of rows and readonly options to the textarea field
+Added error notice for users with a php version lower than 5.3.0 on the settings page
+Front End Posting field labels can now be translated with WPML
+
+2.2.7
+Added Phone field type
+Added HTML field type
+Added Time Picker field type
+Added Default Text for textarea field instead of Default Value
+
+2.2.8
+Added Map field type
+Added Lables field in Custom Fields Creator next to Options for checkboxes, selects and radios
+Fixed a bug with the datepicker field and repeaters
+
+2.2.9
+Fixed bug in cfc when updating post
+Security fixes
+
+2.3.0
+Fixed Front end Posting problem with anonymous posting and repeater custom fields
+Fixed preview draft not showing the correct custom fields in certain conditions
+Fixed a fatal error that was happening in certain conditions when adding a new Custom Fields Creator Meta Box
+
+2.3.1
+Added Number field type
+Removed notice regarding post thumbnail on certain themes
+Fixed and error with the Map field
+New branding to match website
+
+2.3.2
+Added date format option for Datepicker Field
+Fixed notices when multiple single boxes were present and the first one had a required error
+New menu icon
+
+2.3.3
+We now save every custom field in it's own separate post meta with an editable meta_key
+UI improvements to repeater sortable table
+
+2.3.4
+Fixed issue with Custom Fields Creator when fields had the same name as the meta name
+
+2.3.5
+Fixed an issue with the unserialized conversion page when fields had same names
+
+2.3.6
+Fixed some issues with the unserialized fields conversion
+Changed per batch variable from 100 to 30 to try to reduce timeouts on sites with a lot of entries
+Fixed warnings regarding Number field
+Fixed a issue with FEP and label change that contained special characters on some servers
+
+2.3.7
+Added sortable taxonomy admin column support for Taxonomy Creator
+Added show_in_quick_edit argument support for Taxonomy Creator
+
+2.3.8
+Changes to the unserialized fields: we can now handle fields from other sources
+Improvements to javascript speed in the admin interface
+
+2.3.9
+Fixed a problem with Front End Posting and some custom fields not showing up on edit
+Fixed a bug in Front End Posting admin interface when values in the fields list would disappear
+We now display default values in custom fields on front end forms from Front End Posting
+Fixed an issue with Swift Templates and serialized fields when the serialized meta was not present
+Fixed an issue with fields that had their slug changed and didn't appear sometimes
+Modifications to upload button so that it disappears when we already have something uploaded
+Added 2 new currencies in the Currency Select field
+Small modifications to the generate slug function
+
+2.4.0
+Compatibility with php version 7.1
+Fixed an issue with Swift Templates and repeater fields that were not displaying properly

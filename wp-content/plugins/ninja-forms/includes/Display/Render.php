@@ -72,11 +72,13 @@ final class NF_Display_Render
             unset( $settings[ $name ] );
         }
 
-        $settings = array_merge( Ninja_Forms::config( 'i18nFrontEnd' ), $settings );
+        $settings = array_merge( Ninja_Forms::config( 'i18nFrontEnd' ), $settings );        
+        $settings = apply_filters( 'ninja_forms_display_form_settings', $settings, $form_id );
+
         $form->update_settings( $settings );
 
         if( $form->get_setting( 'logged_in' ) && ! is_user_logged_in() ){
-            echo $form->get_setting( 'not_logged_in_msg' );
+            echo do_shortcode( $form->get_setting( 'not_logged_in_msg' ));
             return;
         }
 
@@ -92,7 +94,7 @@ final class NF_Display_Render
             }
 
             if( $count >= $form->get_setting( 'sub_limit_number' ) ) {
-                echo apply_filters( 'nf_sub_limit_reached_msg', $form->get_setting( 'sub_limit_msg' ), $form_id );
+                echo do_shortcode( apply_filters( 'nf_sub_limit_reached_msg', $form->get_setting( 'sub_limit_msg' ), $form_id ));
                 return;
             }
         }
@@ -330,7 +332,6 @@ final class NF_Display_Render
             var form = [];
             form.id = '<?php echo $form_id; ?>';
             form.settings = <?php echo wp_json_encode( $form->get_settings() ); ?>;
-
             form.fields = <?php echo wp_json_encode( $fields ); ?>;
 
             /* Add Form Data to nfForms object */
@@ -358,11 +359,13 @@ final class NF_Display_Render
         }
 
         if( isset( $form[ 'settings' ][ 'logged_in' ] ) && $form[ 'settings' ][ 'logged_in' ] && ! is_user_logged_in() ){
-            echo $form[ 'settings' ][ 'not_logged_in_msg' ];
+            echo do_shortcode( $form[ 'settings' ][ 'not_logged_in_msg' ]);
             return;
         }
 
         $form[ 'settings' ] = array_merge( Ninja_Forms::config( 'i18nFrontEnd' ), $form[ 'settings' ] );
+        $form[ 'settings' ] = apply_filters( 'ninja_forms_display_form_settings', $form[ 'settings' ], $form_id );
+
 
         $form[ 'settings' ][ 'is_preview' ] = TRUE;
 
