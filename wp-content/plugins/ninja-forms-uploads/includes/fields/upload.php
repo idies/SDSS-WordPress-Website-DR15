@@ -122,8 +122,12 @@ class NF_FU_Fields_Upload extends NF_Abstracts_Field {
 			$file_url = trailingslashit( $base_url . ltrim( $custom_upload_dir, '/' ) ) . $file_name;
 
 			// Move to permanent location
-			// TODO error handling
 			$result = rename( $tmp_file, $target_file );
+			if ( false === $result ) {
+				$data['errors']['fields'][ $field['id'] ] = __( 'File upload error' );
+
+				return $data;
+			}
 
 			// Add to FU table
 			$file_data = array(
@@ -188,9 +192,19 @@ class NF_FU_Fields_Upload extends NF_Abstracts_Field {
 	 * @return string
 	 */
 	public function admin_form_element( $id, $value ) {
+		if ( ! is_array( $value ) || empty( $value ) ) {
+			return $value;
+		}
+
 		$new_value = array();
 		foreach ( $value as $upload_id => $file_url ) {
-			$new_value[] = sprintf( '<a href="%1$s" target="_blank">%2$s</a><br><input class="widefat" type="text" value="%1$s">', $file_url, __( 'View', 'ninja-forms-uploads' ) );
+			$upload = NF_File_Uploads()->controllers->uploads->get( $upload_id );
+
+			if ( false !== $upload ) {
+				$file_url = NF_File_Uploads()->controllers->uploads->get_file_url( $file_url, $upload->data );
+			}
+
+			$new_value[] = sprintf( '<a href="%1$s" target="_blank">%2$s</a><br><input class="widefat" disabled type="text" value="%1$s">', $file_url, __( 'View', 'ninja-forms-uploads' ) );
 		}
 
 		return implode( '<br>', $new_value );
@@ -228,7 +242,8 @@ class NF_FU_Fields_Upload extends NF_Abstracts_Field {
 	 * Load admin scripts for the builder
 	 */
 	public function admin_enqueue_scripts() {
+	    $ver = NF_File_Uploads()->plugin_version;
 		$url = plugin_dir_url( NF_File_Uploads()->plugin_file_path );
-		wp_enqueue_script( 'nf-fu-file-upload', $url . 'assets/js/builder/controllers/fieldFile.js', array( 'nf-builder' ) );
+		wp_enqueue_script( 'nf-fu-file-upload', $url . 'assets/js/builder/controllers/fieldFile.js', array( 'nf-builder' ), $ver );
 	}
 }
