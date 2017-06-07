@@ -27,7 +27,17 @@ class NF_FU_AJAX_Controllers_Uploads extends NF_Abstracts_Controller {
 	 * Process the upload of files
 	 */
 	public function handle_upload() {
-		check_ajax_referer( 'nf-file-upload', 'nonce' );
+		$field_id = filter_input( INPUT_POST, 'field_id' );
+		if ( empty( $field_id ) ) {
+			$this->_errors[] = __( 'No field ID supplied', 'ninja-forms-uploads' );
+			$this->_respond();
+		}
+
+		$result = check_ajax_referer( 'nf-file-upload-' . $field_id, 'nonce', false );
+		if ( false === $result ) {
+			$this->_errors[] = __( 'Nonce error', 'ninja-forms-uploads' );
+			$this->_respond();
+		}
 
 		if ( ! isset( $_FILES['files'] ) ) {
 			$this->_errors[] = $this->code_to_message( '' );
@@ -86,7 +96,7 @@ class NF_FU_AJAX_Controllers_Uploads extends NF_Abstracts_Controller {
 
 			if ( false === $this->_validate( $file ) ) {
 				unset( $this->_data['files'][ $key ] );
-
+				@unlink( $file['tmp_name'] );
 				continue;
 			}
 
@@ -95,7 +105,7 @@ class NF_FU_AJAX_Controllers_Uploads extends NF_Abstracts_Controller {
 
 			$result = move_uploaded_file( $file['tmp_name'], $file_path );
 			if ( false === $result ) {
-				$this->_errors[] = __( 'Unable to move uploaded temp file', 'ninja-forms' );
+				$this->_errors[] = __( 'Unable to move uploaded temp file', 'ninja-forms-uploads' );
 
 				continue;
 			}
@@ -146,8 +156,10 @@ class NF_FU_AJAX_Controllers_Uploads extends NF_Abstracts_Controller {
 			return false;
 		}
 
+		$extension = pathinfo( $file['name'], PATHINFO_EXTENSION );
+
 		// Check for blacklisted file types
-		if ( $this->blacklisted( $this->_blacklist, $file['type'] ) ) {
+		if ( $this->blacklisted( $this->_blacklist, $extension ) ) {
 			return false;
 		}
 
@@ -165,7 +177,6 @@ class NF_FU_AJAX_Controllers_Uploads extends NF_Abstracts_Controller {
 		}
 
 		// Check file extension against whitelist of file extensions
-		$extension = pathinfo( $file['name'], PATHINFO_EXTENSION );
 		if ( is_array( $types ) && false === $this->whitelisted( $types, $extension ) ) {
 			return false;
 		}
@@ -185,7 +196,7 @@ class NF_FU_AJAX_Controllers_Uploads extends NF_Abstracts_Controller {
 	protected function blacklisted( $types, $file_type) {
 		// Check for blacklisted file types
 		foreach ( $types as $extension ) {
-			if ( ( false !== stripos( $file_type, ltrim( $extension, '.' ) ) ) ) {
+			if ( strtolower( ltrim( $extension, '.' ) ) === strtolower( $file_type ) ) {
 				$this->_errors[] = sprintf( __( 'File extension of %s not allowed', 'ninja-forms-uploads' ), $file_type );
 
 				return true;
@@ -206,7 +217,7 @@ class NF_FU_AJAX_Controllers_Uploads extends NF_Abstracts_Controller {
 	protected function whitelisted( $types, $file_type) {
 		// Check for whitelisted file types
 		foreach ( $types as $extension ) {
-			if ( false !== stripos( $file_type, $extension ) ) {
+			if ( strtolower( $extension ) === strtolower( $file_type ) ) {
 				return true;
 			}
 		}

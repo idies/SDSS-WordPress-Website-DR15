@@ -157,12 +157,15 @@ class NF_FU_Admin_UploadsTable extends WP_List_Table {
 				$forms[ $upload['form_id'] ] = $form_name;
 			}
 
+			$user_name = __( 'Guest', 'ninja-forms-uploads' );
 			if ( isset( $users[ $upload['user_id'] ] ) ) {
 				$user_name = $users[ $upload['user_id'] ];
 			} else {
-				$user                        = get_user_by( 'id', $upload['user_id'] );
-				$user_name                   = $user->user_nicename;
-				$users[ $upload['user_id'] ] = $user_name;
+				$user = get_user_by( 'id', $upload['user_id'] );
+				if ( $user ) {
+					$user_name                   = $user->user_nicename;
+					$users[ $upload['user_id'] ] = $user_name;
+				}
 			}
 
 			$data[] = array(
@@ -358,7 +361,22 @@ class NF_FU_Admin_UploadsTable extends WP_List_Table {
 		}
 	}
 
+	/**
+	 * Delete the item from the file uploads table and remove file from server.
+	 *
+	 * @param int $id
+	 *
+	 * @return false|int
+	 */
 	public static function delete_item( $id ) {
+		$upload = NF_File_Uploads()->controllers->uploads->get( $id );
+
+		if ( file_exists( $upload->file_path ) ) {
+			unlink( $upload->file_path );
+		}
+
+		do_action( 'ninja_forms_upload_delete_upload', $upload );
+
 		return NF_File_Uploads()->model->delete( $id );
 	}
 

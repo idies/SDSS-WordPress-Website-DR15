@@ -48,7 +48,11 @@ class NF_FU_Fields_Upload extends NF_Abstracts_Field {
 	 * @return mixed
 	 */
 	public function process( $field, $data ) {
-		if ( ! isset( $field['files'] ) || empty( $field['files'] ) ) {
+
+		/*
+		 * If we don't have any files set or we are saving progress, bail early.
+		 */
+		if ( ! isset( $field['files'] ) || empty( $field['files'] ) || ( isset ( $data[ 'extra' ][ 'saveProgress' ] ) && 1 == $data[ 'extra' ][ 'saveProgress' ] ) ) {
 			return $data;
 		}
 
@@ -198,6 +202,12 @@ class NF_FU_Fields_Upload extends NF_Abstracts_Field {
 
 		$new_value = array();
 		foreach ( $value as $upload_id => $file_url ) {
+			if ( is_array( $file_url ) ) {
+				// FU 2.9.x data format
+				$upload_id = $file_url['upload_id'];
+				$file_url  = $file_url['file_url'];
+			}
+
 			$upload = NF_File_Uploads()->controllers->uploads->get( $upload_id );
 
 			if ( false !== $upload ) {
@@ -233,7 +243,8 @@ class NF_FU_Fields_Upload extends NF_Abstracts_Field {
 
 		$settings['max_file_size_mb'] = $max_file_size_mb;
 		$max_file_size    = NF_File_Uploads()->controllers->settings->max_filesize( $max_file_size_mb );
-		$settings['max_file_size']    = $max_file_size;
+		$settings['max_file_size'] = $max_file_size;
+		$settings['uploadNonce'] = wp_create_nonce( 'nf-file-upload-' . $settings['id'] );
 
 		return $settings;
 	}

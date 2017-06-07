@@ -212,7 +212,7 @@ function wck_stp_redirect_pag_params(){
                 }
 
                 if( isset($_GET['pag']) ){
-                    $pag = $_GET['pag'];
+                    $pag = absint( $_GET['pag'] );
                     wp_redirect( $redirect_permalink . '/pag/' . $pag );
                     exit();
                 }

@@ -63,7 +63,7 @@ add_action('admin_enqueue_scripts', 'wck_stp_print_scripts' );
 function wck_stp_print_scripts($hook){
 	
 	global $pagenow;	
-	$sent_post_type = (isset($_GET['post_type'])) ? $_GET['post_type'] : $sent_post_type = false;
+	$sent_post_type = (isset($_GET['post_type'])) ? sanitize_text_field( $_GET['post_type'] ) : $sent_post_type = false;
 	$post_type = $sent_post_type ? $sent_post_type : get_post_type( $sent_post_type );
 	
 	if( ( $pagenow=='post-new.php' || $pagenow=='post.php' ) || 'wck-swift-template' == $post_type ){

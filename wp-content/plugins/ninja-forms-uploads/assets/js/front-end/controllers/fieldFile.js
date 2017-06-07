@@ -9,7 +9,7 @@
 		fieldID: 0
 	} );
 
-	var fileCollection = Backbone.Collection.extend( {
+	var FileCollection = Backbone.Collection.extend( {
 		model: fileModel
 	} );
 
@@ -45,14 +45,6 @@
 
 		initFile: function( model ) {
 			model.set( 'uploadMulti', 1 != model.get( 'upload_multi_count' ) ) ;
-			model.set( 'uploadNonce', nf_upload.nonces.file_upload );
-
-			var files = model.get( 'files' );
-			if ( typeof files === 'undefined' ) {
-				files = []
-			}
-
-			model.set( 'files', new fileCollection( files ) );
 		},
 
 		renderView: function( view ) {
@@ -114,13 +106,27 @@
 		initFileUpload: function( view ) {
 			var fieldID = view.model.id;
 			var formID = view.model.get( 'formID' );
+			var nonce = view.model.get( 'uploadNonce' );
 			var $file = $( view.el ).find( '.nf-element' );
-			var $nonce = $( view.el ).find( '.nf-upload-nonce' );
 			var $files_uploaded = $( view.el ).find( '.files_uploaded' );
-			this.$progress_bars[ fieldID ] = $( view.el ).find( '.progress-bar' );
+			this.$progress_bars[ fieldID ] = $( view.el ).find( '.nf-fu-progress-bar' );
 			var url = nfFrontEnd.adminAjax + '?action=nf_fu_upload';
 			var self = this;
 			var files = view.model.get( 'files' );
+
+			/*
+			 * Make sure that our files array isn't undefined.
+			 * If it is, set it to an empty array.
+			 */
+			files = files || [];
+
+			/*
+			 * If "files" isn't a collection, turn it into one.
+			 */
+			if ( ! ( files instanceof FileCollection ) ) {
+				files = new FileCollection( files );
+				view.model.set( 'files', files );
+			}
 
 			this.renderView( view );
 
@@ -129,8 +135,8 @@
 				dataType: 'json',
 				formData: {
 					form_id: formID,
-					field_id: view.model.id,
-					nonce: $nonce.val()
+					field_id: fieldID,
+					nonce: nonce
 				},
 				messages: {
 					maxFileSize: nf_upload.strings.max_file_size_error.replace( '%n', view.model.get( 'max_file_size_mb' ) )
@@ -265,7 +271,7 @@
 	new uploadController();
 
 	$( document ).ready( function() {
-		$( 'body' ).on( 'click', 'button.fileinput-button', function( e ) {
+		$( 'body' ).on( 'click', 'button.nf-fu-fileinput-button', function( e ) {
 			$( this ).next( 'input.nf-element' ).click();
 		} );
 	} );
