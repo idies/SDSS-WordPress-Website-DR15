@@ -179,6 +179,8 @@ class GoogleSitemapGeneratorLoader {
 	public static function DeactivatePlugin() {
 		delete_option("sm_rewrite_done");
 		wp_clear_scheduled_hook('sm_ping_daily');
+		wp_clear_scheduled_hook('sm_ping');
+		wp_clear_scheduled_hook('do_pings');
 	}
 
 
