@@ -1,9 +1,6 @@
 [submodule "wp-content/themes/sdss"]
 	path = wp-content/themes/sdss
 	url = git@bitbucket.org:idies/sdss_wptheme.git
-[submodule "wp-content/plugins/idies-update-tracker"]
-	path = wp-content/plugins/idies-update-tracker
-	url = git@bitbucket.org:idies/idies-update-tracker.git
 [submodule "wp-content/plugins/updatez"]
 	path = wp-content/plugins/updatez
 	url = git@github.com:bonbons0220/updatez.git
