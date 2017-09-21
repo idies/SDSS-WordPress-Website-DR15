@@ -2,9 +2,9 @@
 Contributors: kstover, jameslaws
 Donate link: http://ninjaforms.com
 Tags: form, forms
-Requires at least: 1.0
-Tested up to: 4.7.5
-Stable tag: 3.0.7
+Requires at least: 4.6
+Tested up to: 4.8.1
+Stable tag: 3.0.15
 
 License: GPLv2 or later
 
@@ -26,6 +26,75 @@ This section describes how to install the plugin and get it working.
 For help and video tutorials, please visit our website: [NinjaForms.com](http://ninjaforms.com)
 
 == Changelog ==
+
+= 3.0.15 (1 Aug 2017) =
+
+*Bugs:*
+
+* Fix external URLs not sent to Zapier when using Zapier addon
+* Fix field max upload size bigger than server limit
+
+= 3.0.14 (11 Aug 2017) =
+
+*Bugs:*
+
+* Fix Dropbox file uploaded with full server path when having no custom upload path
+
+= 3.0.13 (10 Aug 2017) =
+
+*Features:*
+
+* German translation file, thanks @christophrado!
+
+*Changes:*
+
+* Added original filename to `ninja_forms_uploads_[external service]_filename` filter
+* Added more information to the help bubble for file renames to describe creating directories
+
+*Bugs:*
+
+* Fix isset weirdness when checking for old NF format of file value
+* Fix method not exists when creating table if using older version of NF core.
+* Fix custom upload path not replacing %field_ shortcodes
+* Fix custom upload path not working for external (Dropbox/S3) file paths
+* Fix %formtitle% not being replaced in field rename if no custom upload path
+
+= 3.0.12 (28 July 2017) =
+
+*Bugs:*
+
+* Dropbox uploads failing when custom path defined
+
+= 3.0.11 (25 July 2017) =
+
+*Bugs:*
+
+* File Uploads table not created on fresh installation
+* jQuery File Upload JavaScript files clashed with Calendarize plugin
+
+= 3.0.10 (12 July 2017) =
+
+*Bugs:*
+
+* File Uploads should work properly with non-standard WordPress databse prefixes.
+
+= 3.0.9 (06 July 2017) =
+
+*Bugs:*
+
+* File Uploads should now work properly with Multi-Part Forms.
+* Fixed a bug with non-English characters and file name encoding.
+
+= 3.0.8 ( 26 June 2017) =
+
+*Changes:*
+
+* Supports Dropbox API v2
+* Custom name of file now supports changing path with field specific data
+
+*Bugs:*
+
+* File appeared even if upload failed
 
 = 3.0.7 ( 5 June 2017) =
 

@@ -30,6 +30,9 @@ class GoogleSitemapGeneratorLoader {
 		//Register the sitemap creator to wordpress...
 		add_action('admin_menu', array(__CLASS__, 'RegisterAdminPage'));
 
+		// Add a widget to the dashboard.
+		add_action( 'wp_dashboard_setup', array(__CLASS__, 'WpDashboardSetup'));
+
 		//Nice icon for Admin Menu (requires Ozh Admin Drop Down Plugin)
 		add_filter('ozh_adminmenu_icon', array(__CLASS__, 'RegisterAdminIcon'));
 
@@ -179,8 +182,6 @@ class GoogleSitemapGeneratorLoader {
 	public static function DeactivatePlugin() {
 		delete_option("sm_rewrite_done");
 		wp_clear_scheduled_hook('sm_ping_daily');
-		wp_clear_scheduled_hook('sm_ping');
-		wp_clear_scheduled_hook('do_pings');
 	}
 
 
@@ -206,6 +207,23 @@ class GoogleSitemapGeneratorLoader {
 	 */
 	public static function RegisterAdminPage() {
 		add_options_page(__('XML-Sitemap Generator', 'sitemap'), __('XML-Sitemap', 'sitemap'), 'administrator', self::GetBaseName(), array(__CLASS__, 'CallHtmlShowOptionsPage'));
+	}
+
+	/**
+	 * Add a widget to the dashboard.
+	 */
+	public static function WpDashboardSetup($a) {
+		self::LoadPlugin();
+		$sg = GoogleSitemapGenerator::GetInstance();
+
+		if ($sg->ShowSurvey()) {
+			add_action( 'admin_notices', array(__CLASS__, 'WpDashboardAdminNotices' ) );
+		}
+	}
+
+	public static function WpDashboardAdminNotices() {
+		$sg = GoogleSitemapGenerator::GetInstance();
+		$sg->HtmlSurvey();
 	}
 
 	/**
@@ -235,7 +253,6 @@ class GoogleSitemapGeneratorLoader {
 			$links[] = '<a href="options-general.php?page=' . self::GetBaseName() . '">' . __('Settings', 'sitemap') . '</a>';
 			$links[] = '<a href="http://www.arnebrachhold.de/redir/sitemap-plist-faq/">' . __('FAQ', 'sitemap') . '</a>';
 			$links[] = '<a href="http://www.arnebrachhold.de/redir/sitemap-plist-support/">' . __('Support', 'sitemap') . '</a>';
-			$links[] = '<a href="http://www.arnebrachhold.de/redir/sitemap-plist-donate/">' . __('Donate', 'sitemap') . '</a>';
 		}
 		return $links;
 	}
@@ -445,4 +462,3 @@ if(defined('ABSPATH') && defined('WPINC')) {
 	GoogleSitemapGeneratorLoader::SetupQueryVars();
 	GoogleSitemapGeneratorLoader::SetupRewriteHooks();
 }
-

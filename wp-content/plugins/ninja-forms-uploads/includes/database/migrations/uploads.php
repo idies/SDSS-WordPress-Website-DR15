@@ -4,7 +4,7 @@
 
 class NF_FU_Database_Migrations_Uploads extends NF_Abstracts_Migration {
 
-	protected $version = '3.0.1';
+	protected $version = '3.0.10';
 	protected $version_key = 'uploads_table_version';
 
 	public function __construct() {
@@ -15,8 +15,13 @@ class NF_FU_Database_Migrations_Uploads extends NF_Abstracts_Migration {
 	 * Create table
 	 */
 	public function run() {
+		$table_name = $this->table_name;
+		if ( method_exists( $this, 'table_name' ) ) {
+			$table_name = $this->table_name();
+		}
+
 		$query = "
-CREATE TABLE $this->table_name (
+CREATE TABLE {$table_name} (
 id int(11) NOT NULL AUTO_INCREMENT,
 user_id int(11) DEFAULT NULL,
 form_id int(11) NOT NULL,
@@ -37,7 +42,7 @@ PRIMARY KEY (id)
 			return;
 		}
 		
-		$current_version = Ninja_Forms()->get_setting( $this->version_key, NF_File_Uploads()->plugin_version );
+		$current_version = Ninja_Forms()->get_setting( $this->version_key, '0' );
 		$version        = $this->version;
 
 		if ( version_compare( $current_version, $version, '!=' ) ) {

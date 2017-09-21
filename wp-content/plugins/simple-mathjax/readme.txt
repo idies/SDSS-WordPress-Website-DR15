@@ -4,8 +4,8 @@ Contributors: sgcoskey
 Donate link: https://boolesrings.org
 Tags: mathjax, latex
 Requires at least: 3.0
-Tested up to: 4.7
-Stable tag: 1.0
+Tested up to: 4.8.1
+Stable tag: 1.0.1
 
 Yet another plugin to add MathJax support to your wordpress blog.
 Just wrap your equations inside $ signs and MathJax will render
@@ -36,6 +36,8 @@ Nothing unusual here!
 
 == Changelog ==
 
+`1.0.1` update to latest MathJax version
+
 `1.0` send default url to new cdn
 
 `0.5` minor code cleanup, allow mathjax in admin screens
@@ -53,4 +55,3 @@ cover a small space created by mathjax v.2
 below the body tag, rather than in the header
 
 `0.0` initial release
-
