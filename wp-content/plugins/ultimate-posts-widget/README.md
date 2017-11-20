@@ -33,13 +33,12 @@ Designed for both the average user and developer, Ultimate Posts Widgets aims to
 
 * For help use [wordpress.org](http://wordpress.org/support/plugin/ultimate-posts-widget/)
 * Fork or contribute on [Github](https://github.com/bostondv/ultimate-posts-widget/)
-* Visit [our website](http://pomelodesign.com/) for more
 * Follow me on [Twitter](http://twitter.com/bostondv/)
 * View my other [WordPress Plugins](http://profiles.wordpress.org/bostondv/)
 
 ## Support
 
-Did you enjoy this plugin? Please [donate to support ongoing development](http://pomelodesign.com/donate/). Your contribution would be greatly appreciated.
+Enjoy this plugin? [Send a tip to support development](http://bostondv.com/tips/).
 
 ## Frequently Asked Questions
 
@@ -106,6 +105,9 @@ This plugin uses the [timthumb library](http://www.binarymoon.co.uk/projects/tim
 5. Order options tab
 
 ## Changelog
+
+### 2.0.7
+* Tested update WordPress 4.8
 
 ### 2.0.6
 * Fix PHP notice (thanks @rhyswynne)
@@ -251,4 +253,4 @@ This is a major update and includes some breaking changes. New templates have be
 
 ## About
 
-Written by Boston Dell-Vandenberg of [Pomelo Design](http://www.pomelodesign.com). Pomelo Design is a web and mobile app development agency based in Toronto, Canada.
+Made with <3 by [Boston Dell-Vandenberg](http://bostondv.com).

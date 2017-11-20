@@ -370,7 +370,7 @@ function wck_stp_generate_mustache_single_array($single, $post_type, $level = 0,
                             foreach( $all_metas_for_this_post as $meta_key => $meta_for_this_post ){
                                 if( $meta_key == $box_args['meta_name'] ){
                                     $meta_for_this_post = maybe_unserialize( $meta_for_this_post[0] );
-                                    if( !empty( $meta_for_this_post[0][$slug] ) ) {
+                                    if( isset( $meta_for_this_post[0][$slug] ) ) {
                                         $meta_value = $meta_for_this_post[0][$slug];
 
                                         $field_type = WCK_Template_API::generate_slug($value['type']);
@@ -408,7 +408,7 @@ function wck_stp_generate_mustache_single_array($single, $post_type, $level = 0,
 
                                     if( !empty( $meta_for_this_post ) ){
                                         foreach( $meta_for_this_post as $mkey => $meta ){
-                                            if( !empty( $meta[$slug] ) ) {
+                                            if( isset( $meta[$slug] ) ) {
                                                 $meta_value = $meta[$slug];
                                                 $field_type = WCK_Template_API::generate_slug($value['type']);
                                                 $unprocessed = apply_filters('wck_output_get_field_' . $field_type, $meta_value);

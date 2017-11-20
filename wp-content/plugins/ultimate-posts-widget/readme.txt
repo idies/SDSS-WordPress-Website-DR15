@@ -1,12 +1,12 @@
 === Ultimate Posts Widget ===
 Contributors: bostondv
-Donate link: http://www.pomelodesign.com/donate/
+Donate link: http://bostondv.com/tips/
 License: MIT
 License URI: http://opensource.org/licenses/MIT
 Tags: widget, recent posts, custom post types, sticky posts, featured image, post thumbnail, excerpts, category, custom fields, list pages, widget query, microformats, customizable widget,  categories widget, tags widget, excerpt, widget templates, post author, post date, custom query, ultimate posts, comments, orderby, comment count
 Requires at least: 3.5
-Tested up to: 4.6.1
-Stable tag: 2.0.6
+Tested up to: 4.8
+Stable tag: 2.0.7
 
 The ultimate widget for displaying posts, custom post types or sticky posts with an array of options.
 
@@ -49,13 +49,14 @@ See the [FAQ tab](https://wordpress.org/plugins/ultimate-posts-widget/faq/) for 
 
 * For help use [wordpress.org](http://wordpress.org/support/plugin/ultimate-posts-widget/)
 * Fork or contribute on [Github](https://github.com/bostondv/ultimate-posts-widget/)
-* Visit [our website](http://pomelodesign.com/) for more
 * Follow me on [Twitter](http://twitter.com/bostondv/)
 * View my other [WordPress Plugins](http://profiles.wordpress.org/bostondv/)
 
+Made with <3 by [Boston Dell-Vandenberg](http://bostondv.com).
+
 = Support =
 
-Did you enjoy this plugin? Please [donate to support ongoing development](http://pomelodesign.com/donate/). Your contribution would be greatly appreciated.
+Enjoy this plugin? [Send a tip to support development](http://bostondv.com/tips/).
 
 == Frequently Asked Questions ==
 
@@ -122,6 +123,9 @@ This plugin uses the [timthumb library](http://www.binarymoon.co.uk/projects/tim
 5. Order options tab
 
 == Changelog ==
+
+= 2.0.7 =
+* Tested update WordPress 4.8
 
 = 2.0.6 =
 * Fix PHP notice (thanks @rhyswynne)
