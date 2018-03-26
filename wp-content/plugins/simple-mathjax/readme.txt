@@ -1,11 +1,11 @@
 === Simple Mathjax ===
 
-Contributors: sgcoskey
+Contributors: sgcoskey, pkra
 Donate link: https://boolesrings.org
 Tags: mathjax, latex
 Requires at least: 3.0
-Tested up to: 4.8.1
-Stable tag: 1.0.1
+Tested up to: 4.9.4
+Stable tag: 1.1
 
 Yet another plugin to add MathJax support to your wordpress blog.
 Just wrap your equations inside $ signs and MathJax will render
@@ -22,7 +22,7 @@ equations.
 A preference pane is added to the "Settings" group where you can
 modify the MathJax server location (CDN) and the MathJax configuration
 settings.  (See [this
-page](http://www.mathjax.org/docs/1.1/configuration.html#using-in-line-configuration-options)
+page](https://docs.mathjax.org/en/latest/configuration.html#using-in-line-configuration-options)
 for details on the options available.)  You can also specify a LaTeX
 "preamble" of newcommands which will be loaded in a hidden element
 near the top of each page.
@@ -36,7 +36,7 @@ Nothing unusual here!
 
 == Changelog ==
 
-`1.0.1` update to latest MathJax version
+`1.1` update latest mathjax version, load mathjax in footer instead of header
 
 `1.0` send default url to new cdn
 

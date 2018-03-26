@@ -79,7 +79,9 @@ function wck_ctc_create_box(){
 			array( 'type' => 'select', 'title' => __( 'Show Admin Column', 'wck' ), 'slug' => 'show-admin-column', 'options' => array( 'false', 'true' ), 'default' => 'false', 'description' => __( 'Whether to allow automatic creation of taxonomy columns on associated post-types.', 'wck' ) ),
 			array( 'type' => 'select', 'title' => __( 'Sortable Admin Column', 'wck' ), 'slug' => 'sortable-admin-column', 'options' => array( 'false', 'true' ), 'default' => 'false', 'description' => __( 'Whether to make the columns sortable or not. WARNING: on a large number of posts the performance can be severely affected', 'wck' ) ),
 			array( 'type' => 'select', 'title' => __( 'Show in Quick Edit', 'wck' ), 'slug' => 'show-in-quick-edit', 'options' => array( 'false', 'true' ), 'default' => 'false', 'description' => __( 'Whether to show the taxonomy in the quick/bulk edit panel.', 'wck' ) ),
-			array( 'type' => 'select', 'title' => __( 'Show in REST API', 'wck'), 'slug' => 'show-in-rest', 'options' => array( 'false', 'true'), 'default' => 'false', 'description' => __('Make this taxonomy available via WP REST API ', 'wck' ) )
+			array( 'type' => 'select', 'title' => __( 'Show in REST API', 'wck'), 'slug' => 'show-in-rest', 'options' => array( 'false', 'true'), 'default' => 'false', 'description' => __('Make this taxonomy available via WP REST API ', 'wck' ) ),
+            array( 'type' => 'select', 'title' => __( 'Rewrite', 'wck' ), 'slug' => 'rewrite', 'options' => array( 'true', 'false' ), 'default' => 'true', 'description' => __( 'Rewrite permalinks.', 'wck' ) ),
+            array( 'type' => 'text', 'title' => __( 'Rewrite Slug', 'wck' ), 'slug' => 'rewrite-slug', 'description' => __( 'Defaults to post type name.', 'wck' ) ),
 		);
 
 		foreach( $ct_creation_fields2 as $ct_creation_field ) {
@@ -166,6 +168,17 @@ function wck_ctc_create_taxonomy(){
                 $object_type = explode( ', ', $ct['attach-to'] );
             else
                 $object_type = '';
+
+            if( !empty( $ct['rewrite'] ) ) {
+                if ($ct['rewrite'] == 'false') {
+                    $args['rewrite'] = $ct['rewrite'] == 'false' ? false : true;
+                }
+                else {
+                    if (!empty($ct['rewrite-slug'])) {
+                        $args['rewrite'] = array('slug' => $ct['rewrite-slug']);
+                    }
+                }
+            }
 
             register_taxonomy( $ct['taxonomy'], $object_type, apply_filters( 'wck_ctc_register_taxonomy_args', $args, $ct['taxonomy'] ) );
 
@@ -280,7 +293,7 @@ function wck_ctc_form_wrapper_start(){
     echo '<li id="ctc-advanced-options-container" style="display:none;"><ul>';
 }
 
-add_action( "wck_after_add_form_wck_ctc_element_27", 'wck_ctc_form_wrapper_end' );
+add_action( "wck_after_add_form_wck_ctc_element_29", 'wck_ctc_form_wrapper_end' );
 function wck_ctc_form_wrapper_end(){
     echo '</ul></li>';
 }
@@ -307,7 +320,7 @@ function wck_ctc_update_form_wrapper_start( $form, $i ){
     return $form;
 }
 
-add_filter( "wck_after_update_form_wck_ctc_element_27", 'wck_ctc_update_form_wrapper_end', 10, 2 );
+add_filter( "wck_after_update_form_wck_ctc_element_29", 'wck_ctc_update_form_wrapper_end', 10, 2 );
 function wck_ctc_update_form_wrapper_end( $form, $i ){
     $form .=  '</ul></li>';
     return $form;
@@ -336,7 +349,7 @@ function wck_ctc_display_adv_wrapper_start( $form, $i ){
     return $form;
 }
 
-add_filter( "wck_after_listed_wck_ctc_element_27", 'wck_ctc_display_adv_wrapper_end', 10, 2 );
+add_filter( "wck_after_listed_wck_ctc_element_29", 'wck_ctc_display_adv_wrapper_end', 10, 2 );
 function wck_ctc_display_adv_wrapper_end( $form, $i ){
     $form .=  '</ul></li>';
     return $form;

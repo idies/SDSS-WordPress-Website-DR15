@@ -1,6 +1,6 @@
 jQuery( function() {
     jQuery(document).ready( function() {
-        if( typeof dialog != "undefined") {
+        if( typeof jQuery.ui.dialog != "undefined") {
             jQuery('.stp-modal-box').dialog({
                 autoOpen: false,
                 modal: true,

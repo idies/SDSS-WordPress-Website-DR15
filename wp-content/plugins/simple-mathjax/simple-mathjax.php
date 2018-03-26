@@ -2,9 +2,9 @@
 /*
  * Plugin Name: Simple Mathjax
  * Description: Load the mathjax scripts across your wordpress blog
- * Version: 1.0.1
+ * Version: 1.1
  * Author: Samuel Coskey, Peter Krautzberger
- * Author URI: http://boolesrings.org
+ * Author URI: https://boolesrings.org
 */
 
 
@@ -24,9 +24,8 @@ function configure_mathjax() {
 add_action('wp_enqueue_scripts', 'add_mathjax');
 function add_mathjax() {
   $custom_cdn = esc_url( get_option('custom_mathjax_cdn') );
-  $cdn = $custom_cdn ? $custom_cdn : "//cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.2/MathJax.js?config=TeX-MML-AM_CHTML,Safe.js";
-
-  wp_enqueue_script('mathjax', $cdn);
+  $cdn = $custom_cdn ? $custom_cdn : "//cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.3/MathJax.js?config=TeX-MML-AM_CHTML,Safe.js";
+  wp_enqueue_script('mathjax', $cdn, array(), false, true);
 }
 
 /*
@@ -99,7 +98,7 @@ function simple_mathjax_options() {
         <tr valign="top">
         <th scope="row">Custom mathjax CDN</th>
         <td><input type="text" name="custom_mathjax_cdn" size="50" value="<?php echo esc_url( get_option('custom_mathjax_cdn') ); ?>" /></td>
-	<td><p>If you leave this blank, the default will be used: <code>http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML,Safe.js</code></p></td>
+	<td><p>If you leave this blank, the default will be used: <code>//cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.3/MathJax.js?config=TeX-MML-AM_CHTML,Safe.js</code></p></td>
         </tr>
         <tr valign="top">
         <th scope="row">Custom mathjax config</th>

@@ -5,8 +5,8 @@ Donate link: http://www.cozmoslabs.com/wordpress-creation-kit-sale-page/
 Tags: custom fields, custom field, wordpress custom fields, advanced custom fields, custom post type, custom post types, post types, repeater fields, repeater, repeatable, meta box, meta boxes, metabox, taxonomy, taxonomies, custom taxonomy, custom taxonomies, custom, custom fields creator, post meta, meta, get_post_meta, post creator, cck, content types, types
 
 Requires at least: 3.1
-Tested up to: 4.9.0
-Stable tag: 2.4.7
+Tested up to: 4.9.2
+Stable tag: 2.5.2
 
 A must have tool for creating custom fields, custom post types and taxonomies, fast and without any programming knowledge.
 
@@ -477,3 +477,24 @@ Added translation function to wrap Register string on login form
 Improved speed on sites with a lot of Custom Fields Metaboxes defined
 Fixed and issue with Swift Templates and the 0 value for some custom fields
 Fixed some php notices that appeared in Front End Posting
+
+2.4.8
+Added a filter so we can add a metabox to multiple meta boxes: wck_filter_add_meta_box_screens
+Fixed issue with PageBuilder from SiteOrigin plugin and CodeMirror
+Refactored the way Swift Templates rewrite rules are being loaded
+
+2.4.9
+Fixed a notice regarding the Custom Fields Creator introduced in the last version
+
+2.5.0
+Important security fix. Please update
+
+2.5.1
+Improved speed by at least 100% in most cases for the interface
+Small visual and functionality interface tweaks
+
+2.5.2
+Added 'rewrite' and 'rewrite slug' advanced options for custom taxonomy creator
+Added a plugin notification class
+Put back the yellow background on rows when editing an entry
+Fixed an issue with the view more jquery dialog in Swift Templates view more image tags
