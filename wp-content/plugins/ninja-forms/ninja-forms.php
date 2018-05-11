@@ -3,7 +3,7 @@
 Plugin Name: Ninja Forms
 Plugin URI: http://ninjaforms.com/
 Description: Ninja Forms is a webform builder with unparalleled ease of use and features.
-Version: 3.2.16
+Version: 3.2.25
 Author: The WP Ninjas
 Author URI: http://ninjaforms.com
 Text Domain: ninja-forms
@@ -53,7 +53,7 @@ if( get_option( 'ninja_forms_load_deprecated', FALSE ) && ! ( isset( $_POST[ 'nf
         /**
          * @since 3.0
          */
-        const VERSION = '3.2.16';
+        const VERSION = '3.2.25';
 
         const WP_MIN_VERSION = '4.7';
 
@@ -225,10 +225,14 @@ if( get_option( 'ninja_forms_load_deprecated', FALSE ) && ! ( isset( $_POST[ 'nf
                  * AJAX Controllers
                  */
                 self::$instance->controllers[ 'form' ]          = new NF_AJAX_Controllers_Form();
+                self::$instance->controllers[ 'batch_process' ]          = new
+                NF_AJAX_REST_BatchProcess();
                 self::$instance->controllers[ 'preview' ]       = new NF_AJAX_Controllers_Preview();
                 self::$instance->controllers[ 'submission' ]    = new NF_AJAX_Controllers_Submission();
                 self::$instance->controllers[ 'savedfields' ]   = new NF_AJAX_Controllers_SavedFields();
+                self::$instance->controllers[ 'deletealldata' ] = new NF_AJAX_Controllers_DeleteAllData();
                 self::$instance->controllers[ 'jserror' ]       = new NF_AJAX_Controllers_JSError();
+                self::$instance->controllers[ 'dispatchpoints' ] = new NF_AJAX_Controllers_DispatchPoints();
 
                 /*
                  * REST Controllers
@@ -363,6 +367,14 @@ if( get_option( 'ninja_forms_load_deprecated', FALSE ) && ! ( isset( $_POST[ 'nf
             add_action( 'init', array( self::$instance, 'init' ), 5 );
             add_action( 'admin_init', array( self::$instance, 'admin_init' ), 5 );
 
+            // Checks php version and..
+            if( PHP_VERSION < 5.6 ) {
+                // Pulls in the whip notice if the user is.
+                add_action( 'admin_init', array( self::$instance, 'nf_whip_notice' ) );
+            }
+            
+            add_action( 'admin_init', array( self::$instance, 'nf_do_telemetry' ) );
+
             return self::$instance;
         }
 
@@ -379,6 +391,45 @@ if( get_option( 'ninja_forms_load_deprecated', FALSE ) && ! ( isset( $_POST[ 'nf
             }
 
             add_filter( 'ninja_forms_dashboard_menu_items', array( $this, 'maybe_hide_dashboard_items' ) );
+        }
+
+        /**
+         * NF Whip Notice
+         * If the user is on a version below PHP 5.6 then we get an instance of the
+         * NF Whip class which will add a non-dismissible admin notice.
+         *
+         * @return NF_Whip
+         */
+        public function nf_whip_notice()
+        {
+            require_once self::$dir . '/includes/Libraries/Whip/NF_Whip.php';
+            return new NF_Whip();
+        }
+        
+        /**
+         * Function to launch our various telemetry calls on admin_init.
+         */
+        public function nf_do_telemetry() {
+            if ( ! has_filter( 'ninja_forms_settings_licenses_addons' ) && ( ! Ninja_Forms()->tracking->is_opted_in() || Ninja_Forms()->tracking->is_opted_out() ) ) {
+                return false;
+            }
+            global $wpdb;
+            // If we've not already sent table collation...
+            if ( ! get_option( 'nf_tel_collate' ) ) {
+                $collate = array();
+                // Get the collation of the wp_options table.
+                $sql = "SHOW FULL COLUMNS FROM `" . $wpdb->prefix . "options` WHERE Field = 'option_value'";
+                $result = $wpdb->get_results( $sql, 'ARRAY_A' );
+                $collate[ 'cache' ] = $result[ 0 ][ 'Collation' ];
+                // Get the collation of the nf3_forms table.
+                $sql = "SHOW FULL COLUMNS FROM `" . $wpdb->prefix . "nf3_forms` WHERE Field = 'title'";
+                $result = $wpdb->get_results( $sql, 'ARRAY_A' );
+                $collate[ 'forms' ] = $result[ 0 ][ 'Collation' ];
+                // Send our data to api.ninjaforms.com.
+                Ninja_Forms()->dispatcher()->send( 'table_collate', $collate );
+                // Record an option so that we don't run this again.
+                add_option( 'nf_tel_collate', '1', '', 'no' );
+            }
         }
 
         public function maybe_hide_dashboard_items( $items )
@@ -622,8 +673,6 @@ if( get_option( 'ninja_forms_load_deprecated', FALSE ) && ! ( isset( $_POST[ 'nf
                 NF_Display_Render::localize_preview($form_id);
             }
         }
-
-
 
         /*
          * PRIVATE METHODS
