@@ -1,0 +1,163 @@
+﻿1
+00:00:00,000 --> 00:00:02,000
+<font size="50px">Welcome to the Marvin home page!</font>
+
+2
+00:00:02,000 --> 00:00:10,000
+<font size="50px">The ‘Help’ button towards the middle of the screen is a link to the Marvin documentation, including tutorials. We recommend going through the documentation after this exercise.</font>
+
+3
+00:00:10,000 --> 00:00:18,000
+<font size="50px">At the top of the page are links to ‘Known Issues’ and ‘What’s New’. The link at the very left labeled ‘Marvin’ will take you back to this Marvin home page.</font>
+
+4
+00:00:18,000 --> 00:00:22,000
+<font size="50px">To look up a galaxy, you need its plate and ifu design or MaNGA ID number.</font>
+
+5
+00:00:22,000 --> 00:00:28,000
+<font size="50px">In the box that says ‘Plate or ID Designation’, type ‘7443’ and hit return.</font>
+
+6
+00:00:28,000 --> 00:00:38,000
+<font size="50px">Then you will see some information about this plate and below a set of images for all the IFUs of galaxies observed with this plate. You can then click on the image for ‘12703’.</font>
+
+7
+00:00:38,000 --> 00:00:42,000
+<font size="50px">On the galaxy page there is a lot of information!</font>
+
+8
+00:00:42,000 --> 00:00:48,000
+<font size="50px">In the top left there is some basic information. There are also a few links to download the data for this galaxy and also how to use python to import the galaxy in Marvin tools.</font>
+
+9
+00:00:50,000 --> 00:00:55,000
+<font size="50px">Click on the red box that says ‘Map/SpecView Off’ (it should turn green and now say ‘Map/SpecView On’).</font>
+
+10
+00:00:55,000 --> 00:01:00,000
+<font size="50px">Scroll down to see an image of the galaxy (left) and a spectrum of a spaxel (right). When you hover the mouse over the galaxy image you should see a blue dot.</font>
+
+11
+00:01:00,000 --> 00:01:07,000
+<font size="50px">The right panel shows by default the spectrum in the central spaxel.</font>
+
+12
+00:01:07,000 --> 00:01:18,000
+<font size="50px">If you click on different locations for different spaxels, the spectrum on the right will change to reflect the spectrum at that spaxel.</font>
+
+13
+00:01:18,000 --> 00:01:25,000
+<font size="50px">You can also zoom in on different part of the spectrum by clicking and dragging the mouse across the section of interest. You can zoom in both horizontally and vertically.</font>
+
+14
+00:01:25,000 --> 00:01:33,000
+<font size="50px">With the spectrum on the right you can hover the mouse along the spectrum and the value of the flux at that wavelength shows up in the top right corner of the plot.</font>
+
+15
+00:01:33,000 --> 00:01:40,000
+<font size="50px">To un-zoom and get back to the full spectrum, double click on the plot.</font>
+
+16
+00:01:40,000 --> 00:01:48,000
+<font size="50px">Now scroll down the the DAP Maps, where you should see an example of three commonly used maps.</font>
+
+17
+00:01:48,000 --> 00:01:56,000
+<font size="50px">As in the image panel, you can click on different areas in the maps to see the spectrum in that spaxel.</font>
+
+18
+00:01:56,000 --> 00:02:02,000
+<font size="50px">Note that the wavelength is in the observed frame and not the rest frame.</font>
+
+19
+00:02:02,000 --> 00:02:12,000
+<font size="50px">Under the tab that says ‘3 items selected’, you can click on this and change which maps are shown.</font>
+
+20
+00:02:12,000 --> 00:02:20,000
+<font size="50px">The description of the different quantities shown in the maps is given in the data model.</font>
+
+21
+00:02:20,000 --> 00:02:28,000
+<font size="50px">A selected map with have a green check mark next to it. You can select any number of maps.</font>
+
+22
+00:02:28,000 --> 00:02:35,000
+<font size="50px">Once you have selected which maps you would like, click on the yellow ‘Get Maps’ button to generate the desired maps.</font>
+
+23
+00:02:35,000 --> 00:02:40,000
+<font size="50px">Depending on your Internet connection this could take a while.</font>
+
+24
+00:02:40,000 --> 00:03:00,000
+<font size="50px">You can also change the binning scheme by clicking on the next tab to the right.</font>
+
+25
+00:03:00,000 --> 00:03:10,000
+<font size="50px">If you want to reset your selections, click on the ‘Reset Maps’ blue button.</font>
+
+26
+00:03:10,000 --> 00:03:23,000
+<font size="50px">The green button labeled ‘Use Maps in Python’, shows you the python script for creating the maps using the Marvin tools.</font>
+
+27
+00:03:23,000 --> 00:03:30,000
+<font size="50px">We recommend you to try the Marvin tools, which offer further options to interact with maps.</font>
+
+28
+00:03:30,000 --> 00:03:36,000
+<font size="50px">Now we will check out the galaxy properties. To do so click on ‘Galaxy Properties’.</font>
+
+29
+00:03:36,000 --> 00:03:55,000
+<font size="50px">In this section, you can plot different galaxy properties for all the currently observed MaNGA galaxies, with your current galaxy in red for comparison.</font>
+
+30
+00:03:55,000 --> 00:04:10,000
+<font size="50px">To zoom in, you can click and drag the mouse over a section you want zoomed in.</font>
+
+31
+00:04:10,000 --> 00:04:18,000
+<font size="50px">To un-zoom, click on the ‘Reset zoom’ button.</font>
+
+32
+00:04:18,000 --> 00:04:24,000
+<font size="50px">You can also change which parameters are being plotted.</font>
+
+33
+00:04:24,000 --> 00:04:34,000
+<font size="50px">There is a table on the left with the various NSA parameters listed.</font>
+
+34
+00:04:34,000 --> 00:04:45,000
+<font size="50px">Only the parameters in bold (12) can be used for the plots.</font>
+
+35
+00:04:45,000 --> 00:04:55,000
+<font size="50px">Click on the parameter of choice and drag the name over to plot and axis of choice.</font>
+
+36
+00:04:55,000 --> 00:05:08,000
+<font size="50px">You should get a grabbing hand symbol as you click and drag.</font>
+
+37
+00:05:08,000 --> 00:05:15,000
+<font size="50px">In addition to the scatter plots, you can also see 12 of the NSA parameters as box and whisker plots.</font>
+
+38
+00:05:15,000 --> 00:05:22,000
+<font size="50px">Click on the ‘Box and Whisker’ link to see a set of these plots, and horizontally scroll to see all the plots. </font>
+
+39
+00:05:22,000 --> 00:05:32,000
+<font size="50px">The boxes span the first to third quartile (25 to 75%) with the middle horizontal line being the median.</font>
+
+40
+00:05:32,000 --> 00:05:40,000
+<font size="50px">The dashed lines span from 10 to 90%. If you hover over the red dot, you can see its value, as well as the outliers in gray circles</font>
+
+41
+00:05:40,000 --> 00:06:50,000
+<font size="50px">For more features and descriptions of Marvin web, see Marvin Docs!!</font>
