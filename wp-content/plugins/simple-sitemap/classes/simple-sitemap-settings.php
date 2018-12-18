@@ -41,37 +41,13 @@ class WPGO_Simple_Sitemap_Settings {
 		<div class="wrap">
 
 			<h2 style="float:left;"><?php _e( 'Welcome to Simple Sitemap!', 'simple-sitemap' ); ?></h2>
-			<div style="float:right;padding:1px;background: rgba(57, 49, 76, 0.33);"><a style="display: block;line-height:0;" target="_blank" title="We love to develop WordPress plugins!" alt="WPGO Plugins Site" href="https://wpgoplugins.com/"><img src="<?php echo plugins_url(); ?>/simple-sitemap/images/wpgo_plugins_logo.png"></a></div>
+			<div style="float:right;margin-top:5px;padding:10px 12px;background: #39314c;border-radius: 6px;"><a style="display: block;line-height:0;" target="_blank" title="Check out our other plugins!" alt="WPGO Plugins Site" href="https://wpgoplugins.com/"><img style="width: 175px;" src="<?php echo plugins_url(); ?>/simple-sitemap/images/wpgo_plugins_logo.png"></a></div>
 
 			<div style="clear:both;"></div>
 
-			<div style="margin-top:30px;font-size:18px;line-height:1.4em;">What sitemap will you create today? There's plenty of different types of sitemap to choose from! Checkout the live demos below.</div>
+			<div style="margin-top:30px;font-size:18px;line-height:1.4em;">What sitemap will you create today? There are plenty of different types of sitemap to choose from. Checkout the live demo to view the gallery of sitemap examples!</div>
 
-			<div id="ssp-demo-gallery">
-
-				<div><h5><a href="http://demo.wpgothemes.com/flexr/simple-sitemap-pro-demo/standard-sitemap-demo/">Standard Sitemap</a></h5><div><a href="http://demo.wpgothemes.com/flexr/simple-sitemap-pro-demo/standard-sitemap-demo/"><img src="<?php echo plugins_url(); ?>/simple-sitemap/images/standard-sitemap.png" alt="" width="325" height="270" class="alignnone size-full" /></a></div></div>
-
-				<div><h5><a href="http://demo.wpgothemes.com/flexr/simple-sitemap-pro-demo/sitemap-with-excerpt/">Sitemap with Excerpt</a></h5><div><a href="http://demo.wpgothemes.com/flexr/simple-sitemap-pro-demo/sitemap-with-excerpt/"><img src="<?php echo plugins_url(); ?>/simple-sitemap/images/sitemap-with-excerpt.png" alt="" width="325" height="270" class="alignnone size-full" /></a></div></div>
-
-				<div><h5><a href="http://demo.wpgothemes.com/flexr/simple-sitemap-pro-demo/column-layout/">Column Layout</a></h5><div><a href="http://demo.wpgothemes.com/flexr/simple-sitemap-pro-demo/column-layout/"><img src="<?php echo plugins_url(); ?>/simple-sitemap/images/column-layout.png" alt="" width="325" height="270" class="alignnone size-full" /></a></div></div>
-
-				<div><h5><a href="http://demo.wpgothemes.com/flexr/simple-sitemap-pro-demo/list-posts-by-category/">List Posts by Category</a></h5><div><a href="http://demo.wpgothemes.com/flexr/simple-sitemap-pro-demo/list-posts-by-category/"><img src="<?php echo plugins_url(); ?>/simple-sitemap/images/posts-by-category.png" alt="" width="325" height="270" class="alignnone size-full" /></a></div></div>
-
-				<div><h5><a href="http://demo.wpgothemes.com/flexr/simple-sitemap-pro-demo/nofollow-sitemap-links/">Nofollow Sitemap Links</a></h5><div><a href="http://demo.wpgothemes.com/flexr/simple-sitemap-pro-demo/nofollow-sitemap-links/"><img src="<?php echo plugins_url(); ?>/simple-sitemap/images/nofollow-sitemap-links.png" alt="" width="325" height="270" class="alignnone size-full" /></a></div></div>
-
-				<div><h5><a href="http://demo.wpgothemes.com/flexr/simple-sitemap-pro-demo/basic-tabbed-sitemap-demo/">Basic Tabbed Sitemap</a></h5><div><a href="http://demo.wpgothemes.com/flexr/simple-sitemap-pro-demo/basic-tabbed-sitemap-demo/"><img src="<?php echo plugins_url(); ?>/simple-sitemap/images/basic-tabbed-sitemap.png" alt="" width="325" height="270" class="alignnone size-full" /></a></div></div>
-
-				<div><h5><a href="http://demo.wpgothemes.com/flexr/simple-sitemap-pro-demo/basic-tabbed-sitemap-demo/">Advanced Tabbed Sitemap</a></h5><div><a href="http://demo.wpgothemes.com/flexr/simple-sitemap-pro-demo/advanced-tabbed-sitemap/"><img src="<?php echo plugins_url(); ?>/simple-sitemap/images/advanced-tabbed-sitemap.png" alt="" width="325" height="270" class="alignnone size-full" /></a></div></div>
-
-				<div><h5><a href="http://demo.wpgothemes.com/flexr/horizontal-sitemap/">Horizontal Sitemap</a></h5><div><a href="http://demo.wpgothemes.com/flexr/horizontal-sitemap/"><img src="<?php echo plugins_url(); ?>/simple-sitemap/images/horizontal-sitemap.png" alt="" width="325" height="270" class="alignnone size-full" /></a></div></div>
-
-				<div><h5><a href="http://demo.wpgothemes.com/flexr/simple-sitemap-pro-demo/list-posts-by-taxonomy/">List Posts by Taxonomy</a></h5><div><a href="http://demo.wpgothemes.com/flexr/simple-sitemap-pro-demo/list-posts-by-taxonomy/"><img src="<?php echo plugins_url(); ?>/simple-sitemap/images/list-post-by-taxonomy.png" alt="" width="325" height="270" class="alignnone size-full" /></a></div></div>
-
-				<div style="width:100%;display:flex;align-items:center;justify-content:space-between;">
-					<h3 style="color:#3c8f8c;font-style:italic;">More live demos coming soon...</h3>
-					<div><a style="line-height:normal;display:inline;text-decoration:none;" href="https://wpgoplugins.com/contact/" target="_blank">Suggest a demo</a></div>
-				</div>
-			</div>
+			<div style="margin:15px 0 30px 0;width:150px;font-size: 18px;background: #279a97bf;border: 2px #237976a1 solid;border-radius: 2px;"><a style="color: #fff;text-decoration: none;padding: 7px 10px;display: inline-block;" href="http://demo.wpgothemes.com/flexr/simple-sitemap-pro-demo/">LAUNCH DEMO</a></div>
 
 			<hr>
 

@@ -178,4 +178,111 @@ jQuery(document).ready(function($) {
 		$( "#delete_on_uninstall" ).attr( 'checked', true );
 
 	} );
+    
+    // If we're allowed to track site data...
+    if ( '1' == nf_settings.allow_telemetry ) {
+        // Show the optout button.
+        $( '#nfTelOptin' ).addClass( 'hidden' );
+        $( '#nfTelOptout' ).removeClass( 'hidden' );
+    } // Otherwise...
+    else {
+        // Show the optin button.
+        $( '#nfTelOptout' ).addClass( 'hidden' );
+        $( '#nfTelOptin' ).removeClass( 'hidden' );
+    }
+    
+    // If optin is clicked...
+    $( '#nfTelOptin' ).click( function( e ) {
+        // Hide the button.
+        $( '#nfTelOptin' ).addClass( 'hidden' );
+        $( '#nfTelSpinner' ).css( 'display', 'inline-block' );
+        // Hit AJAX endpoint and opt-in.
+        $.post( ajaxurl, { action: 'nf_optin', ninja_forms_opt_in: 1 },
+                    function( response ) {
+            $( '#nfTelOptout' ).removeClass( 'hidden' );
+            $( '#nfTelSpinner' ).css( 'display', 'none' );
+        } );  
+    } );
+    
+    // If optout is clicked...
+    $( '#nfTelOptout' ).click( function( e ) {
+        // Hide the button.
+        $( '#nfTelOptout' ).addClass( 'hidden' );
+        $( '#nfTelSpinner' ).css( 'display', 'inline-block' );
+        // Hit AJAX endpoint and opt-out.
+        $.post( ajaxurl, { action: 'nf_optin', ninja_forms_opt_in: 0 },
+                    function( response ) {
+            $( '#nfTelOptin' ).removeClass( 'hidden' );
+            $( '#nfTelSpinner' ).css( 'display', 'none' );
+        } );  
+    } );
+
+    jQuery( '#nfTrashExpiredSubmissions' ).click( function( e ) {
+    	var that = this;
+    	var data = {
+    		closeOnClick: false,
+            closeOnEsc: true,
+            content: '<p>' + nf_settings.i18n.trashExpiredSubsMessage + '<p>',
+            btnPrimary: {
+				text: nf_settings.i18n.trashExpiredSubsButtonPrimary,
+				callback: function( e ) {
+                    // Hide the buttons.
+                    deleteModal.maybeShowActions( false );
+                    // Show the progress bar.
+                    deleteModal.maybeShowProgress( true );
+                    // Begin our cleanup process.
+                    that.submissionExpirationProcess( that, -1, deleteModal );
+
+				}
+			},
+            btnSecondary: {
+            	text: nf_settings.i18n.trashExpiredSubsButtonSecondary,
+				callback: function( e ) {
+            		deleteModal.toggleModal( false );
+				}
+			},
+            useProgressBar: true,
+		};
+
+        this.submissionExpirationProcess = function( context, steps, modal ) {
+            var data = {
+                action: 'nf_batch_process',
+                batch_type: 'expired_submission_cleanup',
+                security: nf_settings.batch_nonce
+            };
+            jQuery.post( nf_settings.ajax_url, data, function( response ) {
+                response = JSON.parse( response );
+                // If we're done...
+                if ( response.batch_complete ) {
+                    // Push our progress bar to 100%.
+                    modal.setProgress( 100 );
+                    modal.toggleModal( false );
+                    // Exit.
+                    return false;
+                }
+                // If we do not yet have a determined number of steps...
+                if ( -1 == steps ) {
+                    // If step_toal is defined...
+                    if ( 'undefined' != typeof response.step_total ) {
+                        // Use the step_total.
+                        steps = response.step_total;
+                    } // Otherwise... (step_total is not defined)
+                    else {
+                        // Use step_remaining.
+                        steps = response.step_remaining;
+                    }
+                }
+                // Calculate our current step.
+                var step = steps - response.step_remaining;
+                // Calculate our maximum progress for this step.
+                var maxProgress = Math.round( step / steps * 100 );
+                // Increment the progress.
+                modal.incrementProgress ( maxProgress );
+                // Recall our function...
+                context.submissionExpirationProcess( context, steps, modal );
+            } );
+        }
+
+    	var deleteModal = new NinjaModal( data );
+	});
 });

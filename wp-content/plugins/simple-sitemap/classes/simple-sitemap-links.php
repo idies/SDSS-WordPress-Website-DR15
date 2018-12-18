@@ -93,14 +93,11 @@ class WPGO_Simple_Sitemap_Links {
 		if ( $file == 'simple-sitemap/simple-sitemap.php') {
 			$pccf_links = '<a href="' . get_admin_url() . 'options-general.php?page=simple-sitemap/classes/simple-sitemap-settings.php">' . __( 'Get Started' ) . '</a>';
 			array_unshift( $links, $pccf_links );
-
-		if ( $file == 'simple-sitemap/simple-sitemap.php') {
-			$pccf_links = '<a style="color:#60a559;" href="https://wpgoplugins.com/plugins/simple-sitemap-pro/" target="_blank" title="Try Simple Sitemap Pro today for just $29 - 100% money back guarantee"><b>Go Pro</b></a>';
-			array_push( $links, $pccf_links );
 		}
 
-			//$pccf_links = '<a style="color:#60a559;" href="https://wpgoplugins.com/plugins/simple-sitemap-pro/" target="_blank" title="Try Simple Sitemap Pro today - 100% money back guarantee"><b>Upgrade to Pro</b></a>';
-			//array_push( $links, $pccf_links );
+		if ( $file == 'simple-sitemap/simple-sitemap.php') {
+			$pccf_links = '<a style="color:#60a559;" href="https://wpgoplugins.com/plugins/simple-sitemap-pro/" target="_blank" title="Upgrade for more features"><b>Upgrade</b></a>';
+			array_push( $links, $pccf_links );
 		}
 
 		return $links;
